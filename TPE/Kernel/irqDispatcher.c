@@ -1,5 +1,6 @@
 #include <time.h>
 #include <stdint.h>
+#include <keyboardDriver.h>
 
 static void int_20();
 static void int_21();
@@ -21,5 +22,5 @@ void int_20() {
 }
 
 void int_21(){
-	keyboard_handler();
+	keyboardHandler();
 }

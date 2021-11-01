@@ -8,7 +8,7 @@ static int bufferSize = 0;
 int keyboardHandler(){
     int scancodeKey;
     while(keyboardActivated()){
-        scancodeKey = getKeyPressed();
+        scancodeKey = getPressedKey();
         if(scancodeToAscii(scancodeKey) != 0 && bufferSize <= MAX_SIZE){
             buffer[bufferSize++] = scancodeToAscii(scancodeKey);
             return 1;
