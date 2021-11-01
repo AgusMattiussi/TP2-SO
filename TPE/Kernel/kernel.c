@@ -3,6 +3,8 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
+#include <keyboardDriver.h>
+
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -82,6 +84,7 @@ void * initializeKernelBinary()
 
 int main()
 {	
+	load_idt();
 	ncPrint("[Kernel Main]");
 
 	// ncNewline();
@@ -102,8 +105,11 @@ int main()
 
 	ncNewline();
 
-	while(1);
+	// while(1){
+	// 	ncPrintToPos(getBuffer(), 0xB8000);
+	// }
 
 	ncPrint("[Finished]");
+
 	return 0;
 }

@@ -9,4 +9,6 @@ int keyboardHandler();
 
 char scancodeToAscii(int scancode);
 
+char * getBuffer();
+
 #endif

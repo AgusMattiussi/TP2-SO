@@ -6,11 +6,12 @@ static char buffer[MAX_SIZE];
 static int bufferSize = 0;
 
 int keyboardHandler(){
-    int scancodeKey;
+    char scancodeKey;
     while(keyboardActivated()){
         scancodeKey = getPressedKey();
         if(scancodeToAscii(scancodeKey) != 0 && bufferSize <= MAX_SIZE){
             buffer[bufferSize++] = scancodeToAscii(scancodeKey);
+            //ncPrintChar(scancodeToAscii(scancodeKey));
             return 1;
         }
     }
@@ -53,4 +54,9 @@ char scancodeToAscii(int scancode){
     };
 
     return kbd_US[scancode];
+}
+
+char * getBuffer(){
+    buffer[bufferSize] = 0;
+    return buffer;
 }
