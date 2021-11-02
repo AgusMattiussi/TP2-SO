@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/bin/bash
 cd Toolchain
 make clean
 make all
