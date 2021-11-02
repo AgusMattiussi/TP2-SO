@@ -60,3 +60,7 @@ char * getBuffer(){
     buffer[bufferSize] = 0;
     return buffer;
 }
+
+char kb_getChar(){
+    return buffer[bufferSize--];
+}

@@ -11,4 +11,6 @@ char scancodeToAscii(int scancode);
 
 char * getBuffer();
 
+char kb_getChar();
+
 #endif
