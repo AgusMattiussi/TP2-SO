@@ -1,4 +1,5 @@
 GLOBAL sys_getChar
+GLOBAL sys_putChar
 
 SECTION .text
 
@@ -45,16 +46,34 @@ SECTION .text
 
 ; Linux Order: rax, rdi, rsi, rdx, r10, r8, r9
 
+; %macro syscall 1
+;     pushState
+
+;     mov rax, %1     ; Cargo en rax el numero de syscall
+;     int 80h         
+
+;     popState
+;     ret             ; es necesario?
+; %endmacro
+
+
 %macro syscall 1
-    pushState
+	pushState
 
-    mov rax, %1     ; Cargo en rax el numero de syscall
-    int 80h         
+	mov	r10, r9 	; arg[5]
+	mov	r9, r8 		; arg[4]
+	mov r8, rcx  	; arg[3]
+    mov rcx, rdx 	; arg[2]
+	mov rdx, rsi 	; arg[1]
+	mov rsi, rdi 	; arg[0]
+	mov rdi, %1 	; Syscall #	
+    int 80h
 
-    popState
-    ret             ; es necesario?
+	popState
+    ret     
 %endmacro
 
 sys_getChar:
     syscall 0
-
+sys_putChar:
+	syscall 1

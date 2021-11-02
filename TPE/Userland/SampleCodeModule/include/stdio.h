@@ -2,7 +2,10 @@
 #define _FONT_H
 
 extern char sys_getChar();
+extern void sys_putChar(char c);
 
 char getChar();
+void putChar(char c);
+
     
 #endif
