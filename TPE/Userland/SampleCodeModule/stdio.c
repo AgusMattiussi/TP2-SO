@@ -7,3 +7,10 @@ char getChar(){
 void putChar(char c){
     sys_putChar(c);
 }
+
+void print(char * string){
+    while (*string != 0){
+        putChar(*string);
+        *string++;
+    }    
+}

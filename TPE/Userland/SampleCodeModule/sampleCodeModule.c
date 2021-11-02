@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 int main() {
-	putChar('A');
+	print("No puedo creer que esto funcione");
 
 	return 0;
 }
