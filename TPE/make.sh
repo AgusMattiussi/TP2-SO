@@ -1,7 +1,7 @@
-#!/bin/bash
-cd /Toolchain
+!#/bin/bash
+cd Toolchain
 make clean
 make all
-cd ../
+cd ..
 make clean
 make all
