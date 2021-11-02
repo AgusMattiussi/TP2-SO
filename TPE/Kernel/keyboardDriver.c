@@ -62,5 +62,7 @@ char * getBuffer(){
 }
 
 char kb_getChar(){
-    return buffer[bufferSize--];
+    if(bufferSize > 0)
+        return buffer[bufferSize--];
+    return 0;
 }
