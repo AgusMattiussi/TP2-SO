@@ -6,10 +6,6 @@ char getChar(){
     return c;
 }
 
-void putChar(char c){
-    sys_putCharWC(c, WHITE_BLACK);
-}
-
 void putCharWithColor(char c, unsigned char colorCode){
     sys_putCharWC(c, colorCode);
   
@@ -17,7 +13,7 @@ void putCharWithColor(char c, unsigned char colorCode){
 
 void putChar(char c){
     if(c != 0)
-        sys_putChar(c);
+        sys_putCharWC(c, WHITE_BLACK);
 }
 
 void print(char * string){
