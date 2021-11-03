@@ -7,8 +7,8 @@ char getChar(){
 }
 
 void putCharWithColor(char c, unsigned char colorCode){
-    sys_putCharWC(c, colorCode);
-  
+    if(c != 0)
+        sys_putCharWC(c, colorCode);
 }
 
 void putChar(char c){
