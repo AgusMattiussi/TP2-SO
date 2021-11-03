@@ -5,7 +5,7 @@ char syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, u
 		case 0:
 			return kb_getChar(); // getChar
 		case 1:
-			ncPrintCharWithColor((char) rsi, 0x02); //putChar
+			ncPrintCharWithColor((char) rsi, (unsigned char)rdx); //putCharWC
 			return 1;
 	}
 

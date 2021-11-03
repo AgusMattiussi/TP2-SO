@@ -1,5 +1,5 @@
 GLOBAL sys_getChar
-GLOBAL sys_putChar
+GLOBAL sys_putCharWC
 
 SECTION .text
 
@@ -75,5 +75,5 @@ SECTION .text
 
 sys_getChar:
     syscall 0
-sys_putChar:
+sys_putCharWC:
 	syscall 1

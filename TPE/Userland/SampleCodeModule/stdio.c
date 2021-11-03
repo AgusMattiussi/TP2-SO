@@ -1,20 +1,15 @@
 #include <stdio.h>
 
 char getChar(){
-    // char c = sys_getChar();
-    // if(c != 0)
-    //     sys_putChar(c);
-    // else
-    //     sys_putChar('M');
-    // return 'L';
-
     return sys_getChar();
 }
 
 void putChar(char c){
-    // if(c == 0)
-    //     sys_putChar('D');
-    sys_putChar(c);
+    sys_putCharWC(c, WHITE_BLACK);
+}
+
+void putCharWithColor(char c, unsigned char colorCode){
+    sys_putCharWC(c, colorCode);
 }
 
 void print(char * string){

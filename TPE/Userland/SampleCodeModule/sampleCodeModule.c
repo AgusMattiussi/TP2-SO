@@ -3,15 +3,19 @@
 int scan(char *buffer, int size);
 
 int main() {
-	print("No puedo creer que esto funcione");
+	print("No puedo creer que esto funcione    ");
 
-	// char c;
-	// while ((c = getChar()) != '\n')
-	// {	
-	// 	if(c != 0)
-	// 		putChar(c);
-	// }
-	
+	putChar('H');
+	putChar('O');
+	putChar('L');
+	putChar('A');
+	putChar(' ');
+	putCharWithColor('M', RED_BLACK);
+	putCharWithColor('U', ORANGE_BLACK);
+	putCharWithColor('N', YELLOW_BLACK);
+	putCharWithColor('D', GREEN_BLACK);
+	putCharWithColor('O', BLUE_BLACK);
+
 	return 0;
 }
 
