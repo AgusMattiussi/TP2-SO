@@ -61,8 +61,25 @@ char * getBuffer(){
     return buffer;
 }
 
+// char kb_getChar(){
+//     if(bufferSize > 0)
+//         return buffer[0];
+//     return 0;
+// }
+
+
 char kb_getChar(){
-    if(bufferSize > 0)
-        return buffer[bufferSize--];
-    return 0;
+    if (bufferSize <= 0)
+        return 0;
+    
+    char key = buffer[0];
+
+    if (bufferSize > 0){
+        // removemos el primero.
+        for (int i = 1; i < bufferSize; i++)
+            buffer[i - 1] = buffer[i];
+    }
+
+    bufferSize--;
+    return key;
 }

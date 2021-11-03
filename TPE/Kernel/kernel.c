@@ -62,6 +62,12 @@ int main()
 	// }
 	((EntryPoint)sampleCodeModuleAddress)();
 	ncNewline();
+
+	// while (kb_getChar() != '\n')
+	// {
+	// 	ncPrintToPos(getBuffer(), 0xB8000);
+	// }
+	
 	ncPrint("[Finished]");
 
 

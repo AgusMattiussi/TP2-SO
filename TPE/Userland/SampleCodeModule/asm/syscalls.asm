@@ -4,7 +4,7 @@ GLOBAL sys_putChar
 SECTION .text
 
 %macro pushState 0
-	;push rax Chequear si rax es necesario
+	;push rax ;Chequear si rax es necesario
 	push rbx
 	push rcx
 	push rdx
@@ -36,7 +36,7 @@ SECTION .text
 	pop rdx
 	pop rcx
 	pop rbx
-	; pop rax Chequear si rax es necesario
+	;pop rax ;Chequear si rax es necesario
 %endmacro
 
 ; User-level applications use as integer registers for passing 
