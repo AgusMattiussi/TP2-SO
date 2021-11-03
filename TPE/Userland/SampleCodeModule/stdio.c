@@ -1,7 +1,9 @@
 #include <stdio.h>
 
 char getChar(){
-    return sys_getChar();
+    char c;
+    while((c = sys_getChar()) == 0);
+    return c;
 }
 
 void putChar(char c){
@@ -10,6 +12,12 @@ void putChar(char c){
 
 void putCharWithColor(char c, unsigned char colorCode){
     sys_putCharWC(c, colorCode);
+  
+}
+
+void putChar(char c){
+    if(c != 0)
+        sys_putChar(c);
 }
 
 void print(char * string){
@@ -17,4 +25,15 @@ void print(char * string){
         putChar(*string);
         string++;
     }    
+}
+
+int scan(char *buffer, int size){
+    char c;
+    int lenght=0;
+    while((c = getChar()) != '\n' && lenght < size){
+        putChar(c);
+        buffer[lenght++] = c;
+    }
+    buffer[lenght] = 0;
+    return lenght;
 }

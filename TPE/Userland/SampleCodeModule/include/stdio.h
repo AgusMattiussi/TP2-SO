@@ -8,10 +8,10 @@ char getChar();
 void print(char * string);
 void putChar(char c);
 void putCharWithColor(char c, unsigned char colorCode);
+int scan(char *buffer, int size);
 
 
 // COLORES: El formato es COLORLETRA_COLORFONDO
-
 #define BLUE_BLACK 0x01
 #define GREEN_BLACK 0x02
 #define CYAN_BLACK 0x03
