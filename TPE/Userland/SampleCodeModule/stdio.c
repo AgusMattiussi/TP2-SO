@@ -7,14 +7,14 @@ char getChar(){
     // else
     //     sys_putChar('M');
     // return 'L';
-
-    return sys_getChar();
+    char c;
+    while((c = sys_getChar()) == 0);
+    return c;
 }
 
 void putChar(char c){
-    // if(c == 0)
-    //     sys_putChar('D');
-    sys_putChar(c);
+    if(c != 0)
+        sys_putChar(c);
 }
 
 void print(char * string){
@@ -22,4 +22,15 @@ void print(char * string){
         putChar(*string);
         string++;
     }    
+}
+
+int scan(char *buffer, int size){
+    char c;
+    int lenght=0;
+    while((c = getChar()) != '\n' && lenght < size){
+        putChar(c);
+        buffer[lenght++] = c;
+    }
+    buffer[lenght] = 0;
+    return lenght;
 }

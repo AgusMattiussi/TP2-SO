@@ -7,6 +7,7 @@ extern void sys_putChar(char c);
 char getChar();
 void putChar(char c);
 void print(char * string);
+int scan(char *buffer, int size);
 
     
 #endif
