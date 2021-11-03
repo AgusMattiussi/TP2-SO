@@ -23,6 +23,13 @@ void print(char * string){
     }    
 }
 
+void printWithColor(char * string, unsigned char colorCode){
+    while (*string != 0){
+        putCharWithColor(*string, colorCode);
+        string++;
+    }    
+}
+
 int scan(char *buffer, int size){
     char c;
     int lenght=0;
