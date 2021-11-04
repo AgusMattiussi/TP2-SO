@@ -5,6 +5,13 @@
 #define COMMANDS_COUNT 6
 #define BUFFER_SIZE 50
 
+#define MINUTES 2
+#define HOURS 4
+#define DAY 6
+#define MONTH 8
+#define YEAR 9
+#define LOCAL_TIME_CORRECTION 1
+
 static char * commandsNames[COMMANDS_COUNT];
 static char * commandsDesc[COMMANDS_COUNT];
 static void (*commandsFn[COMMANDS_COUNT])();
@@ -64,7 +71,42 @@ void printmem(int argSize, char *args[]){
 }
 
 void printTime(){
+    char str[3];
+    int hours = sys_getTime(HOURS);
 
+    if(hours>3)
+        hours -=3;
+    if(hours==0)
+        hours=21;
+    if(hours==1)
+        hours=22;
+    if(hours==2)
+        hours=23;
+
+    itoa(hours, str);
+    print(str);
+
+    print(":");
+
+    itoa(sys_getTime(MINUTES), str);
+    print(str);
+
+    print(" - ");
+
+    itoa(sys_getTime(DAY)-LOCAL_TIME_CORRECTION, str);
+    print(str);
+
+    print("/");
+
+    itoa(sys_getTime(MONTH), str);
+    print(str);
+
+    print("/");
+
+    itoa(sys_getTime(YEAR), str);
+    print(str);
+
+    putChar('\n');
 }
 
 void divZero(){

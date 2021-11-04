@@ -103,3 +103,22 @@ int strtok(char * input, char delim, char * tokenArray[], int maxTokens){
 //     // to the string
 //     return result;
 // }
+
+void itoa(int num, char *str){
+    int digits = 1;
+    for(int n = num / 10 ; n != 0 ; digits++, n/=10);
+
+    if(digits == 1){
+        str[0] = '0';
+        str[1] = num + '0';
+        str[2] = 0;
+        return;
+    }
+
+    str[digits] = 0;
+    for(int i=digits-1; i >= 0; i--){
+        str[i] = (num % 10) + '0';
+        num /= 10;
+    }
+    return;
+}
