@@ -1,5 +1,6 @@
 GLOBAL sys_getChar
 GLOBAL sys_putCharWC
+GLOBAL sys_getTime
 
 SECTION .text
 
@@ -77,3 +78,5 @@ sys_getChar:
     syscall 0
 sys_putCharWC:
 	syscall 1
+sys_getTime:
+	syscall 2

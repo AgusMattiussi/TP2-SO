@@ -3,6 +3,7 @@
 
 extern char sys_getChar();
 extern void sys_putCharWC(char c, unsigned char colorCode);
+extern int sys_getTime(int descriptor);
 
 char getChar();
 void print(char * string);
