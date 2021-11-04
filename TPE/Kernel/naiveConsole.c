@@ -1,32 +1,28 @@
 #include <naiveConsole.h>
 
-static char buffer[64] = { '0' };
+static char buffer[64] = {'0'};
 static uint8_t * const video = (uint8_t*)0xB8000;
 static uint8_t * currentVideo = (uint8_t*)0xB8000;
 static const uint32_t width = 80;
-static const uint32_t height = 25 ;
+static const uint32_t height = 25;
 
 #define TOTAL_TEXT_SCREEN_LENGTH width*height
 #define TOTAL_SCREEN_LENGTH width*height*2
+#define LINE_LENGTH width*2
+#define LAST_LINE video + TOTAL_SCREEN_LENGTH - LINE_LENGTH
 #define DEFAULT_COLOR 0x0F
 
-int current_print_color = DEFAULT_COLOR;
-
-void ncPrint(const char * string)
-{
-	int i;
-
-	for (i = 0; string[i] != 0; i++)
-		if(string[i] == '\n')
-			ncNewline();
-		else
-			ncPrintCharWithColor(string[i], current_print_color);
+void ncPrint(const char * string){
+	ncPrintWithColor(string, DEFAULT_COLOR);
 }
 
 void ncPrintWithColor(const char * string, uint8_t color_code){
-	int i;
+	if(currentVideo == LAST_LINE){
+		ncScrollUp();
+		currentVideo = LAST_LINE;
+	}
 
-	for (i = 0; string[i] != 0; i++){
+	for (int i = 0; string[i] != 0; i++){
 		if(string[i] == '\n')
 			ncNewline();
 		else
@@ -44,17 +40,16 @@ void ncPrintToPos(const char * string, int position){
 	}
 }
 
-void ncPrintChar(char character)
-{
-	if(character == '\n')
-		ncNewline();
-	else {
-	*currentVideo = character;
-	currentVideo += 2;
-	}
+void ncPrintChar(char character){
+	ncPrintCharWithColor(character, DEFAULT_COLOR);
 }
 
 void ncPrintCharWithColor(char character, uint8_t color_code){
+	if(currentVideo == LAST_LINE + LINE_LENGTH){
+		ncScrollUp();
+		currentVideo = LAST_LINE;
+	}
+
 	if(character == '\n')
 		ncNewline();
 	else {
@@ -65,30 +60,31 @@ void ncPrintCharWithColor(char character, uint8_t color_code){
 	}
 }
 
-void ncSetPrintColor(uint8_t color_code){
-	current_print_color = color_code;
-}
-
-void ncClearPrintColor(){
-	current_print_color = DEFAULT_COLOR;
-}
-
-void ncNewline()
-{
-	do
-	{
+void ncNewline(){
+	do {
 		ncPrintChar(' ');
-	}
-	while((uint64_t)(currentVideo - video) % (width * 2) != 0);
+	} while((uint64_t)(currentVideo - video) % (width * 2) != 0);
 }
 
-void ncPrintDec(uint64_t value)
-{
+void ncScrollUp(){
+	int i;
+	for (i = 0; i < TOTAL_SCREEN_LENGTH - LINE_LENGTH; i++) {
+		video[i] = video[i + LINE_LENGTH];
+	}
+	
+	while(i < TOTAL_SCREEN_LENGTH){
+		if(i % 2 == 0)
+			video[i++] = ' ';
+		else
+			video[i++] = DEFAULT_COLOR;
+	}
+}
+
+void ncPrintDec(uint64_t value){
 	ncPrintBase(value, 10);
 }
 
-void ncPrintHex(uint64_t value)
-{
+void ncPrintHex(uint64_t value){
 	ncPrintBase(value, 16);
 }
 
@@ -97,14 +93,12 @@ void ncPrintBin(uint64_t value)
 	ncPrintBase(value, 2);
 }
 
-void ncPrintBase(uint64_t value, uint32_t base)
-{
+void ncPrintBase(uint64_t value, uint32_t base){
     uintToBase(value, buffer, base);
     ncPrint(buffer);
 }
 
-void ncClear()
-{
+void ncClear(){
 	int i;
 
 	for (i = 0; i < height * width; i++)
