@@ -9,6 +9,7 @@ void print(char * string);
 void putChar(char c);
 void putCharWithColor(char c, unsigned char colorCode);
 int scan(char *buffer, int size);
+void printWithColor(char * string, unsigned char colorCode);
 
 
 // COLORES: El formato es COLORLETRA_COLORFONDO
