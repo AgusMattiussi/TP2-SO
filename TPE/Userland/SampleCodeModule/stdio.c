@@ -40,3 +40,7 @@ int scan(char *buffer, int size){
     buffer[lenght] = 0;
     return lenght;
 }
+
+void clear(){
+    sys_clear();
+}

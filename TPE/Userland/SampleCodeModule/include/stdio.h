@@ -5,6 +5,7 @@ extern char sys_getChar();
 extern void sys_putCharWC(char c, unsigned char colorCode);
 extern int sys_getTime(int descriptor);
 extern void sys_getRegistersInfo();
+extern void sys_clear();
 
 char getChar();
 void print(char * string);
@@ -12,7 +13,7 @@ void putChar(char c);
 void putCharWithColor(char c, unsigned char colorCode);
 int scan(char *buffer, int size);
 void printWithColor(char * string, unsigned char colorCode);
-
+void clear();
 
 // COLORES: El formato es COLORLETRA_COLORFONDO
 #define BLUE_BLACK 0x01

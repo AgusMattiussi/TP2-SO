@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <strings.h>
 
-#define COMMANDS_COUNT 6
+#define COMMANDS_COUNT 7
 #define BUFFER_SIZE 50
 
 #define MINUTES 2
@@ -16,6 +16,7 @@ static char * commandsNames[COMMANDS_COUNT];
 static char * commandsDesc[COMMANDS_COUNT];
 static void (*commandsFn[COMMANDS_COUNT])();
 
+static int commandIndex = 0;
 
 void startTerminal(){
     startCommands();
@@ -30,18 +31,20 @@ void startTerminal(){
 
 //TODO agregar Clear
 void startCommands(){
-    commandBuilder("help", "Displays information about every command available.", &help, 0);
-    commandBuilder("inforeg", "Displays the information of all the registers.", &sys_getRegistersInfo, 1);
-    commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument", &printmem, 2);
-    commandBuilder("time", "Displays the current time and date.", &printTime, 3);
-    commandBuilder("divZero", "Displays exception of division by zero.", &divZero, 4);
-    commandBuilder("invalidOpCode", "Displays exception of an invalid operation code.", &invalidOpCode, 5);
+    commandBuilder("help", "Displays information about every command available.", &help);
+    commandBuilder("clear", "Clears the screen.", &clearScreen);
+    commandBuilder("inforeg", "Displays the information of all the registers.", &sys_getRegistersInfo);
+    commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument", &printmem);
+    commandBuilder("time", "Displays the current time and date.", &printTime);
+    commandBuilder("divZero", "Displays exception of division by zero.", &divZero);
+    commandBuilder("invalidOpCode", "Displays exception of an invalid operation code.", &invalidOpCode);
 }
 
-void commandBuilder(char *name, char *desc, void (*fn)(), int index){
-    commandsNames[index] = name;
-    commandsDesc[index] = desc;
-    commandsFn[index] = fn;
+void commandBuilder(char *name, char *desc, void (*fn)()){
+    commandsNames[commandIndex] = name;
+    commandsDesc[commandIndex] = desc;
+    commandsFn[commandIndex] = fn;
+    commandIndex++;
 }
 
 void executeCommand(char *buffer){
@@ -84,6 +87,7 @@ void printTime(){
         default:
             hours -= 3;
     }
+
 
     itoa(hours, str);
     print(str);

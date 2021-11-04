@@ -12,6 +12,9 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 		case 4:
 			getRegistersInfo();
 			return 4;
+		case 3:
+			ncClear();
+			return 3;
 	}
 
     // Por default devuelve 0

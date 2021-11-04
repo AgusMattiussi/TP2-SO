@@ -2,6 +2,7 @@ GLOBAL sys_getChar
 GLOBAL sys_putCharWC
 GLOBAL sys_getTime
 GLOBAL sys_getRegistersInfo
+GLOBAL sys_clear
 
 SECTION .text
 
@@ -83,3 +84,5 @@ sys_getTime:
 	syscall 2
 sys_getRegistersInfo:
 	syscall 4
+sys_clear:
+	syscall 3
