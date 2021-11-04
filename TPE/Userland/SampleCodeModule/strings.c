@@ -41,7 +41,6 @@ unsigned int strlen(const char * str){
 
 int strtok(char * input, char delim, char * tokenArray[], int maxTokens){
 	int tokCount = 0;
-
 	if (*input != delim && *input != 0)
 		tokenArray[tokCount++] = input;
 
