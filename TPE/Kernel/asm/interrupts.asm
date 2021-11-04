@@ -180,8 +180,14 @@ _syscallHandler:
 	pushStateMinusRax
 	call syscallDispatcher
 	popStateMinusRax
-	iretq
 
+	; signal pic EOI (End of Interrupt)
+	push rax
+	mov al, 20h
+	out 20h, al
+	pop rax
+
+	iretq
 
 ;Zero Division Exception
 _exception0Handler:
