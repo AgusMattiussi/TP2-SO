@@ -17,14 +17,21 @@ void ncPrint(const char * string)
 	int i;
 
 	for (i = 0; string[i] != 0; i++)
-		ncPrintCharWithColor(string[i], current_print_color);
+		if(string[i] == '\n')
+			ncNewline();
+		else
+			ncPrintCharWithColor(string[i], current_print_color);
 }
 
 void ncPrintWithColor(const char * string, uint8_t color_code){
 	int i;
 
-	for (i = 0; string[i] != 0; i++)
-		ncPrintCharWithColor(string[i], color_code);
+	for (i = 0; string[i] != 0; i++){
+		if(string[i] == '\n')
+			ncNewline();
+		else
+			ncPrintCharWithColor(string[i], color_code);
+	}
 }
 
 void ncPrintToPos(const char * string, int position){
@@ -39,16 +46,23 @@ void ncPrintToPos(const char * string, int position){
 
 void ncPrintChar(char character)
 {
+	if(character == '\n')
+		ncNewline();
+	else {
 	*currentVideo = character;
 	currentVideo += 2;
+	}
 }
 
-void ncPrintCharWithColor(char character, uint8_t color_code)
-{
-	*currentVideo = character;
-	currentVideo++;
-	*currentVideo = color_code;
-	currentVideo++;
+void ncPrintCharWithColor(char character, uint8_t color_code){
+	if(character == '\n')
+		ncNewline();
+	else {
+		*currentVideo = character;
+		currentVideo++;
+		*currentVideo = color_code;
+		currentVideo++;
+	}
 }
 
 void ncSetPrintColor(uint8_t color_code){

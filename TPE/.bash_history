@@ -53,3 +53,4 @@ make all
 exit
 a
 exit
+exit
