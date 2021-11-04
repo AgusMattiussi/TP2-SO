@@ -7,11 +7,13 @@ void startTerminal();
 
 void startCommands();
 
-void commandBuilder(char *name, char *desc, void (*fn)(), int index);
+void commandBuilder(char *name, char *desc, void (*fn)());
 
 void executeCommand(char *buffer);
 
 void help();
+
+void clearScreen();
 
 void inforeg();
 
