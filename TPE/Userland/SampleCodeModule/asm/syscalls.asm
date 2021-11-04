@@ -82,7 +82,7 @@ sys_putCharWC:
 	syscall 1
 sys_getTime:
 	syscall 2
-sys_getRegistersInfo:
-	syscall 4
 sys_clear:
 	syscall 3
+sys_getRegistersInfo:
+	syscall 4

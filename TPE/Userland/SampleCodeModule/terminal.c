@@ -65,6 +65,10 @@ void help(){
     }
 }
 
+void clearScreen(){
+    clear();
+}
+
 void printmem(int argSize, char *args[]){
 
 }
