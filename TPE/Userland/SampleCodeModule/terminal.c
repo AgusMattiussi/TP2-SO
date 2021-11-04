@@ -5,8 +5,6 @@
 #define COMMANDS_COUNT 7
 #define BUFFER_SIZE 50
 
-#define REGISTERS_COUNT 15
-
 #define MINUTES 2
 #define HOURS 4
 #define DAY 6
@@ -35,7 +33,7 @@ void startTerminal(){
 void startCommands(){
     commandBuilder("help", "Displays information about every command available.", &help);
     commandBuilder("clear", "Clears the screen.", &clearScreen);
-    commandBuilder("inforeg", "Displays the information of all the registers.", &inforeg);
+    commandBuilder("inforeg", "Displays the information of all the registers.", &sys_getRegistersInfo);
     commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument", &printmem);
     commandBuilder("time", "Displays the current time and date.", &printTime);
     commandBuilder("divZero", "Displays exception of division by zero.", &divZero);
@@ -70,16 +68,6 @@ void help(){
 
 void clearScreen(){
     clear();
-}
-
-void inforeg(){
-    char * regs[REGISTERS_COUNT] = { "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "RSP"};
-    for(int i=0; i<REGISTERS_COUNT; i++){
-        printWithColor(regs[i], YELLOW_BLACK);
-        print(": ");
-        
-        putChar('\n');
-    }
 }
 
 void printmem(int argSize, char *args[]){
