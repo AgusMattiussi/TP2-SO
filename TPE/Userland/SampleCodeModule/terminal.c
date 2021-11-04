@@ -5,6 +5,8 @@
 #define COMMANDS_COUNT 6
 #define BUFFER_SIZE 50
 
+#define REGISTERS_COUNT 15
+
 #define MINUTES 2
 #define HOURS 4
 #define DAY 6
@@ -62,7 +64,13 @@ void help(){
 }
 
 void inforeg(){
-
+    char * regs[REGISTERS_COUNT] = { "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "RSP"};
+    for(int i=0; i<REGISTERS_COUNT; i++){
+        printWithColor(regs[i], YELLOW_BLACK);
+        print(": ");
+        
+        putChar('\n');
+    }
 }
 
 void printmem(int argSize, char *args[]){
@@ -73,14 +81,20 @@ void printTime(){
     char str[3];
     int hours = sys_getTime(HOURS);
 
-    if(hours>3)
-        hours -=3;
-    if(hours==0)
-        hours=21;
-    if(hours==1)
-        hours=22;
-    if(hours==2)
-        hours=23;
+    switch(hours){
+        case 0:
+            hours = 21;
+        case 1:
+            hours = 22;
+        case 2:
+            hours = 23;
+        case 4:
+            hours = 22;
+        case 5:
+            hours = 23;
+        default:
+            hours -= 3;
+    }
 
     itoa(hours, str);
     print(str);
