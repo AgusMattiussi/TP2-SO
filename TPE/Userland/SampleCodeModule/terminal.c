@@ -8,7 +8,7 @@
 
 static char * commandsNames[COMMANDS_COUNT];
 static char * commandsDesc[COMMANDS_COUNT];
-static void (*commandsFn)(int argSize, char *args[])[COMMANDS_COUNT];
+static void (*commandsFn[COMMANDS_COUNT])();
 
 
 void startTerminal(){
@@ -22,12 +22,12 @@ void startTerminal(){
 }
 
 void startCommands(){
-    commandBuilder("help", "Displays information about every command available.\n", &help, 0);
-    commandBuilder("inforeg", "Displays the information of all the registers.\n", &inforeg, 1);
-    commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument.\n", &printmem, 2);
-    commandBuilder("time", "Displays the current time and date.\n", &printTime, 3);
-    commandBuilder("divZero", "Displays exception of division by zero.\n", &divZero, 4);
-    commandBuilder("invalidOpCode", "Displays exception of an invalid operation code.\n", &invalidOpCode, 5);
+    commandBuilder("help", "Displays information about every command available.", &help, 0);
+    commandBuilder("inforeg", "Displays the information of all the registers.", &inforeg, 1);
+    commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument.", &printmem, 2);
+    commandBuilder("time", "Displays the current time and date.", &printTime, 3);
+    commandBuilder("divZero", "Displays exception of division by zero.", &divZero, 4);
+    commandBuilder("invalidOpCode", "Displays exception of an invalid operation code.", &invalidOpCode, 5);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)(), int index){
@@ -42,7 +42,7 @@ void executeCommand(char *buffer){
             commandsFn[i]();
         }
     }
-    print("Invalid command.\n")
+    print("Invalid command.\n");
 }
 
 void help(){
@@ -50,7 +50,7 @@ void help(){
         print(commandsNames[i]);
         print(" - ");
         print(commandsDesc[i]);
-        putChar('\n')
+        putChar('\n');
     }
 }
 
