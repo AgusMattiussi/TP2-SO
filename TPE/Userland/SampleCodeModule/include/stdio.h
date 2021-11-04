@@ -4,6 +4,7 @@
 extern char sys_getChar();
 extern void sys_putCharWC(char c, unsigned char colorCode);
 extern int sys_getTime(int descriptor);
+extern void sys_getRegistersInfo();
 
 char getChar();
 void print(char * string);

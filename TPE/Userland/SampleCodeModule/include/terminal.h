@@ -13,7 +13,7 @@ void executeCommand(char *buffer);
 
 void help();
 
-void inforeg();
+//void inforeg();
 
 void printmem(int argSize, char *args[]);
 
