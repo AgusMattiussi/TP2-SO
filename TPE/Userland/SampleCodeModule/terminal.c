@@ -18,10 +18,10 @@ void startTerminal(){
         scan(buffer, BUFFER_SIZE);
         putChar('\n');
         executeCommand(buffer);
-        
     }
 }
 
+//TODO agregar Clear
 void startCommands(){
     commandBuilder("help", "Displays information about every command available.", &help, 0);
     commandBuilder("inforeg", "Displays the information of all the registers.", &inforeg, 1);
