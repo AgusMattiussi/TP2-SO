@@ -18,5 +18,6 @@ static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 void ncPrintToPos(const char * string, int position);
 int getCurrentPos();
 void ncScrollUp();
+void ncBackspace();
 
 #endif

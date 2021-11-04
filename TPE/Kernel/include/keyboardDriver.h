@@ -13,4 +13,6 @@ char * getBuffer();
 
 char kb_getChar();
 
+void removeFirstChar();
+
 #endif

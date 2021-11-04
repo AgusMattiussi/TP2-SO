@@ -12,6 +12,9 @@ static const uint32_t height = 25;
 #define LAST_LINE video + TOTAL_SCREEN_LENGTH - LINE_LENGTH
 #define DEFAULT_COLOR 0x0F
 
+// chars que ocupa el prompt
+#define PROMPT_SIZE 5
+
 void ncPrint(const char * string){
 	ncPrintWithColor(string, DEFAULT_COLOR);
 }
@@ -78,6 +81,18 @@ void ncScrollUp(){
 		else
 			video[i++] = DEFAULT_COLOR;
 	}
+}
+
+void ncBackspace(){
+	//Si estoy al principio de la linea (adelante del prompt)
+	uint64_t posInLine = (uint64_t)(currentVideo - video) % (uint64_t)(LINE_LENGTH);
+	if(posInLine <= PROMPT_SIZE + 1)
+		return;
+
+	currentVideo--;
+	*currentVideo = DEFAULT_COLOR;
+	currentVideo--;
+	*currentVideo = ' ';
 }
 
 void ncPrintDec(uint64_t value){

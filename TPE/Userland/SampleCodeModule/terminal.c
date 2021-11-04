@@ -50,6 +50,7 @@ void commandBuilder(char *name, char *desc, void (*fn)()){
 }
 
 void executeCommand(char *buffer){
+    print(buffer);
     for(int i=0; i< COMMANDS_COUNT; i++){
         if(strcmp(buffer, commandsNames[i]) == 0){
             return (*commandsFn[i])();

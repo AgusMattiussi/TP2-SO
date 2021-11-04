@@ -1,6 +1,7 @@
 #include <keyboardDriver.h>
 
 #define MAX_SIZE 20
+#define BACKSPACE 0x0E
 
 static char buffer[MAX_SIZE];
 static int bufferSize = 0;
@@ -9,7 +10,10 @@ int keyboardHandler(){
     char scancodeKey;
     while(keyboardActivated()){
         scancodeKey = getPressedKey();
-        if(scancodeToAscii(scancodeKey) != 0 && bufferSize <= MAX_SIZE){
+
+        if(scancodeKey == BACKSPACE)
+            ncBackspace();
+        else if(scancodeToAscii(scancodeKey) != 0 && bufferSize <= MAX_SIZE){
             buffer[bufferSize++] = scancodeToAscii(scancodeKey);
             //ncPrintChar(scancodeToAscii(scancodeKey));
             return 1;
@@ -73,13 +77,16 @@ char kb_getChar(){
         return 0;
     
     char key = buffer[0];
+    removeFirstChar();
+    return key;
+}
 
+void removeFirstChar(){
     if (bufferSize > 0){
         // removemos el primero.
         for (int i = 1; i < bufferSize; i++)
             buffer[i - 1] = buffer[i];
     }
-
     bufferSize--;
-    return key;
 }
+
