@@ -1,16 +1,16 @@
-#include "strings.h"
+#include <hangman.h>
 
-char *answer = "JUGOSO";
-char *guess = "______";
-char remainingLettersCount = 6;
+char *answer = "J U G O S O";
+char *guess = "_ _ _ _ _ _";
+char remainingLettersCount = WORD_LENGTH;
 
-char lives = 10;
+char lives = STARTING_LIVES;
 
 bool tryAddPlay(char letter) {
     letter = toUpperCase(letter);
     bool isCorrect = false;
 
-    for (int i = 0; answer[i] != '\0'; i++) {
+    for (int i = 0; i < WORD_LENGTH * 2; i += 2) {
         if (guess[i] == letter) return false;
         if (answer[i] == letter) {
             isCorrect = true;

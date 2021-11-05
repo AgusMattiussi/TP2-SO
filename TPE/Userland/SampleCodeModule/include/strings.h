@@ -6,5 +6,6 @@ unsigned int strlen(const char * str);
 int strtok(char * input, char delim, char * tokenArray[], int maxTokens);
 void itoa(int num, char *str);
 unsigned long hexaStringToInt(char *s);
+char convertCharToUpperCase(char c);
 
 #endif
