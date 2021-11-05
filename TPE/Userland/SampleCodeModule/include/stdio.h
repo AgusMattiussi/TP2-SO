@@ -18,8 +18,6 @@ void putCharWithColor(char c, unsigned char colorCode);
 int scan(char *buffer, int size);
 void printWithColor(char * string, unsigned char colorCode);
 void clear();
-void printVerticalLine(int fromRow, int toRow, int col, unsigned char colorCode);
-void printHorizontalLine(int fromCol, int toCol, int row, unsigned char colorCode);
 
 //#define BACKSPACE 0x0E
 #define BACKSPACE '\b'
@@ -36,5 +34,6 @@ void printHorizontalLine(int fromCol, int toCol, int row, unsigned char colorCod
 #define WHITE_BLACK 0x0F
 #define RED_RED 0x44
 #define MAGENTA_MAGENTA 0x55
+#define WHITE_WHITE 0xFF
     
 #endif

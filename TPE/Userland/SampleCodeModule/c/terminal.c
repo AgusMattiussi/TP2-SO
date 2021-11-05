@@ -7,8 +7,6 @@ static void (*commandsFn[COMMANDS_COUNT])(int argSize, char *args[]);
 static int commandIndex = 0;
 
 void startTerminal(){
-    printVerticalLine(5, 20, 40, RED_RED);
-    printHorizontalLine(5, 75, 18, MAGENTA_MAGENTA);
     startCommands();
     char buffer[BUFFER_SIZE];
     while(strcmp(buffer, "exit") != 0){
@@ -128,8 +126,8 @@ void printTime(){
 }
 
 void gamemode(){
-    //clear();
-    //drawGame();
+    clear();
+    drawGameMode();
     gamemodeManager();
     clear();     
 }

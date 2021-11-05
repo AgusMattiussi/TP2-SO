@@ -71,7 +71,6 @@ int main()
 	// {
 	// 	ncPrintToPos(getBuffer(), 0xB8000);
 	// }
-	
 	ncPrint("[Finished]");
 
 

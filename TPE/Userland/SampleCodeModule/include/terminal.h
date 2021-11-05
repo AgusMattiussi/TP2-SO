@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <strings.h>
 #include <gamemode.h>
+#include <drawings.h>
 
 #define COMMANDS_COUNT 8
 #define BUFFER_SIZE 50
