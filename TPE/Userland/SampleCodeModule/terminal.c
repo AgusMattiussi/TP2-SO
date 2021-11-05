@@ -25,8 +25,8 @@ void startCommands(){
     commandBuilder("inforeg", "Displays the information of all the registers.", &getRegisters);
     commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument", &printmem);
     commandBuilder("time", "Displays the current time and date.", &printTime);
-    commandBuilder("divZero", "Displays exception of division by zero.", &divZero);
-    commandBuilder("invalidOpCode", "Displays exception of an invalid operation code.", &invalidOpCode);
+    commandBuilder("divzero", "Displays exception of division by zero.", &divZero);
+    commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode);
     commandBuilder("gamemode", "Changes the system to game mode + chronometer", &gamemode);
 }
 
@@ -135,10 +135,10 @@ void gamemode(){
 }
 
 void divZero(){
-
+    int x = 1/0;
 }
 
 void invalidOpCode(){
-
+    __asm__("ud2");
 }
 

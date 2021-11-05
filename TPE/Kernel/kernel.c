@@ -4,6 +4,7 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <keyboardDriver.h>
+#include <exceptions.h>
 
 
 extern uint8_t text;
@@ -60,6 +61,8 @@ int main()
 	// while(1){
 	// 	ncPrintToPos(getBuffer(), 0xB8000);
 	// }
+
+	saveInitialState((uint64_t)sampleCodeModuleAddress, getSP());
 
 	((EntryPoint)sampleCodeModuleAddress)();
 	ncNewline();
