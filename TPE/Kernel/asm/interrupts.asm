@@ -16,6 +16,8 @@ GLOBAL _irq05Handler
 GLOBAL _syscallHandler
 
 GLOBAL _exception0Handler
+GLOBAL _exception6Handler
+
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -112,7 +114,8 @@ SECTION .text
 %macro exceptionHandler 1
 	pushState
 
-	mov rdi, %1 ; pasaje de parametro
+	mov rdi, %1 	; descriptor de la excepcion
+	mov rsi, rsp	; registros
 	call exceptionDispatcher
 
 	popState
@@ -193,12 +196,14 @@ _syscallHandler:
 _exception0Handler:
 	exceptionHandler 0
 
+;Invalid Code Exception
+_exception6Handler:
+	exceptionHandler 6
+
 haltcpu:
 	cli
 	hlt
 	ret
-
-
 
 SECTION .bss
 	aux resq 1

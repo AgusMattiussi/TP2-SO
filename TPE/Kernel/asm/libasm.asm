@@ -1,5 +1,6 @@
 GLOBAL cpuVendor
 GLOBAL getRegistersInfo
+GLOBAL getSP
 EXTERN inforeg
 
 section .text
@@ -52,7 +53,10 @@ getRegistersInfo:
 	mov rdi, buffer
 	call inforeg
 
+	ret
 
+getSP:
+	mov rax, rsp
 	ret
 
 
