@@ -2,6 +2,7 @@
 #define _GAMEMODE_H_
 
 #include <stdio.h> 
+#include <strings.h> 
 
 void gamemodeManager();
 
@@ -13,5 +14,9 @@ void gamemodeManager();
 #define IS_LOWER(c) ((c) >= 'a' && (c) <= 'z')
 #define IS_ALPHA(c) (IS_UPPER(c) || IS_LOWER(c))
 #define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
+
+#define SECONDS 0
+#define MINUTES 2
+#define HOURS 4
 
 #endif
