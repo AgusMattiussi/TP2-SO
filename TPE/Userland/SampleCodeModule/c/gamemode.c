@@ -1,7 +1,7 @@
 #include <gamemode.h>
 
 static void updateTime();
-static void updateChronometer(char c);
+static void updateChronometer(unsigned char c);
 static void updateGamesAndChrono(char c);
 static void updateSudoku(int x);
 static void updateHangman(char c);
@@ -14,13 +14,17 @@ static unsigned long startDeciseconds = 0;
 
 
 void gamemodeManager(){
-    char c;
+    unsigned char c;
+    unsigned char buff[2];
     while((c = getCharOrNull()) != ESCAPE_KEY){
         updateTime();
+        itoa(isChronoRunning, buff);
+        //printInPos( buff, 11, 11, CYAN_BLACK);
+
         updateChronometer(c);
         
-        if(IS_ALPHA(c) || IS_DIGIT(c))
-            updateGames(c);
+        // if(IS_ALPHA(c) || IS_DIGIT(c))
+        //     updateGames(c);
     }
     clear();    
 }
@@ -66,12 +70,15 @@ static void printInTimeSector(int hours, int minutes, int seconds){
     printInPos(buffer, TIME_ROW, TIME_SECONDS_COL, ORANGE_BLACK);
 }
 
-static void updateChronometer(char c){
+static void updateChronometer(unsigned char c){
     if(startDeciseconds == 0)
-        printInPos("00:00:00.0", 5, 11, CYAN_BLACK); // hh:mm:ss,d
-    
-    unsigned long currentDeciseconds = getDeciseconds();
+        printInChronoSector(0, 0, 0, 0);
+    char buff[] = {c, 0};
+    printInPos(buff, 15, 11, CYAN_BLACK);
+    //unsigned long currentDeciseconds = getDeciseconds();
+    unsigned long currentDeciseconds = 0;
 
+    
     if(isChronoRunning){
         unsigned long decisecondsDiff = currentDeciseconds - startDeciseconds;
         int deciseconds = decisecondsDiff % 10;
@@ -81,12 +88,15 @@ static void updateChronometer(char c){
         printInChronoSector(hours, minutes, seconds, deciseconds);
     }
     
-    if(c == CONTROL_KEY)
+    if(c == 'f'){
         isChronoRunning = !isChronoRunning;
+        printInPos("penis", 15, 11, CYAN_BLACK);
+    }
     if(c == ALT_KEY){
         isChronoRunning = 0;
         startDeciseconds = 0;
-    }
+    }else
+        startDeciseconds = currentDeciseconds;
 
 }
 

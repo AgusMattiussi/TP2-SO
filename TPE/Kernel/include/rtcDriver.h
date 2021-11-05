@@ -1,6 +1,7 @@
 #ifndef __RTCDriver_H_
 #define __RTCDriver_H_
 #include <stdint.h>
+#include <time.h>
 
 extern uint8_t getRTC(uint64_t descriptor);
 

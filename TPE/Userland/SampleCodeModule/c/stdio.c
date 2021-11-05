@@ -1,12 +1,12 @@
 #include <stdio.h>
 
-char getChar(){
+unsigned char getChar(){
     char c;
     while((c = sys_getChar()) == 0);
     return c;
 }
 
-char getCharOrNull(){
+unsigned char getCharOrNull(){
     return sys_getChar();
 }
 
