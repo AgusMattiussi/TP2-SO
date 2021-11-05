@@ -16,6 +16,9 @@ void gamemodeManager();
 #define TIME_HOURS_COL 11
 #define TIME_MINUTES_COL 14
 #define TIME_SECONDS_COL 17
+#define CHRONO_ROW 5
+#define CHRONO_DECISECONDS_COL 20
+
 
 #define IS_UPPER(c) ((c) >= 'A' && (c) <= 'Z') 
 #define IS_LOWER(c) ((c) >= 'a' && (c) <= 'z')

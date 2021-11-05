@@ -7,8 +7,10 @@ static void updateSudoku(int x);
 static void updateHangman(char c);
 static void updateGames(char c);
 static void printInTimeSector(int hours, int minutes, int seconds);
+static void printInChronoSector(int hours, int minutes, int seconds, int milis);
 
 static int isChronoRunning = 0;
+
 
 void gamemodeManager(){
     char c;
@@ -73,6 +75,28 @@ static void updateChronometer(char c){
         //printInChronoSpace(" -- -- -- -");
     }
 
+}
+
+static void printInChronoSector(int hours, int minutes, int seconds, int decisecs){
+    char buffer[3];
+
+    itoa(hours, buffer);
+    printInPos(buffer, CHRONO_ROW, TIME_HOURS_COL, WHITE_BLACK);
+
+    printInPos(":", CHRONO_ROW, TIME_HOURS_COL + 2, WHITE_BLACK);
+
+    itoa(minutes, buffer);
+    printInPos(buffer, CHRONO_ROW, TIME_MINUTES_COL, WHITE_BLACK);
+
+    printInPos(":", CHRONO_ROW, TIME_MINUTES_COL + 2, WHITE_BLACK);
+
+    itoa(seconds, buffer);
+    printInPos(buffer, CHRONO_ROW, TIME_SECONDS_COL, WHITE_BLACK);
+
+    printInPos(".", CHRONO_ROW, TIME_SECONDS_COL + 2, WHITE_BLACK);
+
+    char decisecsBuffer[2] = {(char)decisecs + '0', 0};
+    printInPos(decisecsBuffer, CHRONO_ROW, CHRONO_DECISECONDS_COL, WHITE_BLACK);
 }
 
 static void updateGames(char c){
