@@ -29,8 +29,6 @@ cpuVendor:
 	ret
 
 getRegistersInfo:
-	push rbp
-	mov rbp, rsp
 
 	mov [buffer], rax
 	mov [buffer + 1*8], rbx
@@ -54,8 +52,7 @@ getRegistersInfo:
 	mov rdi, buffer
 	call inforeg
 
-	mov rsp, rbp
-	pop rbp
+
 	ret
 
 

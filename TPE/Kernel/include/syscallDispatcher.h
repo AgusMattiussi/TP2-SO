@@ -4,7 +4,9 @@
 #include <stdint.h>
 #include <keyboardDriver.h>
 #include <rtcDriver.h>
+#include <memory.h>
 #include <naiveConsole.h> //SACAR ESTO
+
 
 extern void getRegistersInfo();
 

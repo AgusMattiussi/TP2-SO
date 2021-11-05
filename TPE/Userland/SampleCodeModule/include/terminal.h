@@ -2,6 +2,17 @@
 #define _TERMINAL_H_
 
 #include <stdio.h>
+#include <strings.h>
+
+#define COMMANDS_COUNT 7
+#define BUFFER_SIZE 50
+
+#define MINUTES 2
+#define HOURS 4
+#define DAY 6
+#define MONTH 8
+#define YEAR 9
+#define LOCAL_TIME_CORRECTION 1
 
 void startTerminal();
 

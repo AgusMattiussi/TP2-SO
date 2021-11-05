@@ -3,6 +3,7 @@ GLOBAL sys_putCharWC
 GLOBAL sys_getTime
 GLOBAL sys_getRegistersInfo
 GLOBAL sys_clear
+GLOBAL sys_PrintMem
 
 SECTION .text
 
@@ -86,3 +87,5 @@ sys_clear:
 	syscall 3
 sys_getRegistersInfo:
 	syscall 4
+sys_PrintMem:
+	syscall 5

@@ -1,20 +1,8 @@
 #include <terminal.h>
-#include <stdio.h>
-#include <strings.h>
-
-#define COMMANDS_COUNT 7
-#define BUFFER_SIZE 50
-
-#define MINUTES 2
-#define HOURS 4
-#define DAY 6
-#define MONTH 8
-#define YEAR 9
-#define LOCAL_TIME_CORRECTION 1
 
 static char * commandsNames[COMMANDS_COUNT];
 static char * commandsDesc[COMMANDS_COUNT];
-static void (*commandsFn[COMMANDS_COUNT])();
+static void (*commandsFn[COMMANDS_COUNT])(int argSize, char *args[]);
 
 static int commandIndex = 0;
 
@@ -29,7 +17,6 @@ void startTerminal(){
     }
 }
 
-//TODO agregar Clear
 void startCommands(){
     commandBuilder("help", "Displays information about every command available.", &help);
     commandBuilder("clear", "Clears the screen.", &clearScreen);
@@ -48,9 +35,18 @@ void commandBuilder(char *name, char *desc, void (*fn)()){
 }
 
 void executeCommand(char *buffer){
+    char *arguments[3];
+    int argumentsCount = strtok(buffer, ' ', arguments, 3);
+
+    if(argumentsCount <= 0 || argumentsCount > 2){
+        print("Invalid amount of arguments.\n");
+        return;
+    }
+
     for(int i=0; i< COMMANDS_COUNT; i++){
         if(strcmp(buffer, commandsNames[i]) == 0){
-            return (*commandsFn[i])();
+            (*commandsFn[i])(argumentsCount - 1, arguments + 1);
+            return;
         }
     }
     print("Invalid command.\n");
@@ -74,7 +70,12 @@ void getRegisters(){
 }
 
 void printmem(int argSize, char *args[]){
-
+    if(argSize != 1){
+        print("Invalid amount of arguments.\n");
+        return;
+    }
+    unsigned long address = hexaStringToInt(args[0]);
+    sys_PrintMem(address);
 }
 
 void printTime(){

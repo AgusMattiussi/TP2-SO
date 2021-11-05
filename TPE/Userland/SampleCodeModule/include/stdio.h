@@ -6,6 +6,7 @@ extern void sys_putCharWC(char c, unsigned char colorCode);
 extern int sys_getTime(int descriptor);
 extern void sys_getRegistersInfo();
 extern void sys_clear();
+extern void sys_PrintMem(char * address);
 
 char getChar();
 void print(char * string);

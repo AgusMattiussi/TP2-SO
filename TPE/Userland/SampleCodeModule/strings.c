@@ -22,23 +22,6 @@ unsigned int strlen(const char * str){
     return count;
 }
 
-// int strtok(char * input, char delim, char * tokenArray[], int maxTokenCount){
-
-//     int tokCount = 0;
-//     int currentChar = 0;
-//     while(*input != 0 && tokCount < maxTokenCount && currentChar < 20){
-//         if(*input != delim){
-//             tokenArray[currentChar++][tokCount] = *input;
-//         } else { 
-//             tokenArray[tokCount][currentChar] = 0;
-//             tokCount++;
-//             currentChar = 0;
-//         }
-//     }
-//     tokenArray[tokCount][currentChar] = 0;
-//     return tokCount;
-// }
-
 int strtok(char * input, char delim, char * tokenArray[], int maxTokens){
 	int tokCount = 0;
 	if (*input != delim && *input != 0)
@@ -59,51 +42,6 @@ int strtok(char * input, char delim, char * tokenArray[], int maxTokens){
 	return tokCount;
 }
 
-
-// char* strtok(char* s, char d)
-// {
-//     // Stores the state of string
-//     static char* input = NULL;
-  
-//     // Initialize the input string
-//     if (s != NULL)
-//         input = s;
-  
-//     // Case for final token
-//     if (input == NULL)
-//         return NULL;
-  
-//     // Stores the extracted string
-//     char* result = new char[strlen(input) + 1];
-//     int i = 0;
-  
-//     // Start extracting string and
-//     // store it in array
-//     for (; input[i] != '\0'; i++) {
-  
-//         // If delimeter is not reached
-//         // then add the current character
-//         // to result[i]
-//         if (input[i] != d)
-//             result[i] = input[i];
-  
-//         // Else store the string formed
-//         else {
-//             result[i] = '\0';
-//             input = input + i + 1;
-//             return result;
-//         }
-//     }
-  
-//     // Case when loop ends
-//     result[i] = '\0';
-//     input = NULL;
-  
-//     // Return the resultant pointer
-//     // to the string
-//     return result;
-// }
-
 void itoa(int num, char *str){
     int digits = 1;
     for(int n = num / 10 ; n != 0 ; digits++, n/=10);
@@ -121,4 +59,35 @@ void itoa(int num, char *str){
         num /= 10;
     }
     return;
+}
+
+static int pow(int base, unsigned int exp){
+	int rta = 1;
+	for (int i = 0; i < exp; i++)
+		rta *= base;
+	return rta;
+}
+
+unsigned long hexaStringToInt(char *s){
+    int c;
+	unsigned long rta = 0;
+
+	if (s[0] == '0' && s[1] == 'x')
+		s += 2;
+
+	int len = strlen(s);
+
+	for (int i = 0; i < len; i++){
+
+		c = s[len-1-i] - '0';
+
+		if (c < 0 || c > 9){
+			c = s[len - 1 - i] - 'A' + 10;
+			if (c < 10 || c > 15)
+				return 0;
+		}
+
+		rta += c * pow(16, i);
+	}
+	return rta;
 }
