@@ -15,6 +15,9 @@ int scan(char *buffer, int size);
 void printWithColor(char * string, unsigned char colorCode);
 void clear();
 
+//#define BACKSPACE 0x0E
+#define BACKSPACE '\b'
+
 // COLORES: El formato es COLORLETRA_COLORFONDO
 #define BLUE_BLACK 0x01
 #define GREEN_BLACK 0x02

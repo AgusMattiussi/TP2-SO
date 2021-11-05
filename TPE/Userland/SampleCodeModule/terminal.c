@@ -33,7 +33,7 @@ void startTerminal(){
 void startCommands(){
     commandBuilder("help", "Displays information about every command available.", &help);
     commandBuilder("clear", "Clears the screen.", &clearScreen);
-    commandBuilder("inforeg", "Displays the information of all the registers.", &sys_getRegistersInfo);
+    commandBuilder("inforeg", "Displays the information of all the registers.", &getRegisters);
     commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument", &printmem);
     commandBuilder("time", "Displays the current time and date.", &printTime);
     commandBuilder("divZero", "Displays exception of division by zero.", &divZero);
@@ -48,7 +48,6 @@ void commandBuilder(char *name, char *desc, void (*fn)()){
 }
 
 void executeCommand(char *buffer){
-    print(buffer);
     for(int i=0; i< COMMANDS_COUNT; i++){
         if(strcmp(buffer, commandsNames[i]) == 0){
             return (*commandsFn[i])();
@@ -68,6 +67,10 @@ void help(){
 
 void clearScreen(){
     clear();
+}
+
+void getRegisters(){
+    sys_getRegistersInfo();
 }
 
 void printmem(int argSize, char *args[]){

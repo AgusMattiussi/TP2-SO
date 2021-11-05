@@ -15,6 +15,8 @@ void help();
 
 void clearScreen();
 
+void getRegisters();
+
 void printmem(int argSize, char *args[]);
 
 void printTime();

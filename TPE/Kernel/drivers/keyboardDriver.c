@@ -13,7 +13,8 @@ int keyboardHandler(){
 
         if(scancodeKey == BACKSPACE)
             ncBackspace();
-        else if(scancodeToAscii(scancodeKey) != 0 && bufferSize <= MAX_SIZE){
+
+        if(scancodeToAscii(scancodeKey) != 0 && bufferSize <= MAX_SIZE){
             buffer[bufferSize++] = scancodeToAscii(scancodeKey);
             //ncPrintChar(scancodeToAscii(scancodeKey));
             return 1;

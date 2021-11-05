@@ -34,8 +34,13 @@ int scan(char *buffer, int size){
     char c;
     int lenght=0;
     while((c = getChar()) != '\n' && lenght < size){
-        putChar(c);
-        buffer[lenght++] = c;
+        if(c == BACKSPACE){
+            if(lenght > 0)
+                buffer[lenght--] = 0;
+        } else {
+            putChar(c);
+            buffer[lenght++] = c;
+        }
     }
     buffer[lenght] = 0;
     return lenght;
