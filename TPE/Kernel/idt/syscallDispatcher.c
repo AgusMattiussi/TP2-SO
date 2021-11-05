@@ -21,6 +21,8 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 		case 6:
 			ncPrintInPos((char *)rsi, (int)rdx, (int)rcx, (unsigned char)r8);
 			return 6;
+		case 7:
+			return 7;
 	}
 
     // Por default devuelve 0

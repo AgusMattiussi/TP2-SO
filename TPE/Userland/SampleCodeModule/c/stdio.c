@@ -62,3 +62,6 @@ int getTime(int descriptor){
     return sys_getTime(descriptor);
 }
 
+unsigned long getDeciseconds(){
+    return sys_getDeciseconds();
+}

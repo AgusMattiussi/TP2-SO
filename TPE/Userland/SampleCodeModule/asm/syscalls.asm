@@ -5,6 +5,8 @@ GLOBAL sys_getRegistersInfo
 GLOBAL sys_clear
 GLOBAL sys_PrintMem
 GLOBAL sys_printInPos
+GLOBAL sys_raiseInvOpCodeExc
+GLOBAL sys_getDeciseconds
 
 SECTION .text
 
@@ -92,3 +94,9 @@ sys_PrintMem:
 	syscall 5
 sys_printInPos:
 	syscall 6
+sys_getDeciseconds:
+	syscall 7
+	
+sys_raiseInvOpCodeExc:
+	ud2
+

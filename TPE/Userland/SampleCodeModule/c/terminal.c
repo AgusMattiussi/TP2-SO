@@ -137,6 +137,7 @@ void divZero(){
 }
 
 void invalidOpCode(){
-    __asm__("ud2");
+    sys_raiseInvOpCodeExc();
+    //__asm__("ud2");
 }
 

@@ -8,6 +8,8 @@ extern void sys_getRegistersInfo();
 extern void sys_clear();
 extern void sys_PrintMem(char * address);
 extern void sys_printInPos(char * string, int row, int col, unsigned char colorCode);
+extern unsigned long sys_getDeciseconds();
+extern void sys_raiseInvOpCodeExc();
 
 char getChar();
 char getCharOrNull();
@@ -18,6 +20,7 @@ int scan(char *buffer, int size);
 void printWithColor(char * string, unsigned char colorCode);
 void clear();
 int getTime(int descriptor);
+unsigned long getDeciseconds();
 
 //#define BACKSPACE 0x0E
 #define BACKSPACE '\b'
