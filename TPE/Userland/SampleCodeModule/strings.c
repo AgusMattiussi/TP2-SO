@@ -91,3 +91,7 @@ unsigned long hexaStringToInt(char *s){
 	}
 	return rta;
 }
+
+char convertCharToUpperCase(char c) {
+    return (c >= 'a' && c <= 'z') ? c + 'A' - 'a' : c;
+}
