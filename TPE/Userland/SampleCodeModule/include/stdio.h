@@ -9,6 +9,7 @@ extern void sys_clear();
 extern void sys_PrintMem(char * address);
 extern void sys_printInPos(char * string, int row, int col, unsigned char colorCode);
 
+
 char getChar();
 char getCharOrNull();
 void print(char * string);
@@ -17,6 +18,8 @@ void putCharWithColor(char c, unsigned char colorCode);
 int scan(char *buffer, int size);
 void printWithColor(char * string, unsigned char colorCode);
 void clear();
+void printVerticalLine(int fromRow, int toRow, int col, unsigned char colorCode);
+void printHorizontalLine(int fromCol, int toCol, int row, unsigned char colorCode);
 
 //#define BACKSPACE 0x0E
 #define BACKSPACE '\b'
@@ -31,5 +34,7 @@ void clear();
 #define GREY_BLACK 0x07
 #define YELLOW_BLACK 0x0E
 #define WHITE_BLACK 0x0F
+#define RED_RED 0x44
+#define MAGENTA_MAGENTA 0x55
     
 #endif
