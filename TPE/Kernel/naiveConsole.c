@@ -124,8 +124,11 @@ void ncPrintBase(uint64_t value, uint32_t base){
 void ncClear(){
 	int i;
 
-	for (i = 0; i < height * width; i++)
-		video[i * 2] = ' ';
+	for (i = 0; i < height * width; i++){
+		video[2*i] = ' ';
+		video[2*i+1] = DEFAULT_COLOR;
+	}
+
 	currentVideo = video;
 }
 

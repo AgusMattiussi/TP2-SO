@@ -58,4 +58,7 @@ void clear(){
     sys_clear();
 }
 
+int getTime(int descriptor){
+    return sys_getTime(descriptor);
+}
 

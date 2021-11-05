@@ -9,7 +9,6 @@ extern void sys_clear();
 extern void sys_PrintMem(char * address);
 extern void sys_printInPos(char * string, int row, int col, unsigned char colorCode);
 
-
 char getChar();
 char getCharOrNull();
 void print(char * string);
@@ -18,6 +17,7 @@ void putCharWithColor(char c, unsigned char colorCode);
 int scan(char *buffer, int size);
 void printWithColor(char * string, unsigned char colorCode);
 void clear();
+int getTime(int descriptor);
 
 //#define BACKSPACE 0x0E
 #define BACKSPACE '\b'

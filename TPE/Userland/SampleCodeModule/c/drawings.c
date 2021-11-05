@@ -22,6 +22,6 @@ void drawHorizontalLine(int fromCol, int toCol, int row, unsigned char colorCode
 
 void drawGameMode(){
     drawVerticalLine(0, 24, 30, RED_RED);
-    drawHorizontalLine(0, 30, 5, RED_RED);
+    drawHorizontalLine(0, 30, 3, RED_RED);
     drawHorizontalLine(0, 30, 10, RED_RED);
 }

@@ -6,6 +6,7 @@ static void updateGamesAndChrono(char c);
 static void updateSudoku(int x);
 static void updateHangman(char c);
 static void updateGames(char c);
+static void printInTimeSector(int hours, int minutes, int seconds);
 
 static int isChronoRunning = 0;
 
@@ -17,12 +18,12 @@ void gamemodeManager(){
         
         if(IS_ALPHA(c) || IS_DIGIT(c))
             updateGames(c);
-    }    
+    }
+    clear();    
 }
 
 static void updateTime(){
-    char str[3];
-    int hours = sys_getTime(HOURS);
+    int hours = getTime(HOURS);
 
     switch(hours){
         case 0:
@@ -39,20 +40,27 @@ static void updateTime(){
             hours -= 3;
     }
 
-    itoa(hours, str);
-    printInPos(str, 3, 3, ORANGE_BLACK);
+    int minutes = getTime(MINUTES);
+    int seconds = getTime(SECONDS);
 
-    printInPos(":", 3, 5, ORANGE_BLACK);
+    printInTimeSector(hours, minutes, seconds);
+}
 
-    itoa(sys_getTime(MINUTES), str);
-    printInPos(str, 3, 6, ORANGE_BLACK);
+static void printInTimeSector(int hours, int minutes, int seconds){
+    char buffer[3];
 
-    printInPos(":", 3, 8, ORANGE_BLACK);
+    itoa(hours, buffer);
+    printInPos(buffer, TIME_ROW, TIME_HOURS_COL, ORANGE_BLACK);
 
+    printInPos(":", TIME_ROW, TIME_HOURS_COL + 2, ORANGE_BLACK);
 
-    itoa(sys_getTime(SECONDS), str);
-    printInPos(str, 3, 9, ORANGE_BLACK);
+    itoa(minutes, buffer);
+    printInPos(buffer, TIME_ROW, TIME_MINUTES_COL, ORANGE_BLACK);
 
+    printInPos(":", TIME_ROW, TIME_MINUTES_COL + 2, ORANGE_BLACK);
+
+    itoa(seconds, buffer);
+    printInPos(buffer, TIME_ROW, TIME_SECONDS_COL, ORANGE_BLACK);
 }
 
 static void updateChronometer(char c){
@@ -62,7 +70,7 @@ static void updateChronometer(char c){
         isChronoRunning = !isChronoRunning;
     if(c == ALT_KEY){
         isChronoRunning = 0;
-        //printInChronoSpace("         ");
+        //printInChronoSpace(" -- -- -- -");
     }
 
 }
