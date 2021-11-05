@@ -3,6 +3,6 @@
 
 #define TABLE_SIZE 3
 
-bool tryAddPlay(char number, int rowIndex, int columnIndex);
+int tryAddPlay(char number, int rowIndex, int columnIndex);
 
 #endif

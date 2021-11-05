@@ -6,7 +6,7 @@
 
 #include <strings.h>
 
-bool tryAddPlay(char letter);
+int tryAddPlay(char letter);
 char getRemainingLives();
 
 #endif

@@ -6,14 +6,14 @@ char remainingLettersCount = WORD_LENGTH;
 
 char lives = STARTING_LIVES;
 
-bool tryAddPlay(char letter) {
+int tryAddPlay(char letter) {
     letter = convertCharToUpperCase(letter);
-    bool isCorrect = false;
+    int isCorrect = 0;
 
     for (int i = 0; i < WORD_LENGTH * 2; i += 2) {
-        if (guess[i] == letter) return false;
+        if (guess[i] == letter) return 0;
         if (answer[i] == letter) {
-            isCorrect = true;
+            isCorrect = 1;
             guess[i] = letter;
             remainingLettersCount--;
         }

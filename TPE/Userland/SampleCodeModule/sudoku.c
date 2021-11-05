@@ -7,20 +7,20 @@ char ****table = [[[[0, 0, 0], [6, 8, 0], [1, 9, 0]], [[2, 6, 0], [0, 7, 0], [0,
     [[0, 7, 4], [0, 3, 6], [0, 0, 0]]]];
 char remainingCount = 45;
 
-bool tryAddPlay(char number, int rowIndex, int columnIndex) {
+int tryAddPlay(char number, int rowIndex, int columnIndex) {
     int bigRowIndex = rowIndex / TABLE_SIZE;
     int bigColumnIndex = columnIndex / TABLE_SIZE;
     int smallRowIndex = rowIndex % TABLE_SIZE;
     int smallColumnIndex = columnIndex % TABLE_SIZE;
 
-    if (table[bigRowIndex][bigColumnIndex][smallRowIndex][smallColumnIndex] != 0) return false;
+    if (table[bigRowIndex][bigColumnIndex][smallRowIndex][smallColumnIndex] != 0) return 0;
 
     for (int i = 0; i < TABLE_SIZE; i++) {
         for (int j = 0; j < TABLE_SIZE; j++) {
             if (table[bigRowIndex][bigColumnIndex][i][j] == number ||
             table[bigRowIndex][i][smallRowIndex][j] == number ||
             table[i][bigColumnIndex][j][smallColumnIndex] == number) {
-                return false;
+                return 0;
             }
         }
     }
