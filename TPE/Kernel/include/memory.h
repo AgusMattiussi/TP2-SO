@@ -8,4 +8,6 @@
 
 void inforeg(uint64_t * regInfo);
 
+void printMemory(uint64_t argument);
+
 #endif
