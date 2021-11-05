@@ -6,6 +6,10 @@ char getChar(){
     return c;
 }
 
+char getCharOrNull(){
+    return sys_getChar();
+}
+
 void putCharWithColor(char c, unsigned char colorCode){
     if(c != 0)
         sys_putCharWC(c, colorCode);

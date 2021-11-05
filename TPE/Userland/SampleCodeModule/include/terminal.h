@@ -3,8 +3,9 @@
 
 #include <stdio.h>
 #include <strings.h>
+#include <gamemode.h>
 
-#define COMMANDS_COUNT 7
+#define COMMANDS_COUNT 8
 #define BUFFER_SIZE 50
 
 #define MINUTES 2
@@ -35,5 +36,7 @@ void printTime();
 void divZero();
 
 void invalidOpCode();
+
+void gamemode();
 
 #endif

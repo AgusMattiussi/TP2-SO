@@ -9,6 +9,7 @@ extern void sys_clear();
 extern void sys_PrintMem(char * address);
 
 char getChar();
+char getCharOrNull();
 void print(char * string);
 void putChar(char c);
 void putCharWithColor(char c, unsigned char colorCode);

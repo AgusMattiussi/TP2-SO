@@ -25,6 +25,7 @@ void startCommands(){
     commandBuilder("time", "Displays the current time and date.", &printTime);
     commandBuilder("divZero", "Displays exception of division by zero.", &divZero);
     commandBuilder("invalidOpCode", "Displays exception of an invalid operation code.", &invalidOpCode);
+    commandBuilder("gamemode", "Changes the system to game mode + chronometer", &gamemode);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)()){
@@ -122,6 +123,13 @@ void printTime(){
     print(str);
 
     putChar('\n');
+}
+
+void gamemode(){
+    //clear();
+    //drawGame();
+    gamemodeManager();
+    clear();     
 }
 
 void divZero(){
