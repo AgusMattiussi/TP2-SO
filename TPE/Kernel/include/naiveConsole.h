@@ -15,7 +15,7 @@ void ncPrintWithColor(const char * string, uint8_t color_code);
 void ncPrintCharWithColor(char character, uint8_t color_code);
 void ncChangeBackgroundColor(uint8_t color_code);
 uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
-void ncPrintToPos(const char * string, int position);
+void ncPrintInPos(const char * string, int row, int col, uint8_t colorCode);
 int getCurrentPos();
 void ncScrollUp();
 void ncBackspace();

@@ -4,6 +4,7 @@ GLOBAL sys_getTime
 GLOBAL sys_getRegistersInfo
 GLOBAL sys_clear
 GLOBAL sys_PrintMem
+GLOBAL sys_printInPos
 
 SECTION .text
 
@@ -89,3 +90,5 @@ sys_getRegistersInfo:
 	syscall 4
 sys_PrintMem:
 	syscall 5
+sys_printInPos:
+	syscall 6

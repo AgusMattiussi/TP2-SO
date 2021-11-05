@@ -6,6 +6,10 @@ char getChar(){
     return c;
 }
 
+char getCharOrNull(){
+    return sys_getChar();
+}
+
 void putCharWithColor(char c, unsigned char colorCode){
     if(c != 0)
         sys_putCharWC(c, colorCode);
@@ -30,6 +34,10 @@ void printWithColor(char * string, unsigned char colorCode){
     }    
 }
 
+void printInPos(char * string, int row, int col, unsigned char colorCode){
+    sys_printInPos(string, row, col, colorCode);
+}
+
 int scan(char *buffer, int size){
     char c;
     int lenght=0;
@@ -49,3 +57,8 @@ int scan(char *buffer, int size){
 void clear(){
     sys_clear();
 }
+
+int getTime(int descriptor){
+    return sys_getTime(descriptor);
+}
+

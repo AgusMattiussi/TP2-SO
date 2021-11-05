@@ -7,7 +7,7 @@ extern unsigned char getPressedKey();
 
 int keyboardHandler();
 
-char scancodeToAscii(int scancode);
+unsigned char scancodeToAscii(int scancode);
 
 char * getBuffer();
 

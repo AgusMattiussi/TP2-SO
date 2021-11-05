@@ -13,3 +13,8 @@ int ticks_elapsed() {
 int seconds_elapsed() {
 	return ticks / 18;
 }
+
+// Inchequeable
+int deciseconds_elapsed() {
+	return (int)(ticks / 1.8);
+}
