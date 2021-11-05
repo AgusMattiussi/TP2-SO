@@ -19,30 +19,17 @@ void gamemodeManager(){
         updateTime();
         updateChronometer(c);
         
-        if(IS_ALPHA(c) || IS_DIGIT(c))
-            updateGames(c);
+        if (IS_DIGIT(c)) {
+            updateSudoku(c);
+        } else if (IS_ALPHA(c)) {
+            updateHangman(c);
+        }
     }
     clear();    
 }
 
 static void updateTime(){
-    int hours = getTime(HOURS);
-
-    switch(hours){
-        case 0:
-            hours = 21;
-        case 1:
-            hours = 22;
-        case 2:
-            hours = 23;
-        case 4:
-            hours = 22;
-        case 5:
-            hours = 23;
-        default:
-            hours -= 3;
-    }
-
+    int hours = (getTime(HOURS) - 3) % 24;
     int minutes = getTime(MINUTES);
     int seconds = getTime(SECONDS);
 
@@ -112,17 +99,10 @@ static void printInChronoSector(int hours, int minutes, int seconds, int decisec
     printInPos(decisecsBuffer, CHRONO_ROW, CHRONO_DECISECONDS_COL, WHITE_BLACK);
 }
 
-static void updateGames(char c){
-    if(IS_ALPHA(c))
-        updateSudoku(c - '0');
-    else
-        updateHangman(c);
+static void updateSudoku(char digit) {
+    
 }
 
-static void updateSudoku(int x){
-
-}
-
-static void updateHangman(char c){
-
+static void updateHangman(char c) {
+    c = convertCharToUpperCase(c);
 }

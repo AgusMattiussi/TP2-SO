@@ -4,8 +4,6 @@
 #define WORD_LENGTH 6
 #define STARTING_LIVES 10
 
-#include <strings.h>
-
 int tryAddPlayForSudoku(char letter);
 char getRemainingLives();
 
