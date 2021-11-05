@@ -9,3 +9,6 @@
 
 #Object files
 *.o
+
+#Miscellaneous
+run.shZone.Identifier
