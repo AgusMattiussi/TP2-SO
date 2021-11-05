@@ -60,6 +60,7 @@ int main()
 	// while(1){
 	// 	ncPrintToPos(getBuffer(), 0xB8000);
 	// }
+
 	((EntryPoint)sampleCodeModuleAddress)();
 	ncNewline();
 

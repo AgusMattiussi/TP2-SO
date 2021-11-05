@@ -34,6 +34,10 @@ void printWithColor(char * string, unsigned char colorCode){
     }    
 }
 
+void printInPos(char * string, int row, int col, unsigned char colorCode){
+    sys_printInPos(string, row, col, colorCode);
+}
+
 int scan(char *buffer, int size){
     char c;
     int lenght=0;

@@ -9,6 +9,7 @@ static const uint32_t height = 25;
 #define TOTAL_TEXT_SCREEN_LENGTH width*height
 #define TOTAL_SCREEN_LENGTH width*height*2
 #define LINE_LENGTH width*2
+#define COL_LENGTH height*2
 #define LAST_LINE video + TOTAL_SCREEN_LENGTH - LINE_LENGTH
 #define DEFAULT_COLOR 0x0F
 
@@ -33,13 +34,20 @@ void ncPrintWithColor(const char * string, uint8_t color_code){
 	}
 }
 
-void ncPrintToPos(const char * string, int position){
-	if(position < 0xB8000 || position >= 0xB8000 + TOTAL_SCREEN_LENGTH)
-        return;
+void ncPrintInPos(const char * string, int row, int col, uint8_t colorCode){
+	if(row < 0 || row > height)
+		return;
+	if(col < 0 || col > width)
+		return;
 
-    char * aux = (char*) position;
+	uint8_t * printPos = video + row * LINE_LENGTH + col * 2;
+
     for(int i = 0; string[i] != 0; i++) {
-		*(aux+2*i) = string[i];
+		// *(printPos+2*i) = string[i];
+		// *(printPos+2*i+1) = colorCode;
+
+		printPos[2*i] = string[i];
+		printPos[2*i+1] = colorCode;
 	}
 }
 
