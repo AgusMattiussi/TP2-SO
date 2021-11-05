@@ -7,7 +7,7 @@ char remainingLettersCount = WORD_LENGTH;
 char lives = STARTING_LIVES;
 
 bool tryAddPlay(char letter) {
-    letter = toUpperCase(letter);
+    letter = convertCharToUpperCase(letter);
     bool isCorrect = false;
 
     for (int i = 0; i < WORD_LENGTH * 2; i += 2) {
