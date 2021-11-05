@@ -6,7 +6,7 @@ char remainingLettersCount = WORD_LENGTH;
 
 char lives = STARTING_LIVES;
 
-int tryAddPlay(char letter) {
+int tryAddPlayForHangman(char letter) {
     letter = convertCharToUpperCase(letter);
     int isCorrect = 0;
 
