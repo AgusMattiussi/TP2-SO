@@ -6,7 +6,7 @@
 
 #include <strings.h>
 
-int tryAddPlay(char letter);
+int tryAddPlayForSudoku(char letter);
 char getRemainingLives();
 
 #endif
