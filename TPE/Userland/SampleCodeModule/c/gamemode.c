@@ -58,8 +58,6 @@ static void printInTimeSector(int hours, int minutes, int seconds){
     printInPos(buffer, TIME_ROW, TIME_SECONDS_COL, ORANGE_BLACK);
 }
 
-
-
 static void updateChronometer(unsigned char c){
     static unsigned long currentDeciseconds;
     static unsigned long pausedDeciseconds;
