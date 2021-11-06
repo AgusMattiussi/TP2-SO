@@ -14,7 +14,6 @@ enum chronoStates{STOPPED, PAUSED, RUNNING};
 int chronoState = STOPPED; 
 unsigned long startDeciseconds = 0;
 
-
 void gamemodeManager(){
     unsigned char c;
     restartChronoTime();
@@ -27,9 +26,10 @@ void gamemodeManager(){
         
         // if (IS_DIGIT(c)) {
         //     updateSudoku(c);
-        // } else if (IS_ALPHA(c)) {
-        //     updateHangman(c);
-        // }
+        //  } else 
+         if (IS_ALPHA(c)) {
+            updateHangman(c);
+        }
     }
     clear();    
 }
@@ -58,8 +58,6 @@ static void printInTimeSector(int hours, int minutes, int seconds){
     itoa(seconds, buffer);
     printInPos(buffer, TIME_ROW, TIME_SECONDS_COL, ORANGE_BLACK);
 }
-
-
 
 static void updateChronometer(unsigned char c){
     static unsigned long currentDeciseconds;
@@ -160,7 +158,7 @@ static void updateGames(char c){
     // if(IS_ALPHA(c))
          //updateSudoku(c - '0');
     // else
-        //updateHangman(c);
+        // updateHangman(c);
 }
 
 
