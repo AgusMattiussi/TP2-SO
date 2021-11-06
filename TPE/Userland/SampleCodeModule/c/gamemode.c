@@ -11,8 +11,10 @@ static void updateChronoStateMessage();
 
 enum chronoStates{STOPPED, PAUSED, RUNNING};
 
-int chronoState = STOPPED; 
+int chronoState = STOPPED;
+int hangmanState = PLAYING;
 unsigned long startDeciseconds = 0;
+
 
 
 void gamemodeManager(){
@@ -25,11 +27,8 @@ void gamemodeManager(){
         updateTime();
         updateChronometer(c);
         
-        // if (IS_DIGIT(c)) {
-        //     updateSudoku(c);
-        // } else if (IS_ALPHA(c)) {
-        //     updateHangman(c);
-        // }
+        if(IS_DIGIT(c) || IS_ALPHA(c))
+            updateGames(c);
     }
     clear();    
 }
@@ -157,10 +156,22 @@ static void updateChronoStateMessage(){
 }
 
 static void updateGames(char c){
-    // if(IS_ALPHA(c))
-         //updateSudoku(c - '0');
-    // else
-        //updateHangman(c);
+    if(hangmanState != PLAYING && c == 'r'){
+        clearHangmanScreen();
+        hangmanState = PLAYING;
+        startHangman();
+    }
+
+    if(IS_ALPHA(c) && hangmanState == PLAYING){
+        hangmanState = updateHangman(c);
+
+        if(hangmanState == WON)
+            drawHangmanWinningScreen(getCurrentWord());
+        else if(hangmanState == LOST)
+            drawHangmanLostScreen(getCurrentWord());
+    }
+
+    //AGREGAR MANEJO DE SUDOKU
 }
 
 

@@ -20,7 +20,7 @@ void gamemodeManager();
 #define CHRONO_ROW 5
 #define CHRONO_DECISECONDS_COL 20
 #define CHRONO_MSG_ROW CHRONO_ROW + 2
-
+#define HANGMAN_RESET_KEY 'r'
 
 #define IS_UPPER(c) ((c) >= 'A' && (c) <= 'Z') 
 #define IS_LOWER(c) ((c) >= 'a' && (c) <= 'z')

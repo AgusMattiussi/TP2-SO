@@ -4,7 +4,7 @@
 static char * words[WORD_ARRAY_SIZE] = {"JUGOSO", "ARQUITECTURA", "PEDRO"};
 static int wordLengths[WORD_ARRAY_SIZE] = {6, 12, 5};
 
-enum hangmanStates{LOST, PLAYING, WON};
+static int getRandomWordIndex();
 
 char lives = STARTING_LIVES;
 char * currentWord;
@@ -14,8 +14,10 @@ char alreadyChosen[LETTER_COUNT] = {0};
 int remainingLetters;
 
 void startHangman(){
-    currentWord = words[0];                     //Hacerlo escalable
-    currentWordLength = wordLengths[0];
+    int wordIndex = getRandomWordIndex();
+
+    currentWord = words[wordIndex];                     //Hacerlo escalable
+    currentWordLength = wordLengths[wordIndex];
     
     remainingLetters = currentWordLength;
 
@@ -26,7 +28,7 @@ void startHangman(){
 }
 
 int updateHangman(char c){
-    if(!tryAddPlayForHangman(c))
+    if(!tryAddPlayForHangman(convertCharToUpperCase(c)))
         lives--;
 
     //printLives(lives);
@@ -59,4 +61,15 @@ int tryAddPlayForHangman(char letter) {
         }
     }
     return 0;
+}
+
+char * getCurrentWord(){
+    return currentWord;
+}
+
+// "Random" ;) ;)
+static int getRandomWordIndex(){
+    static int idx = -1;
+    idx++;
+    return idx % WORD_ARRAY_SIZE; 
 }

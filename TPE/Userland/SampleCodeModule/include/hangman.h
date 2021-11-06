@@ -10,5 +10,8 @@
 int updateHangman(char c);
 int tryAddPlayForHangman(char letter);
 void startHangman();
+char * getCurrentWord();
+
+enum hangmanStates{LOST, PLAYING, WON};
 
 #endif

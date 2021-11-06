@@ -21,11 +21,13 @@ void printWithColor(char * string, unsigned char colorCode);
 void clear();
 int getTime(int descriptor);
 unsigned long getDeciseconds();
+void printInPos(char * string, int row, int col, unsigned char colorCode);
 
 //#define BACKSPACE 0x0E
 #define BACKSPACE '\b'
 
 // COLORES: El formato es COLORLETRA_COLORFONDO
+#define BLACK_BLACK 0x00
 #define BLUE_BLACK 0x01
 #define GREEN_BLACK 0x02
 #define CYAN_BLACK 0x03
@@ -38,5 +40,10 @@ unsigned long getDeciseconds();
 #define RED_RED 0x44
 #define MAGENTA_MAGENTA 0x55
 #define WHITE_WHITE 0xFF
-    
+#define LIGHTGREEN_LIGHTGREEN 0xAA
+#define BLUE_LIGHTGREEN 0xA2
+#define BLACK_LIGHTGREEN 0xA2
+#define WHITE_RED 0x4F
+#define YELLOW_RED 0x4E
+
 #endif
