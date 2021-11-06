@@ -19,16 +19,17 @@ void gamemodeManager(){
     unsigned char c;
     restartChronoTime();
     updateChronoStateMessage();
+    startHangman();
 
     while((c = getCharOrNull()) != ESCAPE_KEY){
         updateTime();
         updateChronometer(c);
         
-        if (IS_DIGIT(c)) {
-            updateSudoku(c);
-        } else if (IS_ALPHA(c)) {
-            updateHangman(c);
-        }
+        // if (IS_DIGIT(c)) {
+        //     updateSudoku(c);
+        // } else if (IS_ALPHA(c)) {
+        //     updateHangman(c);
+        // }
     }
     clear();    
 }
@@ -156,16 +157,10 @@ static void updateChronoStateMessage(){
 }
 
 static void updateGames(char c){
-    if(IS_ALPHA(c))
-        updateSudoku(c - '0');
-    else
-        updateHangman(c);
+    // if(IS_ALPHA(c))
+         //updateSudoku(c - '0');
+    // else
+        //updateHangman(c);
 }
 
-// static void updateSudoku(int x){
 
-// }
-
-// static void updateHangman(char c){
-
-// }

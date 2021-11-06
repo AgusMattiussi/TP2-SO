@@ -1,10 +1,14 @@
 #ifndef _HANGMAN_H
 #define _HANGMAN_H
 
-#define WORD_LENGTH 6
-#define STARTING_LIVES 10
+#include <strings.h>
 
-int tryAddPlayForSudoku(char letter);
-char getRemainingLives();
+#define STARTING_LIVES 7
+#define WORD_ARRAY_SIZE 3
+#define LETTER_COUNT 'Z' - 'A' + 1
+
+int updateHangman(char c);
+int tryAddPlayForHangman(char letter);
+void startHangman();
 
 #endif

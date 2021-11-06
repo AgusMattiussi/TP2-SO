@@ -1,27 +1,62 @@
 #include <hangman.h>
+#include <stdio.h>
 
-char *answer = "J U G O S O";
-char *guess = "_ _ _ _ _ _";
-char remainingLettersCount = WORD_LENGTH;
+static char * words[WORD_ARRAY_SIZE] = {"JUGOSO", "ARQUITECTURA", "PEDRO"};
+static int wordLengths[WORD_ARRAY_SIZE] = {6, 12, 5};
+
+enum hangmanStates{LOST, PLAYING, WON};
 
 char lives = STARTING_LIVES;
+char * currentWord;
+int currentWordLength;
+char * guessed;
+char alreadyChosen[LETTER_COUNT] = {0};
+int remainingLetters;
 
-int tryAddPlayForHangman(char letter) {
-    int isCorrect = 0;
+void startHangman(){
+    currentWord = words[0];                     //Hacerlo escalable
+    currentWordLength = wordLengths[0];
+    
+    remainingLetters = currentWordLength;
 
-    for (int i = 0; i < WORD_LENGTH * 2; i += 2) {
-        if (guess[i] == letter) return 0;
-        if (answer[i] == letter) {
-            isCorrect = 1;
-            guess[i] = letter;
-            remainingLettersCount--;
-        }
-    }
-
-    if (!isCorrect) return --lives == 0;
-    return remainingLettersCount == 0;
+    char aux[currentWordLength];
+    for (int i = 0; i < currentWordLength; i++)
+        aux[i] = '_';
+    guessed = aux;
 }
 
-char getRemainingLives() {
-    return lives - 1;
+int updateHangman(char c){
+    if(!tryAddPlayForHangman(c))
+        lives--;
+
+    //printLives(lives);
+    //printGuessed();
+    //printArleadyChosen();
+
+    if(lives == 0)
+        return LOST;
+    if(remainingLetters == 0)
+        return WON;
+    return PLAYING;
+}
+        
+int tryAddPlayForHangman(char letter) {
+    for (int i = 0; i < currentWordLength; i++) {
+        //Ya elegida anteriormente
+        if (alreadyChosen[letter - 'A']) 
+            return 0;
+        else
+            alreadyChosen[letter - 'A'] = 1;
+        //Si encuentro al menos un match
+        if (currentWord[i] == letter) {
+            for (int j = i; j < currentWordLength; j++){
+                if(currentWord[j] == letter){
+                    guessed[j] = letter;
+                    remainingLetters--;
+                }
+            }
+            return 1;
+        }
+    }
+    return 0;
 }
