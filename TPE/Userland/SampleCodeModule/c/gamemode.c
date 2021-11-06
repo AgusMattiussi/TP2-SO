@@ -2,9 +2,6 @@
 
 static void updateTime();
 static void updateChronometer(unsigned char c);
-static void updateGamesAndChrono(char c);
-static void updateSudoku(int x);
-static void updateHangman(char c);
 static void updateGames(char c);
 static void printInTimeSector(int hours, int minutes, int seconds);
 static void printInChronoSector(int hours, int minutes, int seconds, int milis);
@@ -107,12 +104,4 @@ static void printInChronoSector(int hours, int minutes, int seconds, int decisec
 
     char decisecsBuffer[2] = {(char)decisecs + '0', 0};
     printInPos(decisecsBuffer, CHRONO_ROW, CHRONO_DECISECONDS_COL, WHITE_BLACK);
-}
-
-static void updateSudoku(char digit) {
-    
-}
-
-static void updateHangman(char c) {
-    c = convertCharToUpperCase(c);
 }

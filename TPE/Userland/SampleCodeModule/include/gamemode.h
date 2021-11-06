@@ -3,6 +3,8 @@
 
 #include <stdio.h> 
 #include <strings.h> 
+#include <sudokuHandler.h>
+#include <hangmanHandler.h>
 
 void gamemodeManager();
 
