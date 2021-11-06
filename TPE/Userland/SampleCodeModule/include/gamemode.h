@@ -18,6 +18,7 @@ void gamemodeManager();
 #define TIME_SECONDS_COL 17
 #define CHRONO_ROW 5
 #define CHRONO_DECISECONDS_COL 20
+#define CHRONO_MSG_ROW CHRONO_ROW + 2
 
 
 #define IS_UPPER(c) ((c) >= 'A' && (c) <= 'Z') 
