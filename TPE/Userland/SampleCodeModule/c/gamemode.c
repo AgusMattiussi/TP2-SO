@@ -17,20 +17,11 @@ unsigned long startDeciseconds = 0;
 
 void gamemodeManager(){
     unsigned char c;
-    unsigned char buff[2];
-
     restartChronoTime();
     updateChronoStateMessage();
 
     while((c = getCharOrNull()) != ESCAPE_KEY){
         updateTime();
-        // itoa(isChronoRunning, buff);
-        // printInPos( buff, 11, 11, CYAN_BLACK);
-
-
-        // char aux[2] = {c, 0};
-        // printInPos( aux, 20, 11, CYAN_BLACK);
-
         updateChronometer(c);
         
         if (IS_DIGIT(c)) {
