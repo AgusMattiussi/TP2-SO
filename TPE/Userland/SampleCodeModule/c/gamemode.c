@@ -158,6 +158,7 @@ static void updateGames(char c){
         clearHangmanScreen();
         hangmanState = PLAYING;
         startHangman();
+        return;
     }
 
     if(IS_ALPHA(c) && hangmanState == PLAYING){

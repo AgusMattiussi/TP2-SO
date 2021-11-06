@@ -23,5 +23,6 @@ void startHangman();
 char * getCurrentWord();
 
 enum hangmanStates{LOST, PLAYING, WON};
+enum guessResult{FAILED, ALREADY_CHOSEN, GUESSED};
 
 #endif

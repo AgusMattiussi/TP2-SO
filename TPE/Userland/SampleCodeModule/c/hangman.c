@@ -20,20 +20,22 @@ static void printAlreadyChosen();
 
 
 void startHangman(){
+    lives = STARTING_LIVES;
+
+    for (int i = 0; i < LETTER_COUNT; i++)
+        alreadyChosen[i] = 0;
+
     int wordIndex = getRandomWordIndex();
 
-    currentWord = words[wordIndex];                     //Hacerlo escalable
+    currentWord = words[wordIndex];                     
     currentWordLength = wordLengths[wordIndex];
     
     remainingLetters = currentWordLength;
 
-    // char aux[currentWordLength];
-    // for (int i = 0; i < currentWordLength; i++)
-    //     aux[i] = '_';
-
-    // static char guessed[currentWordLength];
-    for (int i = 0; i < currentWordLength; i++)
+    int i;
+    for (i = 0; i < currentWordLength; i++)
         guessed[i] = '_';
+    guessed[i] = 0;
 
     printLives();
     printGuessed();
@@ -41,7 +43,8 @@ void startHangman(){
 }
 
 int updateHangman(char c){
-    if(!tryAddPlayForHangman(convertCharToUpperCase(c)))
+
+    if(tryAddPlayForHangman(convertCharToUpperCase(c)) == FAILED)
         lives--;
 
     printLives();
@@ -58,7 +61,7 @@ int updateHangman(char c){
 int tryAddPlayForHangman(char letter) {
     //Ya elegida anteriormente
     if (alreadyChosen[letter-'A']) 
-        return 0;
+        return ALREADY_CHOSEN;
     else
         alreadyChosen[letter-'A'] = 1;
 
@@ -72,10 +75,10 @@ int tryAddPlayForHangman(char letter) {
                     remainingLetters--;
                 }
             }
-            return 1;
+            return GUESSED;
         }
     }
-    return 0;
+    return FAILED;
 }
 
 char * getCurrentWord(){
@@ -98,10 +101,6 @@ static void printLives(){
 
 static void printGuessed(){
     printInPos(guessed, GUESSED_ROW, LIVES_COL, GREEN_BLACK);
-    // for(int i=0; i<currentWordLength; i++){
-    //     printCharInPos(guessed[i], GUESSED_ROW, LIVES_COL + 2*i, GREEN_BLACK);
-    //     printCharInPos(' ', GUESSED_ROW, LIVES_COL + 2*i + i, GREEN_BLACK);
-    // }
 }
 
 static void printAlreadyChosen(){
