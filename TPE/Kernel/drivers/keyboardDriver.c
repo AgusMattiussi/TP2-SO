@@ -24,7 +24,7 @@ int keyboardHandler(){
 }
 
 unsigned char scancodeToAscii(int scancode){
-        char kbd_US [128] ={
+        unsigned char kbd_US [128] ={
     0,  27, /* <-- Escape */
     '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',   
     '\t', /* <-- Tab */

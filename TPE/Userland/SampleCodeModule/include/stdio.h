@@ -11,8 +11,8 @@ extern void sys_printInPos(char * string, int row, int col, unsigned char colorC
 extern unsigned long sys_getDeciseconds();
 extern void sys_raiseInvOpCodeExc();
 
-char getChar();
-char getCharOrNull();
+unsigned char getChar();
+unsigned char getCharOrNull();
 void print(char * string);
 void putChar(char c);
 void putCharWithColor(char c, unsigned char colorCode);
