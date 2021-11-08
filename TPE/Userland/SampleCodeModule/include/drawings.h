@@ -9,9 +9,10 @@ void drawGameMode();
 void drawHangmanWinningScreen(char * correctWord);
 void drawHangmanLostScreen(char * correctWord);
 void clearHangmanScreen();
-void drawSudoku();
-void redrawSudokuTiles(int sudoku[9][9]);
+void drawSudoku(int sudoku[9][9]);
+void drawInitialSudokuTiles(int sudoku[9][9]);
 void drawSudokuWinScreen();
+void drawInSudokuPos(int col, int row, char digit);
 
 #define HANGMAN_LAST_COL 29
 #define HANGMAN_FIRST_ROW 11

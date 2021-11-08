@@ -2,7 +2,7 @@
 
 static void updateTime();
 static void updateChronometer(unsigned char c);
-static void updateGames(char c);
+static void hangmanHandler(char c);
 static void printInTimeSector(int hours, int minutes, int seconds);
 static void printInChronoSector(int hours, int minutes, int seconds, int milis);
 static void printCurrentChronoTime(unsigned long decisecondsElapsed);
@@ -23,8 +23,7 @@ void gamemodeManager(){
     updateChronoStateMessage();
     startHangman();
 
-    // PARA PROBAR EL SUDOKU
-    // drawSudoku();
+    //PARA PROBAR EL SUDOKU
     // int sudoku[9][9] = { 
     //     {1, 2, 3, 1, 2, 3, 1, 2, 3},
     //     { 4, 5, 6, 4, 5, 6, 4, 5, 6},
@@ -36,14 +35,30 @@ void gamemodeManager(){
     //     { 4, 5, 6, 4, 5, 6, 4, 5, 6}, 
     //     { 7, 8, 9, 7, 8, 9, 7, 8, 9}
     // };
-    // redrawSudokuTiles(sudoku);
+
+    int sudoku2[9][9] = { 
+        {1, 0, 3, 1, 2, 3, 1, 2, 3},
+        { 4, 0, 6, 4, 5, 0, 0, 5, 6},
+        { 7, 8, 9, 7, 8, 0, 7, 0, 0},
+        {1, 2, 0, 1, 2, 0, 1, 2, 3}, 
+        { 4, 5, 6, 4, 0, 6, 4, 0, 6}, 
+        { 7, 0, 9, 0, 0, 9, 0, 8, 9}, 
+        {1, 0, 3, 1, 2, 3, 1, 2, 3}, 
+        { 0, 5, 6, 0, 5, 6, 4, 5, 6}, 
+        { 7, 0, 0, 7, 0, 9, 0, 8, 9}
+    };
+
+    drawSudoku(sudoku2);
+    drawInSudokuPos(3, 1, '9');
 
     while((c = getCharOrNull()) != ESCAPE_KEY){
         updateTime();
         updateChronometer(c);
         
-        if(IS_DIGIT(c) || IS_ALPHA(c))
-            updateGames(c);
+        if(IS_ALPHA(c))
+            hangmanHandler(c);
+        //else if(IS_DIGIT(c))
+            //SUDOKUHANLDER
     }
     clear();    
 }
@@ -168,7 +183,7 @@ static void updateChronoStateMessage(){
     printInPos(message, CHRONO_MSG_ROW, TIME_HOURS_COL + 2, color);
 }
 
-static void updateGames(char c){
+static void hangmanHandler(char c){
     if(hangmanState != PLAYING && c == 'r'){
         clearHangmanScreen();
         hangmanState = PLAYING;
@@ -176,7 +191,7 @@ static void updateGames(char c){
         return;
     }
 
-    if(IS_ALPHA(c) && hangmanState == PLAYING){
+    if(hangmanState == PLAYING){
         hangmanState = updateHangman(c);
 
         if(hangmanState == WON)
@@ -184,8 +199,6 @@ static void updateGames(char c){
         else if(hangmanState == LOST)
             drawHangmanLostScreen(getCurrentWord());
     }
-
-    //AGREGAR MANEJO DE SUDOKU
 }
 
 
