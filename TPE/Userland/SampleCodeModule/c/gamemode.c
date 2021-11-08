@@ -23,6 +23,17 @@ void gamemodeManager(){
     updateChronoStateMessage();
     startHangman();
 
+    
+
+    // PARA PROBAR EL SUDOKU
+    //drawSudoku();
+    // int sudoku[9][9] = { 
+    //     {1, 2, 3, 1, 2, 3, 1, 2, 3}, { 4, 5, 6, 4, 5, 6, 4, 5, 6}, { 7, 8, 9, 7, 8, 9, 7, 8, 9}, 
+    //     {1, 2, 3, 1, 2, 3, 1, 2, 3}, { 4, 5, 6, 4, 5, 6, 4, 5, 6}, { 7, 8, 9, 7, 8, 9, 7, 8, 9}, 
+    //     {1, 2, 3, 1, 2, 3, 1, 2, 3}, { 4, 5, 6, 4, 5, 6, 4, 5, 6}, { 7, 8, 9, 7, 8, 9, 7, 8, 9}
+    // };
+    // redrawSudokuTiles(sudoku);
+
     while((c = getCharOrNull()) != ESCAPE_KEY){
         updateTime();
         updateChronometer(c);
