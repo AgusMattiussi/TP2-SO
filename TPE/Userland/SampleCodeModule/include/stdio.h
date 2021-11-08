@@ -42,7 +42,7 @@ void printInPos(char * string, int row, int col, unsigned char colorCode);
 #define WHITE_WHITE 0xFF
 #define LIGHTGREEN_LIGHTGREEN 0xAA
 #define BLUE_LIGHTGREEN 0xA1
-#define BLACK_LIGHTGREEN 0xA2
+#define BLACK_LIGHTGREEN 0xA0
 #define WHITE_RED 0x4F
 #define YELLOW_RED 0x4E
 #define BLUE_BLUE 0x11

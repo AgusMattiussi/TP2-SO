@@ -11,6 +11,7 @@ void drawHangmanLostScreen(char * correctWord);
 void clearHangmanScreen();
 void drawSudoku();
 void redrawSudokuTiles(int sudoku[9][9]);
+void drawSudokuWinScreen();
 
 #define HANGMAN_LAST_COL 29
 #define HANGMAN_FIRST_ROW 11
@@ -21,5 +22,7 @@ void redrawSudokuTiles(int sudoku[9][9]);
 #define SUDOKU_LAST_COL SUDOKU_FIRST_COL + 4*3
 #define SUDOKU_FIRST_ROW 5
 #define SUDOKU_LAST_ROW SUDOKU_FIRST_ROW + 4*3
+#define SUDOKU_SECTION_FIRST_COL 31
+#define SUDOKU_SECTION_LAST_COL 80
 
 #endif

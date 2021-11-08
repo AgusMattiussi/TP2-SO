@@ -35,7 +35,7 @@ void drawHangmanWinningScreen(char * correctWord){
     printInPos("YOU WON", HANGMAN_STATE_ROW, 11, BLUE_LIGHTGREEN);
     printInPos("The word was:", HANGMAN_CORRECT_WORD_ROW - 2, 5, BLACK_LIGHTGREEN);
     printInPos(correctWord, HANGMAN_CORRECT_WORD_ROW, 7, BLUE_LIGHTGREEN);
-    printInPos("Press 'R' to restart", HANGMAN_CORRECT_WORD_ROW + 2, 5, BLACK_LIGHTGREEN);
+    printInPos("Press 'R' to play again", HANGMAN_CORRECT_WORD_ROW + 2, 5, BLACK_LIGHTGREEN);
 }
 
 
@@ -46,7 +46,7 @@ void drawHangmanLostScreen(char * correctWord){
     printInPos("YOU LOST", HANGMAN_STATE_ROW, 11, WHITE_RED);
     printInPos("The word was:", HANGMAN_CORRECT_WORD_ROW - 2, 5, WHITE_RED);
     printInPos(correctWord, HANGMAN_CORRECT_WORD_ROW, 7, YELLOW_RED);
-    printInPos("Press 'R' to restart", HANGMAN_CORRECT_WORD_ROW + 2, 5, WHITE_RED);
+    printInPos("Press 'R' to play again", HANGMAN_CORRECT_WORD_ROW + 2, 5, WHITE_RED);
 }
 
 void clearHangmanScreen(){
@@ -122,5 +122,16 @@ void redrawSudokuTiles(int sudoku[9][9]){
         if((i-SUDOKU_FIRST_COL)%4 != 0)
             sudokuY++;
     }
+}
+
+void drawSudokuWinScreen(){
+    for (int i = SUDOKU_SECTION_FIRST_COL; i < SUDOKU_SECTION_LAST_COL; i++){
+        drawVerticalLine(0, 24, i, LIGHTGREEN_LIGHTGREEN);
+    }
+
+    printInPos("YOU WON", 12, SUDOKU_SECTION_LAST_COL - SUDOKU_SECTION_FIRST_COL + 1, BLUE_LIGHTGREEN);
+    printInPos("Press '0' to play again", 15, SUDOKU_SECTION_LAST_COL - SUDOKU_SECTION_FIRST_COL - 5, BLACK_LIGHTGREEN);
+
+    
 }
 
