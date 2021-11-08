@@ -50,3 +50,19 @@ static int isPositionOfStartingNumber(int rowIndex, int columnIndex) {
     
     return 0;
 }
+
+char *getRowMarkedNumbers(int row) {
+    char res[TABLE_TOTAL_SIZE];
+
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        for (int j = 0; j < TABLE_SIZE; j++) {
+            res[i * 3 + j] = table[row / 3][i][row % 3][j];
+        }
+    }
+
+    return res;
+}
+
+char *getRowHighlightedNumbersPos(int row) {
+    return startingNumbersByColumnsPerRows[row];
+}
