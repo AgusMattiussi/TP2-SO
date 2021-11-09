@@ -14,40 +14,40 @@ Este kernel debe correrse a través del emulador qemu y se debe compilar desde d
 
 Una vez ejecutado el run.sh, se abrirá una ventana con una terminal donde usted dispondrá de los siguientes comandos:
 
--***help***: Despliega en pantalla todos los comandos disponibles para el usuario con su respectiva descripción.
+- ***help***: Despliega en pantalla todos los comandos disponibles para el usuario con su respectiva descripción.
 
--***inforeg***: Muestra en pantalla el valor de los registros.
+- ***inforeg***: Muestra en pantalla el valor de los registros.
 
--***printmem***: Realiza un dump de 32 bytes de una zona de memoria que recibe por parámetro. 
+- ***printmem***: Realiza un dump de 32 bytes de una zona de memoria que recibe por parámetro. 
 
--***time***: Despliega la hora y fecha actual.
+- ***time***: Despliega la hora y fecha actual.
 
--***clear***: Limpia la pantalla, eliminando los comandos anteriores dejando a la terminal en su estado inicial, lista para recibir un nuevo comando.
+- ***clear***: Limpia la pantalla, eliminando los comandos anteriores dejando a la terminal en su estado inicial, lista para recibir un nuevo comando.
 
--***divzero***: Verifica el correcto funcionamiento de la excepción de división por cero.
+- ***divzero***: Verifica el correcto funcionamiento de la excepción de división por cero.
 
--***invalidopcode***: Verifica el correcto funcionamiento de la excepción de código de operación invalido.
+- ***invalidopcode***: Verifica el correcto funcionamiento de la excepción de código de operación invalido.
 
--***gamemode***: Divide la pantalla en cuatro: en una zona muestra la hora en formato hh:mm:ss, en otra hay un cronómetro funcional y en las restantes se puede jugar al sudoku y al ahorcado respectivamente.
+- ***gamemode***: Divide la pantalla en cuatro: en una zona muestra la hora en formato hh:mm:ss, en otra hay un cronómetro funcional y en las restantes se puede jugar al sudoku y al ahorcado respectivamente.
 
 
 ## Gamemode
 
-Si usted ejecuto el comando `gamemode`, usted dispondrá de las siguientes funcionalidades:
+Si usted ejecuta el comando `gamemode`, dispondrá de las siguientes funcionalidades:
 
--***Reloj***: Arriba a la izquierda observara un reloj en tiempo real en formato hh:mm:ss.
+- ***Reloj***: Arriba a la izquierda observará un reloj en tiempo real en formato hh:mm:ss.
 
--***Cronómetro***: Por debajo del reloj, se encontrara con un cronómetro, su funcionamiento consiste en lo siguiente:
+- ***Cronómetro***: Por debajo del reloj, se encontrara con un cronómetro, su funcionamiento consiste en lo siguiente:
 	- `Ctrl` ==> Comienza / pausa / reanuda el cronómetro.
 	- `Alt` ==> Reinicia.
 
--***Ahorcado***: Por la parte inferior izquierda, usted podrá jugar un juego de ahorcado. Dispondrá de 7 vidas y para jugar simplemente debera pulsar la letra que desee. Si es correcta aparecerá en la palabra, si no se le descontará una vida y la letra se sumará a las ya utilizadas, por lo que no perderá otra vida si vuelve a ingresar la misma.
+- ***Ahorcado***: Por la parte inferior izquierda, usted podrá jugar un juego de ahorcado. Dispondrá de 7 vidas y para jugar simplemente debera pulsar la letra que desee. Si es correcta, aparecerá en la palabra. Si no, se le descontará una vida y la letra se sumará a las ya utilizadas, por lo que no perderá otra vida si vuelve a ingresar la misma.
 Si termina el juego, ya sea porque adivinó la palabra o porque perdió, presionando la tecla `R` podrá jugar de nuevo.
 
--***Sudoku***: Por la zona derecha, tambien se podra jugar a un sudoku de 9x9, para ello usted debe ingresar la columna (1-9), luego la fila (1-9) y por último el número a ingresar. Si el número es válido, figurará al instante en el sudoku actualizado, si no lo es se reiniciará el proceso.
+- ***Sudoku***: Por la zona derecha, tambien se podra jugar a un sudoku de 9x9, para ello usted debe ingresar la columna (1-9), luego la fila (1-9) y por último el número a ingresar. Si el número es válido, figurará al instante en el sudoku actualizado, si no lo es se reiniciará el proceso.
 	Si termina el juego, usted podrá reiniciarlo pulsando al tecla `0`.
 
-Si usted desea salir del gamemode pulse la tecla `Esc`.
+Si usted desea salir del gamemode, pulse la tecla `Esc`.
 
 ## Syscalls
 
