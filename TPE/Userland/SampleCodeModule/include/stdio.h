@@ -1,35 +1,6 @@
 #ifndef _STDIO_H
 #define _STDIO_H
 
-extern char sys_getChar();
-extern void sys_putCharWC(char c, unsigned char colorCode);
-extern int sys_getTime(int descriptor);
-extern void sys_getRegistersInfo();
-extern void sys_clear();
-extern void sys_PrintMem(char * address);
-extern void sys_printCharInPos(char c, int row, int col, unsigned char colorCode);
-extern unsigned long sys_getDeciseconds();
-extern void sys_raiseInvOpCodeExc();
-
-unsigned char getChar();
-unsigned char getCharOrNull();
-void print(char * string);
-void putChar(char c);
-void putCharWithColor(char c, unsigned char colorCode);
-int scan(char *buffer, int size);
-void printWithColor(char * string, unsigned char colorCode);
-void clear();
-int getTime(int descriptor);
-unsigned long getDeciseconds();
-void printInPos(char * string, int row, int col, unsigned char colorCode);
-void printCharInPos(char c, int row, int col, unsigned char colorCode);
-
-#define IS_UPPER(c) ((c) >= 'A' && (c) <= 'Z') 
-#define IS_LOWER(c) ((c) >= 'a' && (c) <= 'z')
-#define IS_ALPHA(c) (IS_UPPER(c) || IS_LOWER(c))
-#define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
-
-//#define BACKSPACE 0x0E
 #define BACKSPACE '\b'
 
 // COLORES: El formato es COLORLETRA_COLORFONDO
@@ -57,5 +28,131 @@ void printCharInPos(char c, int row, int col, unsigned char colorCode);
 #define GREY_GREY 0x77
 #define RED_WHITE 0xF4
 #define RED_GREY 0x74
+
+#define IS_UPPER(c) ((c) >= 'A' && (c) <= 'Z')
+#define IS_LOWER(c) ((c) >= 'a' && (c) <= 'z')
+#define IS_ALPHA(c) (IS_UPPER(c) || IS_LOWER(c))
+#define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
+
+/**
+ * Syscall: devuelve un caracter ingresado por el usuario o 0 en
+ * su defecto
+**/
+extern char sys_getChar();
+
+/**
+ * Syscall: Ubica el caracter 'c' en la posicion actual de la pantalla
+ * con el color indicado en 'colorCode'
+**/
+extern void sys_putCharWC(char c, unsigned char colorCode);
+
+/**
+ * Syscall: Devuelve el campo de la fecha/hora actual indicado en 'descriptor'
+**/
+extern int sys_getTime(int descriptor);
+
+/**
+ * Syscall: Imprime en pantalla cada registro del procesador con su contenido
+**/
+extern void sys_getRegistersInfo();
+
+/**
+ * Syscall: Elimina todo el contenido de la pantalla y posiciona el prompt al comienzo
+ * de la misma
+**/
+extern void sys_clear();
+
+/**
+ * Syscall: Imprime en pantalla el contenido de 32 bytes de memoria a partir de la
+ * direccion 'address'
+**/
+extern void sys_PrintMem(char * address);
+
+/**
+ * Syscall: Imprime el caracter 'c' en la fila 'row' y columna 'col' de la pantalla,
+ * teniendo en cuenta que la misma tiene un tamaño de 25x80. Ademas, lo hace en el
+ * color indicado por 'colorCode'
+**/
+extern void sys_printCharInPos(char c, int row, int col, unsigned char colorCode);
+
+/**
+ * Syscall: Retorna los decisegundos desde que se inicio el sistema
+**/
+extern unsigned long sys_getDeciseconds();
+
+/**
+ * Syscall: dispara la excepcion de Operando Invalido
+**/
+extern void sys_raiseInvOpCodeExc();
+
+/**
+ * Devuelve un caracter ingresado por el usuario siempre que este no
+ * sea nulo (distinto de 0)
+**/
+unsigned char getChar();
+
+/**
+ * Devuelve un caracter ingresado por el usuario o en su defecto 0. Se
+ * utiliza para que la ejecucion de funciones como la impresion de la hora
+ * y el cronometro puedan seguir su ejecucion aunque el usuario no haya
+ * ingresado ningun caracter (es decir, cuando sys_getChar devuelve 0)
+**/
+unsigned char getCharOrNull();
+
+/**
+ * Imprime en la posicion actual de la pantalla el string pasado por
+ * parametro
+**/
+void print(char * string);
+
+/**
+ * Imprime en pantalla el caracter 'c' con el color predeterminado.
+**/
+void putChar(char c);
+
+/**
+ * Wrapper de sys_putCharWC
+**/
+void putCharWithColor(char c, unsigned char colorCode);
+
+/**
+ * Recibe hasta 'size' caracteres ingresados por el usuario y los guarda en
+ * 'buffer' mientras que estos sean distintos que '\n'. Cuando se recibe dicho
+ * char, se cierra el string 'buffer' y se retorna la cantidad de caracteres
+ * leidos
+**/
+int scan(char *buffer, int size);
+
+/**
+ * Imprime en la posicion actual de la pantalla el string pasado por
+ * parametro y en el color indicado por 'colorCode'
+**/
+void printWithColor(char * string, unsigned char colorCode);
+
+/**
+ * Wrapper de sys_clear
+**/
+void clear();
+
+/**
+ * Wrapper de sys_getTime
+**/
+int getTime(int descriptor);
+
+/**
+ * Wrapper de sys_getDeciseconds
+**/
+unsigned long getDeciseconds();
+
+/**
+ * Imprime el string pasado por parametro a partir de la fila 'row' y la columna
+ * 'col' de la misma en el color indicado por 'colorCode'
+**/
+void printInPos(char * string, int row, int col, unsigned char colorCode);
+
+/**
+ * Wrapper de sys_printCharInPos
+**/
+void printCharInPos(char c, int row, int col, unsigned char colorCode);
 
 #endif
