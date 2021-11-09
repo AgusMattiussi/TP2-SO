@@ -24,7 +24,6 @@ $(KERNEL): $(LOADEROBJECT) $(OBJECTS) $(STATICLIBS) $(OBJECTS_ASM) $(OBJECTS_DRI
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -I./include -c $< -o $@
-	# Habra que agregar -I./drivers -I./idt -I/c?
 
 %.o : %.asm
 	$(ASM) $(ASMFLAGS) $< -o $@
