@@ -1,7 +1,5 @@
 #include <sudoku.h>
 
-static int isPositionOfStartingNumber(int bigRow, int bigCol, int smallRow, int smallCol);
-
 char startingTable[TABLE_SIZE][TABLE_SIZE][TABLE_SIZE][TABLE_SIZE] =
     {{{{0, 0, 0}, {6, 8, 0}, {1, 9, 0}}, {{2, 6, 0}, {0, 7, 0}, {0, 0, 4}},
     {{7, 0, 1}, {0, 9, 0}, {5, 0, 0}}}, {{{8, 2, 0}, {0, 0, 4},
@@ -33,13 +31,11 @@ int tryAddPlayForSudoku(char number, int rowIndex, int columnIndex) {
     int smallRowIndex = rowIndex % TABLE_SIZE;
     int smallColIndex = columnIndex % TABLE_SIZE;
 
-    if (isPositionOfStartingNumber(bigRowIndex, bigColIndex, smallRowIndex, smallColIndex)) {
-        return 0;
-    }
+    if (startingTable[bigRowIndex][bigColIndex][smallRowIndex][smallColIndex]) return IGNORED;
 
     if (number == 0) {
         table[bigRowIndex][bigColIndex][smallRowIndex][smallColIndex] = number;
-        return 1;
+        return ADDED_AND_CAN_CONTINUE;
     }
 
     for (int i = 0; i < TABLE_SIZE; i++) {
@@ -54,11 +50,7 @@ int tryAddPlayForSudoku(char number, int rowIndex, int columnIndex) {
 
     table[bigRowIndex][bigColIndex][smallRowIndex][smallColIndex] = number;
 
-    return --remainingCount == 0? 2 : 1;
-}
-
-static int isPositionOfStartingNumber(int bigRow, int bigCol, int smallRow, int smallCol) {
-    return startingTable[bigRow][bigCol][smallRow][smallCol] ? 1 : 0;
+    return --remainingCount == 0 ? 2 : 1;
 }
 
 char **getStartingNumbers() {
@@ -73,8 +65,4 @@ char **getStartingNumbers() {
     }
 
     return res;
-}
-
-char getNumberInPos(int row, int column) {
-    return table[row / 3][column / 3][row % 3][column % 3];
 }

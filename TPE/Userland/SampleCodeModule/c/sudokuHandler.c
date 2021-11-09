@@ -5,13 +5,13 @@ static void initializeRowInstructionUI();
 static void updateColumnInstructionUI();
 static void updateRowInstructionUI();
 
-int isPlaying;
+int additionResult;
 char columnInstruction;
 char rowInstruction;
 
 void startSudoku() {
     clearSudokuScreen();
-    isPlaying = 1;
+    additionResult = ADDED_AND_CAN_CONTINUE;
     initializeSudoku();
     drawSudoku(getStartingNumbers());
     columnInstruction = 0;
@@ -21,7 +21,7 @@ void startSudoku() {
 }
 
 void updateSudoku(char digit) {   
-    if (isPlaying == 2) {
+    if (additionResult == ADDED_AND_WON) {
         if (digit == '0') 
             startSudoku();
         return;
@@ -47,12 +47,12 @@ void updateSudoku(char digit) {
     } else {
         columnAux = columnInstruction - 1;
         rowAux = rowInstruction - 1;
-        isPlaying = tryAddPlayForSudoku(number, rowAux, columnAux);
+        additionResult = tryAddPlayForSudoku(number, rowAux, columnAux);
         
-        if (isPlaying == 1) {
-            drawInSudokuPos(columnAux, rowAux, getNumberInPos(rowAux, columnAux) + '0');
+        if (additionResult == ADDED_AND_CAN_CONTINUE) {
+            drawInSudokuPos(columnAux, rowAux, number + '0');
         } 
-        else if(isPlaying == 2) {
+        else if(additionResult == ADDED_AND_WON) {
             drawSudokuWinScreen();
             return;
         }

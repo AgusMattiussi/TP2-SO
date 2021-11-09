@@ -31,9 +31,10 @@ void startHangman();
 int updateHangman(char c);
 
 /**
- * Maneja la lógica del juego de ahorcado, recibe una letra (letter) por parametro,
- * Si ya fue utilizada retorna que la jugada fue invalida, sino chequea con la solución y
- * devuelve dos posibles estados GUESSED o FAILED
+ * Maneja la lógica del juego de ahorcado, recibe una letra (letter) por parametro.
+ * 
+ * Si ya fue utilizada retorna ALREADY_CHOSEN, sino chequea con la solución y
+ * devuelve dos posibles estados, GUESSED o FAILED.
 **/
 int tryAddPlayForHangman(char letter);
 
