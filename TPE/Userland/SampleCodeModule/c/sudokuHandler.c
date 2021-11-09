@@ -44,7 +44,7 @@ void updateSudoku(char digit) {
         rowAux = rowInstruction - 1;
         isPlaying = tryAddPlayForSudoku(number, rowAux, columnAux) ? 0 : 1;
         if (isPlaying) {
-            drawInSudokuPos(columnAux, rowAux, getNumberInPos(rowAux, columnAux));
+            drawInSudokuPos(columnAux, rowAux, getNumberInPos(rowAux, columnAux) + '0');
         } else {
             drawSudokuWinScreen();
         }
