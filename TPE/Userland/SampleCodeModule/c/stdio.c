@@ -56,6 +56,17 @@ int scan(char *buffer, int size){
             buffer[lenght++] = c;  
         }      
     }
+    while(buffer[lenght-1] == ' '){
+        while((c = getChar()) != '\n' && lenght < size){
+            if(c == BACKSPACE){
+                if(lenght > 0)
+                    buffer[lenght--] = 0;
+            } else if(IS_ALPHA(c) || IS_DIGIT(c) || c == ' '){
+                putChar(c);
+                buffer[lenght++] = c;  
+            }      
+        }
+    }
     buffer[lenght] = 0;
     return lenght;
 }

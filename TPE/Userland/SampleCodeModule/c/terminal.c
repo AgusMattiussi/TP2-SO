@@ -83,22 +83,6 @@ void printTime(){
     char str[3];
     int hours = sys_getTime(HOURS);
 
-    switch(hours){
-        case 0:
-            hours = 21;
-        case 1:
-            hours = 22;
-        case 2:
-            hours = 23;
-        case 4:
-            hours = 22;
-        case 5:
-            hours = 23;
-        default:
-            hours -= 3;
-    }
-
-
     itoa(hours, str);
     print(str);
 
@@ -109,7 +93,7 @@ void printTime(){
 
     print(" - ");
 
-    itoa(sys_getTime(DAY)-LOCAL_TIME_CORRECTION, str);
+    itoa(sys_getTime(DAY) + LOCAL_DATE_CORRECTION, str);
     print(str);
 
     print("/");

@@ -14,7 +14,7 @@
 #define DAY 6
 #define MONTH 8
 #define YEAR 9
-#define LOCAL_TIME_CORRECTION 1
+#define LOCAL_DATE_CORRECTION 6
 
 /**
  * Inicializa la terminal, cargando los comandos y entrando en un ciclo infinito

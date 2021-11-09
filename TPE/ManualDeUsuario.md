@@ -49,5 +49,31 @@ Si termina el juego, ya sea porque adivinó la palabra o porque perdió, presion
 
 Si usted desea salir del gamemode pulse la tecla `Esc`.
 
+## Syscalls
+
+[0] char *sys_getChar*();
+Devuelve un caracter ingresado por el usuario o 0 en su defecto
+
+[1] extern void *sys_putCharWC*(char c, unsigned char colorCode);
+Ubica el caracter 'c' en la posicion actual de la pantalla con el color indicado en 'colorCode'
+
+[2] int *sys_getTime*(int descriptor);
+Devuelve el campo de la fecha/hora actual indicado en 'descriptor'
+
+[3] void *sys_clear*();
+Elimina todo el contenido de la pantalla y posiciona el prompt al comienzo de la misma.
+
+[4] void *sys_getRegistersInfo*();
+Imprime en pantalla cada registro del procesador con su contenido
+
+[5] void *sys_PrintMem*(char * address);
+Imprime en pantalla el contenido de 32 bytes de memoria a partir de la direccion 'address'.
+
+[6] void *sys_printCharInPos*(char c, int row, int col, unsigned char colorCode);
+Imprime el caracter 'c' en la fila 'row' y columna 'col' de la pantalla, teniendo en cuenta que la misma tiene un tamaño de 25x80. Ademas, lo hace en el color indicado por 'colorCode'
+
+[7] unsigned long *sys_getDeciseconds*();
+Retorna los decisegundos desde que se inicio el sistema
+
 
 
