@@ -44,16 +44,15 @@ int tryAddPlayForSudoku(char number, int rowIndex, int columnIndex) {
 
     for (int i = 0; i < TABLE_SIZE; i++) {
         for (int j = 0; j < TABLE_SIZE; j++) {
-            if (table[bigRowIndex][bigColIndex][i][j] == number ||
-            table[bigRowIndex][i][smallRowIndex][j] == number ||
-            table[i][bigColIndex][j][smallColIndex] == number) {
+            if (table[bigRowIndex][bigColIndex][i][j] == number || table[bigRowIndex][i][smallRowIndex][j] == number || table[i][bigColIndex][j][smallColIndex] == number) {
                 return 0;
             }
         }
     }
 
     table[bigRowIndex][bigColIndex][smallRowIndex][smallColIndex] = number;
-    return --remainingCount == 0;
+
+    return --remainingCount == 0? 2 : 1;
 }
 
 static int isPositionOfStartingNumber(int bigRow, int bigCol, int smallRow, int smallCol) {
