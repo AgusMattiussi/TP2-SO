@@ -8,8 +8,8 @@ static int commandIndex = 0;
 
 void startTerminal(){
     startCommands();
-    char buffer[BUFFER_SIZE];
-    while(strcmp(buffer, "exit") != 0){
+    char buffer[BUFFER_SIZE] = {0};
+    while(1){
         printWithColor("$> ", GREEN_BLACK);
         scan(buffer, BUFFER_SIZE);
         putChar('\n');
@@ -138,6 +138,5 @@ void divZero(){
 
 void invalidOpCode(){
     sys_raiseInvOpCodeExc();
-    //__asm__("ud2");
 }
 

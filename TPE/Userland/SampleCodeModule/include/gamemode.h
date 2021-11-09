@@ -7,8 +7,6 @@
 #include <sudokuHandler.h>
 #include <drawings.h>
 
-void gamemodeManager();
-
 #define ESCAPE_KEY 0x1B
 #define CONTROL_KEY 200
 #define ALT_KEY 202
@@ -28,5 +26,11 @@ void gamemodeManager();
 #define IS_LOWER(c) ((c) >= 'a' && (c) <= 'z')
 #define IS_ALPHA(c) (IS_UPPER(c) || IS_LOWER(c))
 #define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
+
+/**
+* Funcion encargada de manejar el comportamiento del gamemode, inicaliza los juegos, el crometro y el reloj.
+* Entra en un ciclo hasta que el usuario pulse la tecla 'Esc'
+**/
+void gamemodeManager();
 
 #endif

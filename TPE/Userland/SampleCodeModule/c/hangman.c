@@ -84,7 +84,6 @@ char * getCurrentWord(){
     return currentWord;
 }
 
-// "Random" ;) ;)
 static int getRandomWordIndex(){
     static int idx = -1;
     idx++;

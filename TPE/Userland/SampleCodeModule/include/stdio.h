@@ -1,29 +1,6 @@
 #ifndef _STDIO_H
 #define _STDIO_H
 
-extern char sys_getChar();
-extern void sys_putCharWC(char c, unsigned char colorCode);
-extern int sys_getTime(int descriptor);
-extern void sys_getRegistersInfo();
-extern void sys_clear();
-extern void sys_PrintMem(char * address);
-extern void sys_printCharInPos(char c, int row, int col, unsigned char colorCode);
-extern unsigned long sys_getDeciseconds();
-extern void sys_raiseInvOpCodeExc();
-
-unsigned char getChar();
-unsigned char getCharOrNull();
-void print(char * string);
-void putChar(char c);
-void putCharWithColor(char c, unsigned char colorCode);
-int scan(char *buffer, int size);
-void printWithColor(char * string, unsigned char colorCode);
-void clear();
-int getTime(int descriptor);
-unsigned long getDeciseconds();
-void printInPos(char * string, int row, int col, unsigned char colorCode);
-void printCharInPos(char c, int row, int col, unsigned char colorCode);
-
 #define IS_UPPER(c) ((c) >= 'A' && (c) <= 'Z') 
 #define IS_LOWER(c) ((c) >= 'a' && (c) <= 'z')
 #define IS_ALPHA(c) (IS_UPPER(c) || IS_LOWER(c))
@@ -57,5 +34,28 @@ void printCharInPos(char c, int row, int col, unsigned char colorCode);
 #define GREY_GREY 0x77
 #define RED_WHITE 0xF4
 #define RED_GREY 0x74
+
+extern char sys_getChar();
+extern void sys_putCharWC(char c, unsigned char colorCode);
+extern int sys_getTime(int descriptor);
+extern void sys_getRegistersInfo();
+extern void sys_clear();
+extern void sys_PrintMem(char * address);
+extern void sys_printCharInPos(char c, int row, int col, unsigned char colorCode);
+extern unsigned long sys_getDeciseconds();
+extern void sys_raiseInvOpCodeExc();
+
+unsigned char getChar();
+unsigned char getCharOrNull();
+void print(char * string);
+void putChar(char c);
+void putCharWithColor(char c, unsigned char colorCode);
+int scan(char *buffer, int size);
+void printWithColor(char * string, unsigned char colorCode);
+void clear();
+int getTime(int descriptor);
+unsigned long getDeciseconds();
+void printInPos(char * string, int row, int col, unsigned char colorCode);
+void printCharInPos(char c, int row, int col, unsigned char colorCode);
 
 #endif
