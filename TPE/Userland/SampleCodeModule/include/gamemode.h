@@ -4,6 +4,7 @@
 #include <stdio.h> 
 #include <strings.h> 
 #include <hangman.h>
+#include <sudokuHandler.h>
 #include <drawings.h>
 
 void gamemodeManager();

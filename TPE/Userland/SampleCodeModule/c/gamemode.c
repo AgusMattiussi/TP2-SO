@@ -15,13 +15,12 @@ int chronoState = STOPPED;
 int hangmanState = PLAYING;
 unsigned long startDeciseconds = 0;
 
-
-
 void gamemodeManager(){
     unsigned char c;
     restartChronoTime();
     updateChronoStateMessage();
     startHangman();
+    startSudoku();
 
     //PARA PROBAR EL SUDOKU
     // int sudoku[9][9] = { 
@@ -36,7 +35,7 @@ void gamemodeManager(){
     //     { 7, 8, 9, 7, 8, 9, 7, 8, 9}
     // };
 
-    // int sudoku2[9][9] = { 
+    // char sudoku2[9][9] = { 
     //     {1, 0, 3, 1, 2, 3, 1, 2, 3},
     //     { 4, 0, 6, 4, 5, 0, 0, 5, 6},
     //     { 7, 8, 9, 7, 8, 0, 7, 0, 0},
@@ -49,7 +48,6 @@ void gamemodeManager(){
     // };
 
     // drawSudoku(sudoku2);
-    // drawInSudokuPos(3, 1, '9');
 
     while((c = getCharOrNull()) != ESCAPE_KEY){
         updateTime();
@@ -57,8 +55,8 @@ void gamemodeManager(){
         
         if(IS_ALPHA(c))
             hangmanHandler(c);
-        //else if(IS_DIGIT(c))
-            //SUDOKUHANLDER
+        else if(IS_DIGIT(c))
+            updateSudoku(c);
     }
     clear();    
 }
@@ -199,5 +197,3 @@ static void hangmanHandler(char c){
             drawHangmanLostScreen(getCurrentWord());
     }
 }
-
-
