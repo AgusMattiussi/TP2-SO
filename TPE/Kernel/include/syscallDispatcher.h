@@ -5,10 +5,13 @@
 #include <keyboardDriver.h>
 #include <rtcDriver.h>
 #include <memory.h>
-#include <naiveConsole.h> //SACAR ESTO
+#include <naiveConsole.h>
 
 extern void getRegistersInfo();
 
+/**
+ * Deriva el numero de syscall (en rdi) a la rutina correspondiente y le transfiere sus parametros 
+**/
 uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 
 #endif

@@ -12,7 +12,6 @@ getRTC:
 
     mov rax, rdi
 
-    ;mov al, rdi
     out 70h, al
     in al, 71h
     

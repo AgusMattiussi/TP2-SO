@@ -5,7 +5,14 @@
 #include <stdint.h>
 #include <keyboardDriver.h>
 
+/**
+ * Rutina para la interrupcion 20 (Timer Tick)
+**/
 static void int_20();
+
+/**
+ * Rutina para la interrupcion 21 (Teclado)
+**/
 static void int_21();
 
 #endif

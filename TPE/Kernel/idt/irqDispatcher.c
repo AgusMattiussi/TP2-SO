@@ -3,10 +3,10 @@
 void irqDispatcher(uint64_t irq) {
 	switch (irq) {
 		case 0:
-			int_20(); // Timer
+			int_20(); 			// Timer
 			break;
 		 case 1:
-		 	int_21(); // Teclado
+		 	int_21(); 			// Teclado
 	 		break;
 	}
 	return;
