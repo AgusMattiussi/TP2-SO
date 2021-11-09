@@ -44,35 +44,35 @@ Si usted ejecuto el comando `gamemode`, usted dispondrá de las siguientes funci
 -***Ahorcado***: Por la parte inferior izquierda, usted podrá jugar un juego de ahorcado. Dispondrá de 7 vidas y para jugar simplemente debera pulsar la letra que desee. Si es correcta aparecerá en la palabra, si no se le descontará una vida y la letra se sumará a las ya utilizadas, por lo que no perderá otra vida si vuelve a ingresar la misma.
 Si termina el juego, ya sea porque adivinó la palabra o porque perdió, presionando la tecla `R` podrá jugar de nuevo.
 
--***Sudoku***: Por la zona derecha, tambien se podra jugar a un sudoku de 9x9, para ello usted debe ingresar el número que desea escribir, luego se le pedirá la fila y la columna para este. Si el número es válido, figurará al instante en el sudoku actualizado, si no lo es se reiniciará el proceso.
+-***Sudoku***: Por la zona derecha, tambien se podra jugar a un sudoku de 9x9, para ello usted debe ingresar la columna (1-9), luego la fila (1-9) y por último el número a ingresar. Si el número es válido, figurará al instante en el sudoku actualizado, si no lo es se reiniciará el proceso.
 	Si termina el juego, usted podrá reiniciarlo pulsando al tecla `0`.
 
 Si usted desea salir del gamemode pulse la tecla `Esc`.
 
 ## Syscalls
 
-[0] char *sys_getChar*();
+[0] char ***sys_getChar***();
 Devuelve un caracter ingresado por el usuario o 0 en su defecto
 
-[1] extern void *sys_putCharWC*(char c, unsigned char colorCode);
+[1] extern void ***sys_putCharWC***(char c, unsigned char colorCode);
 Ubica el caracter 'c' en la posicion actual de la pantalla con el color indicado en 'colorCode'
 
-[2] int *sys_getTime*(int descriptor);
+[2] int ***sys_getTime***(int descriptor);
 Devuelve el campo de la fecha/hora actual indicado en 'descriptor'
 
-[3] void *sys_clear*();
+[3] void ***sys_clear***();
 Elimina todo el contenido de la pantalla y posiciona el prompt al comienzo de la misma.
 
-[4] void *sys_getRegistersInfo*();
+[4] void ***sys_getRegistersInfo***();
 Imprime en pantalla cada registro del procesador con su contenido
 
-[5] void *sys_PrintMem*(char * address);
+[5] void ***sys_PrintMem***(char * address);
 Imprime en pantalla el contenido de 32 bytes de memoria a partir de la direccion 'address'.
 
-[6] void *sys_printCharInPos*(char c, int row, int col, unsigned char colorCode);
+[6] void ***sys_printCharInPos***(char c, int row, int col, unsigned char colorCode);
 Imprime el caracter 'c' en la fila 'row' y columna 'col' de la pantalla, teniendo en cuenta que la misma tiene un tamaño de 25x80. Ademas, lo hace en el color indicado por 'colorCode'
 
-[7] unsigned long *sys_getDeciseconds*();
+[7] unsigned long ***sys_getDeciseconds***();
 Retorna los decisegundos desde que se inicio el sistema
 
 
