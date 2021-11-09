@@ -44,7 +44,9 @@ int tryAddPlayForSudoku(char number, int rowIndex, int columnIndex) {
 
     for (int i = 0; i < TABLE_SIZE; i++) {
         for (int j = 0; j < TABLE_SIZE; j++) {
-            if (table[bigRowIndex][bigColIndex][i][j] == number || table[bigRowIndex][i][smallRowIndex][j] == number || table[i][bigColIndex][j][smallColIndex] == number) {
+            if (table[bigRowIndex][bigColIndex][i][j] == number 
+            || table[bigRowIndex][i][smallRowIndex][j] == number 
+            || table[i][bigColIndex][j][smallColIndex] == number) {
                 return 0;
             }
         }
