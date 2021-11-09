@@ -12,6 +12,8 @@ void startSudoku() {
     isPlaying = 1;
     initializeSudoku();
     drawSudoku(getStartingNumbers());
+    updateColumnInstructionUI();
+    updateRowInstructionUI();
 }
 
 void updateSudoku(char digit) {
