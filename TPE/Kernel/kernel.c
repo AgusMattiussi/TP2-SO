@@ -54,25 +54,8 @@ int main()
 {	
 	load_idt();
 	ncClear();
-
-	ncPrint("[Kernel Main]");
-	ncNewline();
-
-	// while(1){
-	// 	ncPrintToPos(getBuffer(), 0xB8000);
-	// }
-
+	
 	saveInitialState((uint64_t)sampleCodeModuleAddress, getSP());
-
 	((EntryPoint)sampleCodeModuleAddress)();
-	ncNewline();
-
-	// while (kb_getChar() != '\n')
-	// {
-	// 	ncPrintToPos(getBuffer(), 0xB8000);
-	// }
-	ncPrint("[Finished]");
-
-
 	return 0;
 }

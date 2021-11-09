@@ -31,11 +31,11 @@ cpuVendor:
 
 getRegistersInfo:
 
-	mov [buffer], rax
-	mov [buffer + 1*8], rbx
-	mov [buffer + 2*8], rcx
-	mov [buffer + 3*8], rdx
-	mov [buffer + 4*8], rsi
+	mov [buffer], rax					; Copiamos cada registro en el
+	mov [buffer + 1*8], rbx				; buffer, para luego imprimirlos
+	mov [buffer + 2*8], rcx				; llamando a la funcion de C
+	mov [buffer + 3*8], rdx				; 'inforeg'. La misma se encuentra
+	mov [buffer + 4*8], rsi				; en memory.c
 	mov [buffer + 5*8], rdi
 	mov [buffer + 6*8], rsp
 	mov [buffer + 7*8], r8

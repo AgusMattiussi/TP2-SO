@@ -34,8 +34,14 @@ void printWithColor(char * string, unsigned char colorCode){
     }    
 }
 
+void printCharInPos(char c, int row, int col, unsigned char colorCode){
+    sys_printCharInPos(c, row, col, colorCode);
+}
+
 void printInPos(char * string, int row, int col, unsigned char colorCode){
-    sys_printInPos(string, row, col, colorCode);
+    for (int i = 0; string[i] != 0; i++){
+        printCharInPos(string[i], row, col + i, colorCode);
+    }  
 }
 
 int scan(char *buffer, int size){
@@ -45,9 +51,10 @@ int scan(char *buffer, int size){
         if(c == BACKSPACE){
             if(lenght > 0)
                 buffer[lenght--] = 0;
-        } else {
+        } else if(IS_ALPHA(c) || IS_DIGIT(c)){
             putChar(c);
             buffer[lenght++] = c;
+            
         }
     }
     buffer[lenght] = 0;

@@ -4,7 +4,7 @@ GLOBAL sys_getTime
 GLOBAL sys_getRegistersInfo
 GLOBAL sys_clear
 GLOBAL sys_PrintMem
-GLOBAL sys_printInPos
+GLOBAL sys_printCharInPos
 GLOBAL sys_raiseInvOpCodeExc
 GLOBAL sys_getDeciseconds
 
@@ -92,11 +92,12 @@ sys_getRegistersInfo:
 	syscall 4
 sys_PrintMem:
 	syscall 5
-sys_printInPos:
+sys_printCharInPos:
 	syscall 6
 sys_getDeciseconds:
 	syscall 7
-	
+
+;Fuente: https://www.felixcloutier.com/x86/ud
 sys_raiseInvOpCodeExc:
 	ud2
 

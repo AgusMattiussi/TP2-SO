@@ -7,4 +7,6 @@ extern uint8_t getRTC(uint64_t descriptor);
 
 uint8_t getTime(uint64_t descriptor);
 
+uint64_t getDecis();
+
 #endif

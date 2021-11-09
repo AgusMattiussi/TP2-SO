@@ -19,7 +19,7 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 			printMemory(rsi);
 			return 5;
 		case 6:
-			ncPrintInPos((char *)rsi, (int)rdx, (int)rcx, (unsigned char)r8);
+			ncPrintCharInPos((char)rsi, (int)rdx, (int)rcx, (unsigned char)r8);
 			return 6;
 		case 7:
 			return getDecis();

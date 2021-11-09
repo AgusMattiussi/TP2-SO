@@ -6,21 +6,13 @@ static uint8_t * currentVideo = (uint8_t*)0xB8000;
 static const uint32_t width = 80;
 static const uint32_t height = 25;
 
-#define TOTAL_TEXT_SCREEN_LENGTH width*height
-#define TOTAL_SCREEN_LENGTH width*height*2
-#define LINE_LENGTH width*2
-#define COL_LENGTH height*2
-#define LAST_LINE video + TOTAL_SCREEN_LENGTH - LINE_LENGTH
-#define DEFAULT_COLOR 0x0F
 
-// chars que ocupa el prompt
-#define PROMPT_SIZE 5
 
 void ncPrint(const char * string){
 	ncPrintWithColor(string, DEFAULT_COLOR);
 }
 
-void ncPrintWithColor(const char * string, uint8_t color_code){
+void ncPrintWithColor(const char * string, uint8_t colorCode){
 	if(currentVideo == LAST_LINE){
 		ncScrollUp();
 		currentVideo = LAST_LINE;
@@ -30,32 +22,34 @@ void ncPrintWithColor(const char * string, uint8_t color_code){
 		if(string[i] == '\n')
 			ncNewline();
 		else
-			ncPrintCharWithColor(string[i], color_code);
+			ncPrintCharWithColor(string[i], colorCode);
 	}
 }
 
 void ncPrintInPos(const char * string, int row, int col, uint8_t colorCode){
+    for(int i = 0; string[i] != 0; i++) {
+		if(col + i >= width)
+			return;
+		ncPrintCharInPos(string[i], row, col + i, colorCode);
+	}
+}
+
+void ncPrintCharInPos(char c, int row, int col, uint8_t colorCode){
 	if(row < 0 || row > height)
 		return;
 	if(col < 0 || col > width)
 		return;
 
 	uint8_t * printPos = video + row * LINE_LENGTH + col * 2;
-
-    for(int i = 0; string[i] != 0; i++) {
-		// *(printPos+2*i) = string[i];
-		// *(printPos+2*i+1) = colorCode;
-
-		printPos[2*i] = string[i];
-		printPos[2*i+1] = colorCode;
-	}
+	printPos[0] = c;
+	printPos[1] = colorCode;
 }
 
 void ncPrintChar(char character){
 	ncPrintCharWithColor(character, DEFAULT_COLOR);
 }
 
-void ncPrintCharWithColor(char character, uint8_t color_code){
+void ncPrintCharWithColor(char character, uint8_t colorCode){
 	if(currentVideo == LAST_LINE + LINE_LENGTH){
 		ncScrollUp();
 		currentVideo = LAST_LINE;
@@ -66,7 +60,7 @@ void ncPrintCharWithColor(char character, uint8_t color_code){
 	else {
 		*currentVideo = character;
 		currentVideo++;
-		*currentVideo = color_code;
+		*currentVideo = colorCode;
 		currentVideo++;
 	}
 }
@@ -132,20 +126,17 @@ void ncClear(){
 	currentVideo = video;
 }
 
-uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
-{
+uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
 	char *p = buffer;
 	char *p1, *p2;
 	uint32_t digits = 0;
 
 	//Calculate characters for each digit
-	do
-	{
+	do {
 		uint32_t remainder = value % base;
 		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
 		digits++;
-	}
-	while (value /= base);
+	} while (value /= base);
 
 	// Terminate string in buffer.
 	*p = 0;
@@ -153,8 +144,7 @@ uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
 	//Reverse string in buffer.
 	p1 = buffer;
 	p2 = p - 1;
-	while (p1 < p2)
-	{
+	while (p1 < p2){
 		char tmp = *p1;
 		*p1 = *p2;
 		*p2 = tmp;

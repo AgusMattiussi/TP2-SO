@@ -9,8 +9,7 @@ void drawGameMode();
 void drawHangmanWinningScreen(char * correctWord);
 void drawHangmanLostScreen(char * correctWord);
 void clearHangmanScreen();
-void drawSudoku(int sudoku[9][9]);
-void drawInitialSudokuTiles(int sudoku[9][9]);
+void drawSudoku(char sudoku[9][9]);
 void drawSudokuWinScreen();
 void drawInSudokuPos(int col, int row, char digit);
 

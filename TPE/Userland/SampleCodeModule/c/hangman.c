@@ -9,7 +9,6 @@ static int getRandomWordIndex();
 int lives = STARTING_LIVES;
 char * currentWord;
 int currentWordLength;
-// static char * guessed;
 static char guessed[MAX_WORD_LENGTH] = {0};
 char alreadyChosen[LETTER_COUNT] = {0};
 int remainingLetters;
@@ -95,8 +94,7 @@ static int getRandomWordIndex(){
 
 static void printLives(){
     printInPos("Lives: ", LIVES_ROW, LIVES_COL, GREEN_BLACK);
-    char buff[2] = {(char)lives + '0', 0};
-    printInPos(buff, LIVES_ROW, LIVES_COL2, GREEN_BLACK);
+    printCharInPos((char)lives + '0', LIVES_ROW, LIVES_COL2, GREEN_BLACK);
 }
 
 static void printGuessed(){
@@ -107,8 +105,7 @@ static void printAlreadyChosen(){
     printInPos("Already chosen letters:", ALREADY_CHOSEN_ROW, ALREADY_CHOSEN_COL, GREEN_BLACK);
     for(int i=0; i<LETTER_COUNT; i++){
         if(alreadyChosen[i]){
-            char buff[2] = {i + 'A', 0};
-            printInPos(buff, ALREADY_CHOSEN_ROW + 1, ALREADY_CHOSEN_COL + i, GREEN_BLACK);
+            printCharInPos(i + 'A', ALREADY_CHOSEN_ROW + 1, ALREADY_CHOSEN_COL + i, GREEN_BLACK);
         }
     }
     
