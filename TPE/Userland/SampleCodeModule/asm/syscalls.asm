@@ -96,7 +96,8 @@ sys_printCharInPos:
 	syscall 6
 sys_getDeciseconds:
 	syscall 7
-	
+
+;Fuente: https://www.felixcloutier.com/x86/ud
 sys_raiseInvOpCodeExc:
 	ud2
 

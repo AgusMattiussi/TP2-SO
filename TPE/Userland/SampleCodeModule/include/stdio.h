@@ -22,6 +22,12 @@ void clear();
 int getTime(int descriptor);
 unsigned long getDeciseconds();
 void printInPos(char * string, int row, int col, unsigned char colorCode);
+void printCharInPos(char c, int row, int col, unsigned char colorCode);
+
+#define IS_UPPER(c) ((c) >= 'A' && (c) <= 'Z') 
+#define IS_LOWER(c) ((c) >= 'a' && (c) <= 'z')
+#define IS_ALPHA(c) (IS_UPPER(c) || IS_LOWER(c))
+#define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
 
 //#define BACKSPACE 0x0E
 #define BACKSPACE '\b'

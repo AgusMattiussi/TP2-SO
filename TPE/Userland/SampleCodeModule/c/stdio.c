@@ -51,9 +51,10 @@ int scan(char *buffer, int size){
         if(c == BACKSPACE){
             if(lenght > 0)
                 buffer[lenght--] = 0;
-        } else {
+        } else if(IS_ALPHA(c) || IS_DIGIT(c)){
             putChar(c);
             buffer[lenght++] = c;
+            
         }
     }
     buffer[lenght] = 0;

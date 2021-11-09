@@ -3,26 +3,29 @@
 #define MAX_SIZE 20
 #define BACKSPACE 0x0E
 
-static char buffer[MAX_SIZE];
+static unsigned char buffer[MAX_SIZE];
 static int bufferSize = 0;
 
 int keyboardHandler(){
-    char scancodeKey;
+    unsigned char scancodeKey = 0;
     while(keyboardActivated()){
         scancodeKey = getPressedKey();
 
         if(scancodeKey == BACKSPACE)
             ncBackspace();
 
-        if(scancodeToAscii(scancodeKey) != 0 && bufferSize <= MAX_SIZE){
+        if(scancodeToAscii(scancodeKey) != 0 && bufferSize < MAX_SIZE){
             buffer[bufferSize++] = scancodeToAscii(scancodeKey);
-            //ncPrintChar(scancodeToAscii(scancodeKey));
+
             return 1;
         }
     }
     return 0;
 }
 
+// BUG: SUMA 16
+
+// Fuente: https://stackoverflow.com/questions/61124564/convert-scancodes-to-ascii
 unsigned char scancodeToAscii(int scancode){
         unsigned char kbd_US [128] ={
     0,  27, /* <-- Escape */
@@ -62,23 +65,16 @@ unsigned char scancodeToAscii(int scancode){
     return kbd_US[scancode];
 }
 
-char * getBuffer(){
+unsigned char * getBuffer(){
     buffer[bufferSize] = 0;
     return buffer;
 }
 
-// char kb_getChar(){
-//     if(bufferSize > 0)
-//         return buffer[0];
-//     return 0;
-// }
-
-
-char kb_getChar(){
+unsigned char kb_getChar(){
     if (bufferSize <= 0)
         return 0;
     
-    char key = buffer[0];
+    unsigned char key = buffer[0];
     removeFirstChar();
     return key;
 }

@@ -9,7 +9,6 @@ static int getRandomWordIndex();
 int lives = STARTING_LIVES;
 char * currentWord;
 int currentWordLength;
-// static char * guessed;
 static char guessed[MAX_WORD_LENGTH] = {0};
 char alreadyChosen[LETTER_COUNT] = {0};
 int remainingLetters;

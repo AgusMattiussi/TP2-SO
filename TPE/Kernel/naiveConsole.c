@@ -35,13 +35,6 @@ void ncPrintWithColor(const char * string, uint8_t color_code){
 }
 
 void ncPrintInPos(const char * string, int row, int col, uint8_t colorCode){
-	if(row < 0 || row > height)
-		return;
-	if(col < 0 || col > width)
-		return;
-
-	uint8_t * printPos = video + row * LINE_LENGTH + col * 2;
-
     for(int i = 0; string[i] != 0; i++) {
 		if(col + i >= width)
 			return;
