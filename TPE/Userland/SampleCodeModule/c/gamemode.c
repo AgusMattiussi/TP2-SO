@@ -36,20 +36,20 @@ void gamemodeManager(){
     //     { 7, 8, 9, 7, 8, 9, 7, 8, 9}
     // };
 
-    int sudoku2[9][9] = { 
-        {1, 0, 3, 1, 2, 3, 1, 2, 3},
-        { 4, 0, 6, 4, 5, 0, 0, 5, 6},
-        { 7, 8, 9, 7, 8, 0, 7, 0, 0},
-        {1, 2, 0, 1, 2, 0, 1, 2, 3}, 
-        { 4, 5, 6, 4, 0, 6, 4, 0, 6}, 
-        { 7, 0, 9, 0, 0, 9, 0, 8, 9}, 
-        {1, 0, 3, 1, 2, 3, 1, 2, 3}, 
-        { 0, 5, 6, 0, 5, 6, 4, 5, 6}, 
-        { 7, 0, 0, 7, 0, 9, 0, 8, 9}
-    };
+    // int sudoku2[9][9] = { 
+    //     {1, 0, 3, 1, 2, 3, 1, 2, 3},
+    //     { 4, 0, 6, 4, 5, 0, 0, 5, 6},
+    //     { 7, 8, 9, 7, 8, 0, 7, 0, 0},
+    //     {1, 2, 0, 1, 2, 0, 1, 2, 3}, 
+    //     { 4, 5, 6, 4, 0, 6, 4, 0, 6}, 
+    //     { 7, 0, 9, 0, 0, 9, 0, 8, 9}, 
+    //     {1, 0, 3, 1, 2, 3, 1, 2, 3}, 
+    //     { 0, 5, 6, 0, 5, 6, 4, 5, 6}, 
+    //     { 7, 0, 0, 7, 0, 9, 0, 8, 9}
+    // };
 
-    drawSudoku(sudoku2);
-    drawInSudokuPos(3, 1, '9');
+    // drawSudoku(sudoku2);
+    // drawInSudokuPos(3, 1, '9');
 
     while((c = getCharOrNull()) != ESCAPE_KEY){
         updateTime();
@@ -64,7 +64,7 @@ void gamemodeManager(){
 }
 
 static void updateTime(){
-    int hours = (getTime(HOURS) - 3) % 24;
+    int hours = (getTime(HOURS) + 21) % 24;
     int minutes = getTime(MINUTES);
     int seconds = getTime(SECONDS);
 
@@ -77,12 +77,12 @@ static void printInTimeSector(int hours, int minutes, int seconds){
     itoa(hours, buffer);
     printInPos(buffer, TIME_ROW, TIME_HOURS_COL, ORANGE_BLACK);
 
-    printInPos(":", TIME_ROW, TIME_HOURS_COL + 2, ORANGE_BLACK);
+    printCharInPos(':', TIME_ROW, TIME_HOURS_COL + 2, ORANGE_BLACK);
 
     itoa(minutes, buffer);
     printInPos(buffer, TIME_ROW, TIME_MINUTES_COL, ORANGE_BLACK);
 
-    printInPos(":", TIME_ROW, TIME_MINUTES_COL + 2, ORANGE_BLACK);
+    printCharInPos(':', TIME_ROW, TIME_MINUTES_COL + 2, ORANGE_BLACK);
 
     itoa(seconds, buffer);
     printInPos(buffer, TIME_ROW, TIME_SECONDS_COL, ORANGE_BLACK);
@@ -146,20 +146,19 @@ static void printInChronoSector(int hours, int minutes, int seconds, int decisec
     itoa(hours, buffer);
     printInPos(buffer, CHRONO_ROW, TIME_HOURS_COL, WHITE_BLACK);
 
-    printInPos(":", CHRONO_ROW, TIME_HOURS_COL + 2, WHITE_BLACK);
+    printCharInPos(':', CHRONO_ROW, TIME_HOURS_COL + 2, WHITE_BLACK);
 
     itoa(minutes, buffer);
     printInPos(buffer, CHRONO_ROW, TIME_MINUTES_COL, WHITE_BLACK);
 
-    printInPos(":", CHRONO_ROW, TIME_MINUTES_COL + 2, WHITE_BLACK);
+    printCharInPos(':', CHRONO_ROW, TIME_MINUTES_COL + 2, WHITE_BLACK);
 
     itoa(seconds, buffer);
     printInPos(buffer, CHRONO_ROW, TIME_SECONDS_COL, WHITE_BLACK);
 
-    printInPos(".", CHRONO_ROW, TIME_SECONDS_COL + 2, WHITE_BLACK);
+    printCharInPos('.', CHRONO_ROW, TIME_SECONDS_COL + 2, WHITE_BLACK);
 
-    char decisecsBuffer[2] = {(char)decisecs + '0', 0};
-    printInPos(decisecsBuffer, CHRONO_ROW, CHRONO_DECISECONDS_COL, WHITE_BLACK);
+    printCharInPos((char)decisecs + '0', CHRONO_ROW, CHRONO_DECISECONDS_COL, WHITE_BLACK);
 }
 
 static void updateChronoStateMessage(){

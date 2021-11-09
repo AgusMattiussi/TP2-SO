@@ -43,12 +43,21 @@ void ncPrintInPos(const char * string, int row, int col, uint8_t colorCode){
 	uint8_t * printPos = video + row * LINE_LENGTH + col * 2;
 
     for(int i = 0; string[i] != 0; i++) {
-		// *(printPos+2*i) = string[i];
-		// *(printPos+2*i+1) = colorCode;
-
-		printPos[2*i] = string[i];
-		printPos[2*i+1] = colorCode;
+		if(col + i >= width)
+			return;
+		ncPrintCharInPos(string[i], row, col + i, colorCode);
 	}
+}
+
+void ncPrintCharInPos(char c, int row, int col, uint8_t colorCode){
+	if(row < 0 || row > height)
+		return;
+	if(col < 0 || col > width)
+		return;
+
+	uint8_t * printPos = video + row * LINE_LENGTH + col * 2;
+	printPos[0] = c;
+	printPos[1] = colorCode;
 }
 
 void ncPrintChar(char character){

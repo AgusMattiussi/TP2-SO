@@ -7,7 +7,7 @@ extern int sys_getTime(int descriptor);
 extern void sys_getRegistersInfo();
 extern void sys_clear();
 extern void sys_PrintMem(char * address);
-extern void sys_printInPos(char * string, int row, int col, unsigned char colorCode);
+extern void sys_printCharInPos(char c, int row, int col, unsigned char colorCode);
 extern unsigned long sys_getDeciseconds();
 extern void sys_raiseInvOpCodeExc();
 

@@ -7,7 +7,7 @@ void drawVerticalLine(int fromRow, int toRow, int col, unsigned char colorCode){
         return;
 
     for (int i = fromRow; i <= toRow; i++){
-        printInPos(" ", i, col, colorCode);
+        printCharInPos(' ', i, col, colorCode);
     }
     
 }
@@ -17,7 +17,7 @@ void drawHorizontalLine(int fromCol, int toCol, int row, unsigned char colorCode
         return;
       
     for (int i = fromCol; i <= toCol; i++){
-        printInPos(" ", row, i, colorCode);
+        printCharInPos(' ', row, i, colorCode);
     }
     
 }
@@ -75,11 +75,11 @@ static void drawSudokuGrid(){
         for (int j = SUDOKU_FIRST_ROW + 1; j < SUDOKU_LAST_ROW; j++){
             //Columna impar, fila par (distinta de 4)
             if(((i-SUDOKU_FIRST_COL) % 2 != 0) && ((j-SUDOKU_FIRST_ROW) % 4 == 2)){
-                    printInPos(" ", j, i, BLUE_GREY);
+                    printCharInPos(' ', j, i, BLUE_GREY);
             } 
             //Columna par (distinta de 4), fila impar
             else if(((i-SUDOKU_FIRST_COL) % 4 == 2) && ((j-SUDOKU_FIRST_ROW) % 2 != 0)){
-                    printInPos(" ", j, i, BLUE_GREY);
+                    printCharInPos(' ', j, i, BLUE_GREY);
             }
         }
     }
@@ -87,7 +87,7 @@ static void drawSudokuGrid(){
 }
 
 void drawInitialSudokuTiles(int sudoku[9][9]){
-    char toPrint[2] = {'0'};
+    char num;
     int sudokuX = 0;
     int sudokuY = 0;
 
@@ -95,26 +95,26 @@ void drawInitialSudokuTiles(int sudoku[9][9]){
     for (i = SUDOKU_FIRST_COL; i < SUDOKU_LAST_COL; i++){
         sudokuX = 0;
         for (int j = SUDOKU_FIRST_ROW; j < SUDOKU_LAST_ROW; j++){
-            toPrint[0] = sudoku[sudokuX][sudokuY] != 0 ? (sudoku[sudokuX][sudokuY] + '0') : ' ';
+            num = sudoku[sudokuX][sudokuY] != 0 ? (sudoku[sudokuX][sudokuY] + '0') : ' ';
 
             if((i-SUDOKU_FIRST_COL)%4 != 0 && (j-SUDOKU_FIRST_ROW)%4 != 0){
                 //Columna impar
                 if(((i-SUDOKU_FIRST_COL)%2 != 0)){
                     //Fila impar
                     if((j-SUDOKU_FIRST_ROW) % 2 != 0)
-                        printInPos(toPrint, j, i, RED_WHITE);
+                        printCharInPos(num, j, i, RED_WHITE);
                     //Fila par (distinta de 4)
                     else
-                        printInPos(toPrint, j, i, RED_GREY);
+                        printCharInPos(num, j, i, RED_GREY);
                 } 
                 //Columna par (distinta de 4)
                 else {
                     //Fila impar
                     if((j-SUDOKU_FIRST_ROW) % 2 != 0)
-                        printInPos(toPrint, j, i, RED_GREY);
+                        printCharInPos(num, j, i, RED_GREY);
                     //Fila par (distinta de 4)
                     else
-                        printInPos(toPrint, j, i, RED_WHITE);
+                        printCharInPos(num, j, i, RED_WHITE);
                 }
                 sudokuX++;
             }
@@ -135,18 +135,9 @@ void drawSudokuWinScreen(){
 }
 
 void drawInSudokuPos(int col, int row, char digit){
-    char toPrint[2] = {0};
-    toPrint[0] = digit;
-
     // Calculo el color de impresion segun
-    // si la fila y columna son pares o impares
-    char printColor;
-
-    if((row + col) % 2 == 0)
-        printColor = BLUE_WHITE;
-    else
-        printColor = BLUE_GREY;
-
+    // la diagonal en la que caiga
+    char printColor = (row + col) % 2 == 0? BLUE_WHITE : BLUE_GREY;
 
     int trueCol, trueRow;
     // Cambio las filas y columnas por su verdadera
@@ -165,6 +156,6 @@ void drawInSudokuPos(int col, int row, char digit){
     else
         trueRow = SUDOKU_FIRST_ROW + row;
 
-    printInPos(toPrint, trueRow, trueCol, printColor);
+    printCharInPos(digit, trueRow, trueCol, printColor);
 }
 
