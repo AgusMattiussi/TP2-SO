@@ -136,6 +136,8 @@ void drawSudokuWinScreen(){
 }
 
 void drawInSudokuPos(int col, int row, char digit){
+    if (digit == '0') digit = ' ';
+    
     // Calculo el color de impresion segun
     // la diagonal en la que caiga
     char printColor = (row + col) % 2 == 0? BLUE_WHITE : BLUE_GREY;

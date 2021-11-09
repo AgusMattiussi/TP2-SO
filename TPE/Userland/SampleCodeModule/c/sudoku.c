@@ -39,7 +39,7 @@ int tryAddPlayForSudoku(char number, int rowIndex, int columnIndex) {
 
     if (number == 0) {
         table[bigRowIndex][bigColIndex][smallRowIndex][smallColIndex] = number;
-        return 0;
+        return 1;
     }
 
     for (int i = 0; i < TABLE_SIZE; i++) {

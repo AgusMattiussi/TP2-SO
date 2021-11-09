@@ -1,19 +1,23 @@
 #include <sudokuHandler.h>
 
+static void initializeColumnInstructionUI();
+static void initializeRowInstructionUI();
 static void updateColumnInstructionUI();
 static void updateRowInstructionUI();
 
 int isPlaying;
-char columnInstruction = 0;
-char rowInstruction = 0;
+char columnInstruction;
+char rowInstruction;
 
 void startSudoku() {
     clearSudokuScreen();
     isPlaying = 1;
     initializeSudoku();
     drawSudoku(getStartingNumbers());
-    updateColumnInstructionUI();
-    updateRowInstructionUI();
+    columnInstruction = 0;
+    rowInstruction = 0;
+    initializeColumnInstructionUI();
+    initializeRowInstructionUI();
 }
 
 void updateSudoku(char digit) {   
@@ -44,6 +48,7 @@ void updateSudoku(char digit) {
         columnAux = columnInstruction - 1;
         rowAux = rowInstruction - 1;
         isPlaying = tryAddPlayForSudoku(number, rowAux, columnAux);
+        
         if (isPlaying == 1) {
             drawInSudokuPos(columnAux, rowAux, getNumberInPos(rowAux, columnAux) + '0');
         } 
@@ -51,6 +56,7 @@ void updateSudoku(char digit) {
             drawSudokuWinScreen();
             return;
         }
+        
         columnInstruction = 0;
         updateColumnInstructionUI();
         rowInstruction = 0;
@@ -58,9 +64,8 @@ void updateSudoku(char digit) {
     }
 }
 
-static void updateColumnInstructionUI() {
-    char *stringForPrint = "Inserting in column:  ";
-    if (columnInstruction != 0) stringForPrint[21] = columnInstruction + '0';
+static void initializeColumnInstructionUI() {
+    char *stringForPrint = "Inserting in column: ";
 
     int rowForPrint = TABLE_UPPER_LEFT_CORNER_POS_Y + TABLE_TOTAL_SIZE * 2 + 1;
     int columnForPrint = TABLE_UPPER_LEFT_CORNER_POS_X;
@@ -68,12 +73,29 @@ static void updateColumnInstructionUI() {
     printInPos(stringForPrint, rowForPrint, columnForPrint, INSTRUCTION_TEXT_COLOR_CODE);
 }
 
-static void updateRowInstructionUI() {
-    char *stringForPrint = "Inserting in row:  ";
-    if (rowInstruction != 0) stringForPrint[18] = rowInstruction + '0';
+static void initializeRowInstructionUI() {
+    char *stringForPrint = "Inserting in row: ";
 
     int rowForPrint = TABLE_UPPER_LEFT_CORNER_POS_Y + TABLE_TOTAL_SIZE * 2 + 3;
     int columnForPrint = TABLE_UPPER_LEFT_CORNER_POS_X;
 
     printInPos(stringForPrint, rowForPrint, columnForPrint, INSTRUCTION_TEXT_COLOR_CODE);
+}
+
+static void updateColumnInstructionUI() {
+    char charForPrint = (columnInstruction != 0) ? columnInstruction + '0' : ' ';
+    
+    int rowForPrint = TABLE_UPPER_LEFT_CORNER_POS_Y + TABLE_TOTAL_SIZE * 2 + 1;
+    int columnForPrint = TABLE_UPPER_LEFT_CORNER_POS_X + 21;
+
+    printCharInPos(charForPrint, rowForPrint, columnForPrint, INSTRUCTION_TEXT_COLOR_CODE);
+}
+
+static void updateRowInstructionUI() {
+    char charForPrint = (rowInstruction != 0) ? rowInstruction + '0' : ' ';
+    
+    int rowForPrint = TABLE_UPPER_LEFT_CORNER_POS_Y + TABLE_TOTAL_SIZE * 2 + 3;
+    int columnForPrint = TABLE_UPPER_LEFT_CORNER_POS_X + 18;
+
+    printCharInPos(charForPrint, rowForPrint, columnForPrint, INSTRUCTION_TEXT_COLOR_CODE);
 }
