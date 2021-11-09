@@ -160,3 +160,7 @@ void drawInSudokuPos(int col, int row, char digit){
     printCharInPos(digit, trueRow, trueCol, printColor);
 }
 
+void clearSudokuScreen(){
+    for (int i = SUDOKU_SECTION_FIRST_COL; i < SUDOKU_SECTION_LAST_COL; i++)
+        drawVerticalLine(0, 24, i, BLACK_BLACK);
+}

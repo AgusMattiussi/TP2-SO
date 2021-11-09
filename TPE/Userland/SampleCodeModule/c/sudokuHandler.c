@@ -1,6 +1,5 @@
 #include <sudokuHandler.h>
 
-// static void updateTableUI();
 static void updateColumnInstructionUI();
 static void updateRowInstructionUI();
 
@@ -9,6 +8,7 @@ char columnInstruction = 0;
 char rowInstruction = 0;
 
 void startSudoku() {
+    clearSudokuScreen();
     isPlaying = 1;
     initializeSudoku();
     drawSudoku(getStartingNumbers());
@@ -16,7 +16,7 @@ void startSudoku() {
     updateRowInstructionUI();
 }
 
-void updateSudoku(char digit) {
+void updateSudoku(char digit) {   
     if (isPlaying == 2) {
         if (digit == '0') 
             startSudoku();
@@ -57,36 +57,6 @@ void updateSudoku(char digit) {
         updateRowInstructionUI();
     }
 }
-
-// static void updateTableUI() {
-//     char *rowMarkedNumbers;
-//     char *rowHightlightedNumbersPos;
-//     char stringForPrint[2];
-//     int rowForPrint;
-//     int columnForPrint;
-//     unsigned char colorCodeForPrint;
-//     char isHighlightedNumber;
-//     char aux;
-
-//     for (int i = 0; i < TABLE_TOTAL_SIZE; i++) {
-//         rowMarkedNumbers = getRowMarkedNumbers(i);
-//         rowHightlightedNumbersPos = getRowHighlightedNumbersPos(i);
-//         rowForPrint = TABLE_UPPER_LEFT_CORNER_POS_Y + i * 2;
-//         aux = 0;
-
-//         for (int j = 0; j < TABLE_TOTAL_SIZE; j++) {
-//             if (rowMarkedNumbers[j] != 0) {
-//                 stringForPrint[0] = rowMarkedNumbers[j] + '0';
-//                 stringForPrint[1] = '\0';
-//                 columnForPrint = TABLE_UPPER_LEFT_CORNER_POS_X + j * 3;
-//                 isHighlightedNumber = (j == rowHightlightedNumbersPos[aux]) ? 1 : 0;
-//                 colorCodeForPrint = isHighlightedNumber ? YELLOW_BLACK : WHITE_BLACK;
-//                 aux += isHighlightedNumber;
-//                 printInPos(stringForPrint, rowForPrint, columnForPrint, colorCodeForPrint);
-//             }
-//         }
-//     }
-// }
 
 static void updateColumnInstructionUI() {
     char *stringForPrint = "Inserting in column:  ";

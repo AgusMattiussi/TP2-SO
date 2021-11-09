@@ -60,4 +60,6 @@ void drawSudokuWinScreen();
 **/
 void drawInSudokuPos(int col, int row, char digit);
 
+void clearSudokuScreen();
+
 #endif
