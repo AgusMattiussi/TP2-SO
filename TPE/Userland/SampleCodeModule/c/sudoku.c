@@ -2,15 +2,30 @@
 
 static int isPositionOfStartingNumber(int rowIndex, int columnIndex);
 
-char table[TABLE_SIZE][TABLE_SIZE][TABLE_SIZE][TABLE_SIZE] =
+char startingTable[TABLE_SIZE][TABLE_SIZE][TABLE_SIZE][TABLE_SIZE] =
     {{{{0, 0, 0}, {6, 8, 0}, {1, 9, 0}}, {{2, 6, 0}, {0, 7, 0}, {0, 0, 4}},
     {{7, 0, 1}, {0, 9, 0}, {5, 0, 0}}}, {{{8, 2, 0}, {0, 0, 4},
     {0, 5, 0}}, {{1, 0, 0}, {6, 0, 2}, {0, 0, 3}}, {{0, 4, 0}, {9, 0, 0}, {0, 2, 8}}},
     {{{0, 0, 9}, {0, 4, 0}, {7, 0, 3}}, {{3, 0, 0}, {0, 5, 0}, {0, 1, 8}},
     {{0, 7, 4}, {0, 3, 6}, {0, 0, 0}}}};
+char table[TABLE_SIZE][TABLE_SIZE][TABLE_SIZE][TABLE_SIZE];
 char startingNumbersByColumnsPerRows[9][4] = {{3, 4, 6, 8}, {0, 1, 4, 7}, {0, 1, 5, 6},
     {0, 1, 3, 7}, {2, 3, 5, 6}, {1, 5, 7, 8}, {2, 3, 7, 8}, {1, 4, 7, 8}, {0, 2, 4, 5}};
 char remainingCount = 45;
+
+void initializeSudoku() {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        for (int j = 0; j < TABLE_SIZE; j++) {
+            for (int k = 0; i < TABLE_SIZE; i++) {
+                for (int l = 0; j < TABLE_SIZE; j++) {
+                    table[i][j][k][l] = startingTable[i][j][k][l];
+                }
+            }
+        }
+    }
+
+    remainingCount = 45;
+}
 
 int tryAddPlayForSudoku(char number, int rowIndex, int columnIndex) {
     if (isPositionOfStartingNumber(rowIndex, columnIndex)) return 0;
@@ -51,18 +66,22 @@ static int isPositionOfStartingNumber(int rowIndex, int columnIndex) {
     return 0;
 }
 
-char *getRowMarkedNumbers(int row) {
-    char res[TABLE_TOTAL_SIZE];
+char **getStartingNumbers() {
+    char res[TABLE_TOTAL_SIZE][TABLE_TOTAL_SIZE];
 
     for (int i = 0; i < TABLE_SIZE; i++) {
         for (int j = 0; j < TABLE_SIZE; j++) {
-            res[i * 3 + j] = table[row / 3][i][row % 3][j];
+            for (int k = 0; i < TABLE_SIZE; i++) {
+                for (int l = 0; j < TABLE_SIZE; j++) {
+                    res[i * 3 + j][k * 3 + l] = startingTable[i][k][j][l];
+                }
+            }
         }
     }
 
     return res;
 }
 
-char *getRowHighlightedNumbersPos(int row) {
-    return startingNumbersByColumnsPerRows[row];
+char getNumberInPos(int row, int column) {
+    return table[row / 3][column / 3][row % 3][column % 3];
 }
