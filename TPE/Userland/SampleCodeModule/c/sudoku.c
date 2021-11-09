@@ -30,11 +30,13 @@ int tryAddPlayForSudoku(char number, int rowIndex, int columnIndex) {
     int bigColIndex = columnIndex / TABLE_SIZE;
     int smallRowIndex = rowIndex % TABLE_SIZE;
     int smallColIndex = columnIndex % TABLE_SIZE;
+    int isAddedAlready = table[bigRowIndex][bigColIndex][smallRowIndex][smallColIndex] ? 1 : 0;
 
     if (startingTable[bigRowIndex][bigColIndex][smallRowIndex][smallColIndex]) return IGNORED;
 
     if (number == 0) {
         table[bigRowIndex][bigColIndex][smallRowIndex][smallColIndex] = number;
+        if (isAddedAlready) remainingCount++;
         return ADDED_AND_CAN_CONTINUE;
     }
 
@@ -43,14 +45,15 @@ int tryAddPlayForSudoku(char number, int rowIndex, int columnIndex) {
             if (table[bigRowIndex][bigColIndex][i][j] == number 
             || table[bigRowIndex][i][smallRowIndex][j] == number 
             || table[i][bigColIndex][j][smallColIndex] == number) {
-                return 0;
+                return IGNORED;
             }
         }
     }
 
     table[bigRowIndex][bigColIndex][smallRowIndex][smallColIndex] = number;
 
-    return --remainingCount == 0 ? 2 : 1;
+    if (!isAddedAlready) remainingCount--;
+    return remainingCount == 0 ? ADDED_AND_WON : ADDED_AND_CAN_CONTINUE;
 }
 
 char **getStartingNumbers() {
