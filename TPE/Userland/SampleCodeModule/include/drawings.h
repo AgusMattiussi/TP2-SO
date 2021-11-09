@@ -12,6 +12,7 @@ void clearHangmanScreen();
 void drawSudoku(char sudoku[9][9]);
 void drawSudokuWinScreen();
 void drawInSudokuPos(int col, int row, char digit);
+void clearSudokuScreen();
 
 #define HANGMAN_LAST_COL 29
 #define HANGMAN_FIRST_ROW 11
