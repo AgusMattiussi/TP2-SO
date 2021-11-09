@@ -17,8 +17,9 @@ void startSudoku() {
 }
 
 void updateSudoku(char digit) {
-    if (!isPlaying) {
-        if (digit == '0') startSudoku();
+    if (isPlaying == 2) {
+        if (digit == '0') 
+            startSudoku();
         return;
     }
 
@@ -42,11 +43,13 @@ void updateSudoku(char digit) {
     } else {
         columnAux = columnInstruction - 1;
         rowAux = rowInstruction - 1;
-        isPlaying = tryAddPlayForSudoku(number, rowAux, columnAux) ? 0 : 1;
-        if (isPlaying) {
+        isPlaying = tryAddPlayForSudoku(number, rowAux, columnAux);
+        if (isPlaying == 1) {
             drawInSudokuPos(columnAux, rowAux, getNumberInPos(rowAux, columnAux) + '0');
-        } else {
+        } 
+        else if(isPlaying == 2) {
             drawSudokuWinScreen();
+            return;
         }
         columnInstruction = 0;
         updateColumnInstructionUI();
