@@ -23,17 +23,26 @@ unsigned int strlen(const char * str){
 
 int strtok(char * input, char delim, char * tokenArray[], int maxTokens){
 	int tokCount = 0;
-	if (*input != delim && *input != 0)
+
+	// Si no es nulo, me guardo el comienzo del string, que sera el
+	// primer token
+	if (input[0] != delim && input[0] != 0)
 		tokenArray[tokCount++] = input;
 
 	while (*input != 0){
+		//Mientras no encuentre el delimitador, avanzo
 		if (*input == delim){
+			// Cambio el delimitador por 0 para cerrar el token
 			*input = 0;
-            char * next = input + 1;
-			if (*next != delim && *next != 0){
+
+			//Chequeo el siguiente
+            char next = *(input+1);
+			if (next != delim && next != 0){
+				// Si todavia entran tokens, me guardo el comienzo del
+				// proximo token. Si no, retorno
 				if (tokCount >= maxTokens)
 					return tokCount;
-				tokenArray[tokCount++] = next;
+				tokenArray[tokCount++] = input+1;
 			}
 		}
 		input++;
