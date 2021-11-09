@@ -3,18 +3,36 @@
 
 #include <naiveConsole.h>
 
+/**
+ * Devuelve verdadero mientras el teclado este activado
+**/
 extern int keyboardActivated();
 
+/**
+ * Devuelve el scancode de la tecla presionada
+**/
 extern unsigned char getPressedKey();
 
+/**
+ * Cuando se presiona una tecla, se genera una interrupcion que llama a 
+ * esta funcion. Se guarda el ascii de la tecla en el buffer.
+**/
 int keyboardHandler();
 
+/**
+ * Devuelve el scancode de la tecla presionada
+**/
 unsigned char scancodeToAscii(int scancode);
 
-unsigned char * getBuffer();
-
+/**
+ *  Devuelve el primer caracter del buffer y lo elimina. Desplaza en una
+ *  posicion todo el buffer
+**/
 unsigned char kb_getChar();
 
+/**
+ *  Elimina el primer caracter del buffer y lo desplaza en una posicion
+**/
 void removeFirstChar();
 
 #endif

@@ -1,6 +1,7 @@
 #include <drawings.h>
 
 static void drawSudokuGrid();
+static void drawInitialSudokuTiles(char sudoku[9][9]);
 
 void drawVerticalLine(int fromRow, int toRow, int col, unsigned char colorCode){
     if(fromRow > toRow)
@@ -54,7 +55,7 @@ void clearHangmanScreen(){
         drawVerticalLine(HANGMAN_FIRST_ROW, HANGMAN_LAST_ROW, i, BLACK_BLACK);
 }
 
-void drawSudoku(int sudoku[9][9]){ 
+void drawSudoku(char sudoku[9][9]){ 
     drawSudokuGrid();
     drawInitialSudokuTiles(sudoku);
 }
@@ -86,7 +87,7 @@ static void drawSudokuGrid(){
     
 }
 
-void drawInitialSudokuTiles(int sudoku[9][9]){
+static void drawInitialSudokuTiles(char sudoku[9][9]){
     char num;
     int sudokuX = 0;
     int sudokuY = 0;
@@ -142,19 +143,19 @@ void drawInSudokuPos(int col, int row, char digit){
     int trueCol, trueRow;
     // Cambio las filas y columnas por su verdadera
     // posicion de impresion
-    if(col >= 4 && col <=6)
-        trueCol = SUDOKU_FIRST_COL + col + 1;
-    else if(col >= 7)
+    if(col >= 3 && col <=5)
         trueCol = SUDOKU_FIRST_COL + col + 2;
+    else if(col >= 6)
+        trueCol = SUDOKU_FIRST_COL + col + 3;
     else
-        trueCol = SUDOKU_FIRST_COL + col;
+        trueCol = SUDOKU_FIRST_COL + col + 1;
 
-    if(row >= 4 && row <=6)
-        trueRow = SUDOKU_FIRST_ROW + row + 1;
-    else if(row >= 7)
+    if(row >= 3 && row <=5)
         trueRow = SUDOKU_FIRST_ROW + row + 2;
+    else if(row >= 6)
+        trueRow = SUDOKU_FIRST_ROW + row + 3;
     else
-        trueRow = SUDOKU_FIRST_ROW + row;
+        trueRow = SUDOKU_FIRST_ROW + row + 1;
 
     printCharInPos(digit, trueRow, trueCol, printColor);
 }

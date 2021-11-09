@@ -23,8 +23,6 @@ int keyboardHandler(){
     return 0;
 }
 
-// BUG: SUMA 16
-
 // Fuente: https://stackoverflow.com/questions/61124564/convert-scancodes-to-ascii
 unsigned char scancodeToAscii(int scancode){
         unsigned char kbd_US [128] ={
@@ -63,11 +61,6 @@ unsigned char scancodeToAscii(int scancode){
     };
 
     return kbd_US[scancode];
-}
-
-unsigned char * getBuffer(){
-    buffer[bufferSize] = 0;
-    return buffer;
 }
 
 unsigned char kb_getChar(){
