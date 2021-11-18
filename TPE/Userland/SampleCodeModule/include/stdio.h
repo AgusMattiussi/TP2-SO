@@ -2,6 +2,7 @@
 #define _STDIO_H
 
 #define BACKSPACE '\b'
+#define SHIFT 201
 
 // COLORES: El formato es COLORLETRA_COLORFONDO
 #define BLACK_BLACK 0x00
@@ -84,6 +85,12 @@ extern unsigned long sys_getDeciseconds();
  * Syscall: dispara la excepcion de Operando Invalido
 **/
 extern void sys_raiseInvOpCodeExc();
+
+/**
+ * Syscall: crea un backup de los registros para luego imprimirlos cuando se llame
+ * a 'inforeg'
+**/
+extern void sys_saveRegs();
 
 /**
  * Devuelve un caracter ingresado por el usuario siempre que este no

@@ -7,7 +7,7 @@
 #include <memory.h>
 #include <naiveConsole.h>
 
-extern void getRegistersInfo();
+extern void saveRegisterInfo();
 
 /**
  * Deriva el numero de syscall (en rdi) a la rutina correspondiente y le transfiere sus parametros 

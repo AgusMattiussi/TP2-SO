@@ -1,7 +1,7 @@
 GLOBAL cpuVendor
-GLOBAL getRegistersInfo
+GLOBAL saveRegisterInfo
 GLOBAL getSP
-EXTERN inforeg
+EXTERN savereg
 
 section .text
 	
@@ -29,13 +29,13 @@ cpuVendor:
 	pop rbp
 	ret
 
-getRegistersInfo:
+saveRegisterInfo:
 
-	mov [buffer], rax					; Copiamos cada registro en el
-	mov [buffer + 1*8], rbx				; buffer, para luego imprimirlos
-	mov [buffer + 2*8], rcx				; llamando a la funcion de C
-	mov [buffer + 3*8], rdx				; 'inforeg'. La misma se encuentra
-	mov [buffer + 4*8], rsi				; en memory.c
+	mov [buffer], rax				
+	mov [buffer + 1*8], rbx			
+	mov [buffer + 2*8], rcx			
+	mov [buffer + 3*8], rdx			
+	mov [buffer + 4*8], rsi				
 	mov [buffer + 5*8], rdi
 	mov [buffer + 6*8], r8
 	mov [buffer + 7*8], r9
@@ -46,11 +46,11 @@ getRegistersInfo:
 	mov [buffer + 12*8], r14
 	mov [buffer + 13*8], r15
 	mov [buffer + 14*8], rsp
-	mov rax, [rsp] ; RIP.
+	mov rax, [rsp] 				; RIP.
     mov [buffer + 15*8], rax
 	
 	mov rdi, buffer
-	call inforeg
+	call savereg
 
 	ret
 

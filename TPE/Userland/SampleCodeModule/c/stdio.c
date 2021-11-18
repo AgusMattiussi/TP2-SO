@@ -45,7 +45,7 @@ void printInPos(char * string, int row, int col, unsigned char colorCode){
 }
 
 int scan(char *buffer, int size){
-    char c;
+    unsigned char c;
     int lenght=0;
     while((c = getChar()) != '\n' && lenght < size){
         if(c == BACKSPACE){
@@ -54,7 +54,9 @@ int scan(char *buffer, int size){
         } else if(IS_ALPHA(c) || IS_DIGIT(c) || c == ' '){
             putChar(c);
             buffer[lenght++] = c;  
-        }      
+        } else if(c == SHIFT){
+            sys_saveRegs();
+        }     
     }
     while(buffer[lenght-1] == ' '){
         while((c = getChar()) != '\n' && lenght < size){
@@ -64,7 +66,9 @@ int scan(char *buffer, int size){
             } else if(IS_ALPHA(c) || IS_DIGIT(c) || c == ' '){
                 putChar(c);
                 buffer[lenght++] = c;  
-            }      
+            } else if(c == SHIFT){
+                sys_saveRegs();
+            }     
         }
     }
     buffer[lenght] = 0;
