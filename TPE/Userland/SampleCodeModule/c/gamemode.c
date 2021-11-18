@@ -30,6 +30,8 @@ void gamemodeManager(){
             hangmanHandler(c);
         else if(IS_DIGIT(c))
             updateSudoku(c);
+        else if(c == SHIFT)
+            sys_saveRegs();
     }
     clear();    
 }

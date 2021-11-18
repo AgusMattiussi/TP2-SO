@@ -13,6 +13,7 @@ void exceptionDispatcher(int exception, uint64_t *registers) {
 		default:
 			return;
 	}
+	saveRegisterInfo();
 	getRegistersInfo();
 	restartTerminal(registers);
 }

@@ -3,6 +3,7 @@
 
 #include <naiveConsole.h>
 #include <stdint.h>
+#include <memory.h>
 
 #define ZERO_EXCEPTION_ID 0
 #define INVALID_OPCODE_EXCEPTION_ID 6
@@ -18,7 +19,7 @@ extern uint64_t getSP();
  * Guarda el valor de cada registro en un buffer que despues
  * imprime
 **/
-extern void getRegistersInfo();
+extern void saveRegisterInfo();
 
 /**
  * Deriva la excepcion (cuyo numero se indica en 'exception') a la funcion
