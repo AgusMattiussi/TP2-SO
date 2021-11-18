@@ -20,7 +20,7 @@ void startTerminal(){
 void startCommands(){
     commandBuilder("help", "Displays information about every command available.", &help);
     commandBuilder("clear", "Clears the screen.", &clearScreen);
-    commandBuilder("inforeg", "Displays the information of all the registers.", &getRegisters);
+    commandBuilder("inforeg", "Displays the information of all the registers, if saved before.", &getRegisters);
     commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument", &printmem);
     commandBuilder("time", "Displays the current time and date.", &printTime);
     commandBuilder("divzero", "Displays exception of division by zero.", &divZero);
@@ -93,7 +93,7 @@ void printTime(){
 
     print(" - ");
 
-    itoa(sys_getTime(DAY) + LOCAL_DATE_CORRECTION, str);
+    itoa(sys_getTime(DAY), str);
     print(str);
 
     print("/");

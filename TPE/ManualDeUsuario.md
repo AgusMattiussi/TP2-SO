@@ -16,7 +16,7 @@ Una vez ejecutado el run.sh, se abrirá una ventana con una terminal donde usted
 
 - ***help***: Despliega en pantalla todos los comandos disponibles para el usuario con su respectiva descripción.
 
-- ***inforeg***: Muestra en pantalla el valor de los registros.
+- ***inforeg***: Muestra en pantalla el valor de los registros, si es que se guardó previamente. Para guardar el estado de los registros en un momento específico, simplemente debe presionar la tecla `Shift`.
 
 - ***printmem***: Realiza un dump de 32 bytes de una zona de memoria que recibe por parámetro. 
 
@@ -63,8 +63,8 @@ Devuelve el campo de la fecha/hora actual indicado en 'descriptor'
 [3] void ***sys_clear***();
 Elimina todo el contenido de la pantalla y posiciona el prompt al comienzo de la misma.
 
-[4] void ***sys_getRegistersInfo***();
-Imprime en pantalla cada registro del procesador con su contenido
+[4] void ***sys_saveRegs***();
+Crea un backup de los registros para luego imprimirlos cuando se llame `inforeg`
 
 [5] void ***sys_PrintMem***(char * address);
 Imprime en pantalla el contenido de 32 bytes de memoria a partir de la direccion 'address'.
@@ -75,5 +75,7 @@ Imprime el caracter 'c' en la fila 'row' y columna 'col' de la pantalla, teniend
 [7] unsigned long ***sys_getDeciseconds***();
 Retorna los decisegundos desde que se inicio el sistema
 
+[8] void ***sys_getRegistersInfo***();
+Imprime en pantalla cada registro del procesador con su contenido
 
 
