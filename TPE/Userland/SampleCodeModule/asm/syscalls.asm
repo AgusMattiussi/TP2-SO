@@ -11,7 +11,6 @@ GLOBAL sys_getDeciseconds
 SECTION .text
 
 %macro pushState 0
-	;push rax ;Chequear si rax es necesario
 	push rbx
 	push rcx
 	push rdx
@@ -43,26 +42,7 @@ SECTION .text
 	pop rdx
 	pop rcx
 	pop rbx
-	;pop rax ;Chequear si rax es necesario
 %endmacro
-
-; User-level applications use as integer registers for passing 
-; the sequence %rdi, %rsi, %rdx, %rcx, %r8 and %r9
-; The kernel interface uses %rdi, %rsi, %rdx, %r10, %r8 and %r9
-; FUENTE: https://stackoverflow.com/questions/2535989/what-are-the-calling-conventions-for-unix-linux-system-calls-and-user-space-f
-
-; Linux Order: rax, rdi, rsi, rdx, r10, r8, r9
-
-; %macro syscall 1
-;     pushState
-
-;     mov rax, %1     ; Cargo en rax el numero de syscall
-;     int 80h         
-
-;     popState
-;     ret             ; es necesario?
-; %endmacro
-
 
 %macro syscall 1
 	pushState
