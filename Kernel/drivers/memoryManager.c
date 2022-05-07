@@ -6,6 +6,14 @@
 
 #define HEAP_START 0x800000
 #define HEAP_MAX_SIZE 0x200000
+#define BYTE_ALIGNMENT 8 
+#define BYTE_ALIGNMENT_MASK 0x0007
+
+#define BLOCK_ALLOCATED_BITMASK                ( ( ( size_t ) 1 ) << ( ( sizeof( size_t ) * 8 ) - 1 ) )
+#define BLOCK_SIZE_IS_VALID(size)              ( ( ( size ) & BLOCK_ALLOCATED_BITMASK ) == 0 )
+#define BLOCK_IS_ALLOCATED(memoryBlock)        ( ( ( memoryBlock->size ) & BLOCK_ALLOCATED_BITMASK ) != 0 )
+#define ALLOCATE_BLOCK(memoryBlock)            ( ( memoryBlock->size ) |= BLOCK_ALLOCATED_BITMASK )
+#define FREE_BLOCK(memoryBlock)                ( ( memoryBlock->size ) &= ~BLOCK_ALLOCATED_BITMASK )
 
 #define ADJUSTED_HEAP_SIZE (HEAP_MAX_SIZE - BYTE_ALIGNMENT)
 
@@ -21,6 +29,8 @@ static size_t freeBytesRemaining = HEAP_MAX_SIZE;
 static uint8_t heap[ HEAP_MAX_SIZE ];
 
 static void initializeHeap();
+
+static const uint16_t MemoryBlockStructSize = ( ( sizeof( memoryBlock_t ) + ( BYTE_ALIGNMENT - 1 ) ) & ~( ( size_t ) BYTE_ALIGNMENT_MASK ) );
 
 static wasHeapInitialized = FALSE;
 
@@ -45,12 +55,44 @@ void * malloc(size_t size){
     memoryBlock_t * newBlock;
 }
 
+void free(void * pv){
+    uint8_t * startBlockAddress = (uint8_t *) pv;
+    memoryBlock_t * blockToFree;
+
+    if(pv != NULL){
+        startBlockAddress -= MemoryBlockStructSize;
+
+        blockToFree = (void *) startBlockAddress;
+
+        // configASSERT( heapBLOCK_IS_ALLOCATED( pxLink ) != 0 );
+        // configASSERT( pxLink->pxNextFreeBlock == NULL );
+        
+        if( BLOCK_IS_ALLOCATED(blockToFree) != 0 ){
+            if( blockToFree->next == NULL ){
+                /* The block is being returned to the heap - it is no longer allocated. */
+                FREE_BLOCK(blockToFree);
+
+                // #if ( configHEAP_CLEAR_MEMORY_ON_FREE == 1 ){
+                //     ( void ) memset( puc + heapSTRUCT_SIZE, 0, pxLink->xBlockSize - heapSTRUCT_SIZE );
+                // }
+                // #endif
+
+                /* Add this block to the list of free blocks. */
+                prvInsertBlockIntoFreeList( ( ( memoryBlock_t * ) blockToFree ) );
+                freeBytesRemaining += blockToFree->size;
+
+                // traceFREE( pv, pxLink->xBlockSize );
+            }
+        }
+    }
+}
+
 static void initializeHeap() {
     memoryBlock_t *firstFreeBlock;
     uint8_t alignedHeap;
 
     /* Ensure the heap starts on a correctly aligned boundary. */
-    alignedHeap = ( uint8_t * ) ( ( ( POINTER_SIZE_TYPE ) & heap[ BYTE_ALIGNMENT - 1 ] ) & ( ~( ( POINTER_SIZE_TYPE ) BYTE_ALIGNMENT_MASK ) ) );
+    alignedHeap = (uint8_t *) (((POINTER_SIZE_TYPE) & heap[BYTE_ALIGNMENT-1]) & (~((POINTER_SIZE_TYPE) BYTE_ALIGNMENT_MASK)));
 
     firstBlock.next = (void *) alignedHeap;
     firstBlock.size = (size_t) 0;
