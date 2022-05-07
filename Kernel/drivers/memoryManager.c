@@ -13,6 +13,7 @@ static memoryBlock_t lastBlock;
 
 static size_t freeBytesRemaining = HEAP_MAX_SIZE;
 
+static wasHeapInitialized = FALSE;
 
 static void prvInsertBlockIntoFreeList(memoryBlock_t * blockToInsert){                                                                                                                               
     memoryBlock_t * blockIterator;                                                                                                   
@@ -27,4 +28,10 @@ static void prvInsertBlockIntoFreeList(memoryBlock_t * blockToInsert){
     /* position. */                                                                                                             
     blockToInsert->next = blockIterator->next;                                                             
     blockIterator->next = blockToInsert;                                                                              
+}
+
+void * malloc(size_t size){
+    memoryBlock_t * block;
+    memoryBlock_t * previousBlock;
+    memoryBlock_t * newBlock;
 }
