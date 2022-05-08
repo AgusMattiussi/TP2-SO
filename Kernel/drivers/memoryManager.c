@@ -1,4 +1,5 @@
 #include <types.h>
+#include <lib.h>
 
 #ifndef POINTER_SIZE_TYPE
     #define POINTER_SIZE_TYPE uint64_t
@@ -20,6 +21,8 @@
 
 /* Chequea que la suma entre a y b sea menor que HEAP_MAX_SIZE */
 #define heapADD_WILL_OVERFLOW(a, b) ((a) > (HEAP_MAX_SIZE - (b)))
+/* Chequea que el producto entre a y b sea menor que HEAP_MAX_SIZE */
+#define heapMULTIPLY_WILL_OVERFLOW(a, b) (((a) > 0) && ((b) > (HEAP_MAX_SIZE/(a))))
 
 typedef struct memoryBlock{
     struct memoryBlock * next;
@@ -133,7 +136,18 @@ void * malloc(size_t wantedSize){
     }
 
     return retPointer;
-    memoryBlock_t * newBlock;
+}
+
+void * calloc(size_t typeSize, size_t typeCount){
+    if(heapMULTIPLY_WILL_OVERFLOW(typeSize, typeCount) == TRUE)
+        return NULL;
+
+    void * retPointer = malloc(typeSize * typeCount);
+
+    if(retPointer != NULL)
+        memset(retPointer, 0, typeSize * typeCount);
+    
+    return retPointer;
 }
 
 void free(void * pointer){
@@ -151,4 +165,5 @@ void free(void * pointer){
         }
     }
 }
+
 
