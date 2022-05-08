@@ -1,10 +1,22 @@
 #include <types.h>
 
+#ifndef POINTER_SIZE_TYPE
+    #define POINTER_SIZE_TYPE uint64_t
+#endif
+
 #define HEAP_START 0x800000
 #define HEAP_MAX_SIZE 0x200000
-
 #define BYTE_ALIGNMENT 8 
 #define BYTE_ALIGNMENT_MASK 0x0007
+#define ADJUSTED_HEAP_SIZE (HEAP_MAX_SIZE - BYTE_ALIGNMENT)
+
+/*
+#define BLOCK_ALLOCATED_BITMASK                ( ( ( size_t ) 1 ) << ( ( sizeof( size_t ) * 8 ) - 1 ) )
+#define BLOCK_SIZE_IS_VALID(size)              ( ( ( size ) & BLOCK_ALLOCATED_BITMASK ) == 0 )
+#define BLOCK_IS_ALLOCATED(memoryBlock)        ( ( ( memoryBlock->size ) & BLOCK_ALLOCATED_BITMASK ) != 0 )
+#define ALLOCATE_BLOCK(memoryBlock)            ( ( memoryBlock->size ) |= BLOCK_ALLOCATED_BITMASK )
+#define FREE_BLOCK(memoryBlock)                ( ( memoryBlock->size ) &= ~BLOCK_ALLOCATED_BITMASK )
+*/
 
 /* Chequea que la suma entre a y b sea menor que HEAP_MAX_SIZE */
 #define heapADD_WILL_OVERFLOW(a, b) ((a) > (HEAP_MAX_SIZE - (b)))
@@ -17,26 +29,47 @@ typedef struct memoryBlock{
 static const uint16_t MemoryBlockStructSize = ((sizeof(memoryBlock_t) + (BYTE_ALIGNMENT - 1)) & ~((size_t)BYTE_ALIGNMENT_MASK));
 #define MINIMUM_BLOCK_SIZE ((size_t)(MemoryBlockStructSize * 2))
 
+/* Estos bloques se utilizan como 'marcadores', representando el comienzo
+*  y fin de la lista de bloques respectivamente */
 static memoryBlock_t firstBlock;
 static memoryBlock_t lastBlock;
 
 static size_t freeBytesRemaining = HEAP_MAX_SIZE;
-
+static uint8_t heap[ HEAP_MAX_SIZE ];
 static wasHeapInitialized = FALSE;
 
 static void insertBlockIntoFreeList(memoryBlock_t * blockToInsert){                                                                                                                               
     memoryBlock_t * blockIterator;                                                                                                   
     size_t size = blockToInsert->size;                                                                                                          
                                                                                                                                                                                                                        
-                                                                                                                                    
-    /* Iterate through the list until a block is found that has a larger size */                                                
-    /* than the block we are inserting. */                                                                                      
+    /* La lista de bloques libres se ordena de menor a mayor tamanio. Entonces,
+    *  se itera por la lista hasta encontrar un bloque cuyo tamanio sea mayor al
+    *  tamanio del bloque a insertar */                                                                                                                                                                                                                  
     for(blockIterator = &firstBlock; blockIterator->next->size < size; blockIterator = blockIterator->next);                                                                                                                          
                                                                                                                                     
-    /* Update the list to include the block being inserted in the correct */                                                    
-    /* position. */                                                                                                             
+    /* Insertamos el bloque en la lista */                                                                                                             
     blockToInsert->next = blockIterator->next;                                                             
     blockIterator->next = blockToInsert;                                                                              
+}
+
+/* Se llama esta funcion la primera vez que se hace un malloc. Inicializa el firstBlock y
+*  lastBlock, a la vez que crea un primer bloque libre cuyo tamanio es todo el heap */
+static void initializeHeap() {
+    memoryBlock_t * firstFreeBlock;
+    uint8_t alignedHeap;
+
+    /* Me aseguro de que el heap comience en una posicion alineada */
+    alignedHeap = (uint8_t *) (((POINTER_SIZE_TYPE) & heap[BYTE_ALIGNMENT-1]) & (~((POINTER_SIZE_TYPE) BYTE_ALIGNMENT_MASK)));
+
+    firstBlock.next = (void *) alignedHeap;
+    firstBlock.size = (size_t) 0;
+
+    lastBlock.size = ADJUSTED_HEAP_SIZE;
+    lastBlock.next = NULL;
+    
+    firstFreeBlock = (void *) alignedHeap;
+    firstFreeBlock->size = ADJUSTED_HEAP_SIZE;
+    firstFreeBlock->next = &lastBlock;
 }
 
 void * malloc(size_t wantedSize){
@@ -46,7 +79,7 @@ void * malloc(size_t wantedSize){
     size_t aditionalRequiredSize;
 
     if(wasHeapInitialized = FALSE){
-        /*** INICIALIZAR HEAP ***/
+        initializeHeap();
         wasHeapInitialized = TRUE;
     }
 
@@ -100,4 +133,22 @@ void * malloc(size_t wantedSize){
     }
 
     return retPointer;
+    memoryBlock_t * newBlock;
 }
+
+void free(void * pointer){
+    memoryBlock_t * blockToFree;
+
+    if(pointer != NULL){
+        /* Antes de cada puntero entregado por malloc, se encuentra
+        * un memoryBlock_t con la informacion del bloque entregado */
+        blockToFree = (void *) (pointer - MemoryBlockStructSize);
+
+        if(blockToFree->next == NULL ){
+            /* Aniado este bloque a la lista de bloques libres */
+            insertBlockIntoFreeList((memoryBlock_t *) blockToFree);
+            freeBytesRemaining += blockToFree->size;
+        }
+    }
+}
+
