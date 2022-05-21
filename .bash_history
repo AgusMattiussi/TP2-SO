@@ -54,3 +54,9 @@ exit
 a
 exit
 exit
+ls
+cd root
+ls
+make clean
+clear
+exit

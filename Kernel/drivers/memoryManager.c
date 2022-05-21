@@ -59,7 +59,7 @@ static void insertBlockIntoFreeList(memoryBlock_t * blockToInsert){
 *  lastBlock, a la vez que crea un primer bloque libre cuyo tamanio es todo el heap */
 static void initializeHeap() {
     memoryBlock_t * firstFreeBlock;
-    uint8_t alignedHeap;
+    uint8_t * alignedHeap;
 
     /* Me aseguro de que el heap comience en una posicion alineada */
     alignedHeap = (uint8_t *) (((POINTER_SIZE_TYPE) & heap[BYTE_ALIGNMENT-1]) & (~((POINTER_SIZE_TYPE) BYTE_ALIGNMENT_MASK)));
@@ -81,7 +81,7 @@ void * malloc(size_t wantedSize){
     void * retPointer = NULL;
     size_t aditionalRequiredSize;
 
-    if(wasHeapInitialized = FALSE){
+    if(wasHeapInitialized == FALSE){
         initializeHeap();
         wasHeapInitialized = TRUE;
     }
