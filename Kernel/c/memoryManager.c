@@ -205,18 +205,18 @@ void * my_malloc(size_t wantedSize){
     return retPointer;
 }
 
-void * my_calloc(size_t typeSize, size_t typeCount){
-    void * retPointer = NULL;
+// void * my_calloc(size_t typeSize, size_t typeCount){
+//     void * retPointer = NULL;
 
-    if(!MULTIPLY_WILL_OVERFLOW(typeSize, typeCount)){
-        retPointer = my_malloc(typeSize * typeCount);
+//     if(!MULTIPLY_WILL_OVERFLOW(typeSize, typeCount)){
+//         retPointer = my_malloc(typeSize * typeCount);
 
-        if(retPointer != NULL)
-            (void) memset(retPointer, 0, typeSize * typeCount);
-    }
+//         if(retPointer != NULL)
+//             (void) memset(retPointer, 0, typeSize * typeCount);
+//     }
 
-    return retPointer;
-}
+//     return retPointer;
+// }
 
 void my_free(void * p) {
     uint8_t * blockPointer = (uint8_t *) p;
