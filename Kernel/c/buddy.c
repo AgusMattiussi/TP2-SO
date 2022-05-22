@@ -1,4 +1,4 @@
-#include <types.h>
+#include "buddy.h"    
 
 #define HEAP_START 0x800000
 
@@ -11,7 +11,7 @@
 
 #define BUCKET_COUNT (MAX_ALLOC_LOG2 - MIN_ALLOC_LOG2 + 1) // = 21 - 4 + 1 = 18
 
-#define PARENT(i) ((i) - 1) / 2
+#define PARENT(i) ((i - 1) / 2)
 #define LEFT_CHILD(i) (i)*2 + 1
 #define RIGHT_CHILD(i) (i)*2 + 2
 #define SIBLING(i) (((i) - 1) ^ 1) + 1
@@ -29,13 +29,13 @@ static uint8_t *base_ptr;
 // static uint8_t *max_ptr;
 
 // Ojo con esto
-/* static int update_max_ptr(uint8_t *new_value) {
-  if(new_value > base_ptr + MAX_ALLOC)
-    return 0;
+// static int update_max_ptr(uint8_t *new_value) {
+//   if(new_value > base_ptr + MAX_ALLOC)
+//     return 0;
 
-  max_ptr = new_value;
-  return 1;
-} */
+//   max_ptr = new_value;
+//   return 1;
+// }
 
 /* ===== MANEJO DE LISTAS ===== */
 
@@ -61,7 +61,8 @@ static void list_remove(list_t *entry) {
 
 static list_t *list_pop(list_t *list) {
   list_t *back = list->prev;
-  if (back == list) return NULL;
+  if (back == list) 
+    return NULL;
   list_remove(back);
   return back;
 }
@@ -97,7 +98,7 @@ static size_t bucket_for_request(size_t request) {
   return bucket;
 }
 
-static void lower_bucket_limit(size_t bucket) {
+static int lower_bucket_limit(size_t bucket) {
   while (bucket < bucket_limit) {
     size_t root = node_for_ptr(base_ptr, bucket_limit);
     uint8_t *right_child;
@@ -111,9 +112,9 @@ static void lower_bucket_limit(size_t bucket) {
 
     right_child = ptr_for_node(root + 1, bucket_limit);
 
-    /* if (!update_max_ptr(right_child + sizeof(list_t))) {
+    if (right_child + sizeof(list_t) > base_ptr + MAX_ALLOC) {
       return 0;
-    } */
+    }
 
     list_push(&buckets[bucket_limit], (list_t *)right_child);
     list_init(&buckets[--bucket_limit]);
@@ -121,14 +122,15 @@ static void lower_bucket_limit(size_t bucket) {
     root = PARENT(root);
     if (root != 0) 
         flip_parent_is_split(root);
-    
   }
+  return 1;
 }
 
 static void initializeHeap() {
+    // base_ptr = (uint8_t *) malloc(MAX_ALLOC);
     base_ptr = (uint8_t *) HEAP_START;
     bucket_limit = BUCKET_COUNT - 1;
-    //update_max_ptr(base_ptr + sizeof(list_t));
+    // update_max_ptr(base_ptr + sizeof(list_t));
     list_init(&buckets[BUCKET_COUNT - 1]);
     list_push(&buckets[BUCKET_COUNT - 1], (list_t *)base_ptr);
 }
@@ -144,13 +146,16 @@ void * b_malloc(size_t request) {
 
   bucket = bucket_for_request(request + HEADER_SIZE);
   original_bucket = bucket;
+  // printf("Reservo bucket de %ld para un request de %ld\n", bucket, request);
 
   while (bucket + 1 != 0) {
     size_t i;
-    //size_t size, bytes_needed
+    // size_t size, bytes_needed;
     uint8_t *ptr;
 
-    lower_bucket_limit(bucket);
+    if (!lower_bucket_limit(bucket)) 
+      return NULL;
+    
     
     ptr = (uint8_t *)list_pop(&buckets[bucket]);
     if (ptr == NULL) {
@@ -160,13 +165,20 @@ void * b_malloc(size_t request) {
         continue;
       }
 
-      lower_bucket_limit(bucket - 1);
+      if (!lower_bucket_limit(bucket - 1)) 
+        return NULL;
+      
 
       ptr = (uint8_t *)list_pop(&buckets[bucket]);
     }
 
-    //size = (size_t)1 << (MAX_ALLOC_LOG2 - bucket); // 2^(21 - 16) = 2^5 = 32
-    //bytes_needed = bucket < original_bucket ? size / 2 + sizeof(list_t) : size;
+    // size = (size_t)1 << (MAX_ALLOC_LOG2 - bucket); // 2^(21 - 16) = 2^5 = 32
+    // bytes_needed = bucket < original_bucket ? size / 2 + sizeof(list_t) : size;
+
+    // if (!update_max_ptr(ptr + bytes_needed)) {
+    //   list_push(&buckets[bucket], (list_t *)ptr);
+    //   return NULL;
+    // }
 
     i = node_for_ptr(ptr, bucket);
     if (i != 0) {
@@ -193,9 +205,15 @@ void b_free(void *ptr) {
   if (ptr == NULL)
     return;
   
-  bucket = bucket_for_request(*(size_t *)ptr);
+  // bucket = bucket_for_request(*(size_t *)ptr);
+  // ptr = (uint8_t *)ptr - HEADER_SIZE;
+  // i = node_for_ptr((uint8_t *)ptr, bucket);
   ptr = (uint8_t *)ptr - HEADER_SIZE;
+  bucket = bucket_for_request(*(size_t *)ptr + HEADER_SIZE);
   i = node_for_ptr((uint8_t *)ptr, bucket);
+
+  // printf("Libero bucket de %ld\n", bucket);
+  // printf("i = %ld\n", i);
 
   while (i != 0) {
 
