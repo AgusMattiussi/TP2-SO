@@ -1,7 +1,16 @@
 #include <types.h>
 
 #define NAME_MAX_SIZE 25
-#define STACK_SIZE 4096
+#define PROCESS_STACK_SIZE 0x1000
+
+extern void timerInterrupt();
+process * getProcess(uint64_t pid);
+int changeProcessState(uint64_t pid, states state);
+void exit();
+uint64_t getPid();
+uint64_t kill(uint64_t pid);
+uint64_t block(uint64_t pid);
+uint64_t unblock(uint64_t pid);
 
 typedef enum {READY, BLOCKED, KILLED} states;
 
@@ -30,7 +39,7 @@ typedef struct stackFrame{
 
 typedef struct processContext{
     char name[NAME_MAX_SIZE];
-    uint64_t pid;
+    pid_t pid;
     uint64_t rsp;
     uint64_t rbp;
     // uint64_t priority;
@@ -50,8 +59,8 @@ typedef struct processList{
     int readyCount;
 } processList;
 
-static uint64_t lastGivenPid = 1;
-static processList * currentList;
+static pid_t lastGivenPid = 1;
+static processList *currentList;
 static process * executingP;
 
 static int dummyP(int argc, char **argv);
@@ -68,6 +77,84 @@ uint64_t kill(uint64_t pid);
 uint64_t block(uint64_t pid);
 uint64_t unblock(uint64_t pid);
 
+static void enqProcess(process * pr) {
+
+    /* Si la lista no existe o el proceso es nulo, no puedo encolarlo */
+    if(pr == NULL || currentList == NULL)
+        return;
+    
+    /* Si no habia procesos en la lista, este es el primero */
+    if(currentList->first == NULL)
+        currentList->first = pr;
+    /* Si no, es el nuevo ultimo */
+    else
+        currentList->last->next = pr;
+    
+    /* Actualizo el puntero al ultimo */
+    currentList->last = pr;
+    /* Como es lista circular, el siguiente del ultimo es el primero */
+    pr->next = currentList->first;
+
+    /* Por default asumimos que el proceso se crea en READY */
+    currentList->readyCount++;
+    currentList->size++;
+}
+
+static process * deqProcess() {
+
+    /* Si la lista no existe o el proceso es nulo, no puedo sacarlo */
+    if(currentList == NULL || currentList->size == 0)
+        return NULL;
+
+    /* Tomo el primero (asumo FIFO). No puede ser NULL */
+    process * deq = currentList->first;
+
+    /* Si habia un solo elemento, entonces first == last. Seteo ambos en
+     * NULL, pues ahora la lista quedara vacia */
+    if(currentList->size == 1){
+        currentList->first = NULL;
+        /* Creo que es redundante, porque first==last */
+        currentList->last = NULL;
+    } else {
+        /* Si no, el first sera el siguiente al que voy a sacar */
+        currentList->first = deq->next;
+        /* Como habia sacado first, el siguiente de last quedo NULL. Lo actualizo */
+        currentList->last->next = currentList->first;
+    }
+
+    /* Elimino la referencia al siguiente */
+    deq->next = NULL;
+
+    /* Si estaba READY, actualizo readyCount*/
+    if(deq->pc.state == READY)
+        currentList->readyCount--;
+
+    currentList->size--;
+    return deq;
+}
+
+pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
+
+    //TODO: Cambiar a malloc a secas
+    process * new = b_malloc(sizeof(process) + PROCESS_STACK_SIZE);
+    if(new == NULL)
+        return 0;
+
+    char * prName = argv[0];
+    if(initProcess(new, prName) == 0)
+        return 0;
+
+    //TODO: Cambiar a malloc a secas
+    char **prArgs = b_malloc(sizeof(char *) * argc);
+    if(prArgs == NULL)
+        return 0;
+
+    //TODO: Implementar copyArguments
+    //TODO: Llamar a initializeStackFrame
+    enqProcess(new);
+    return new->pc.pid;
+}
+
 static int dummyP(int argc, char **argv)
 {
     while (1) {
@@ -80,10 +167,10 @@ static int dummyP(int argc, char **argv)
 void initScheduler()
 {
     // Se inicializa la lista
-    currentList.first = NULL;
-    currentList.last = NULL;
-    currentList.size = 0;
-    currentList.readyCount = 0;
+    currentList->first = NULL;
+    currentList->last = NULL;
+    currentList->size = 0;
+    currentList->readyCount = 0;
     executingP = NULL;
 
     // Se agrega el proceso dummy manualmente al inicio
@@ -97,7 +184,7 @@ static uint64_t initProcess(process *pNode, char *name) {
     processContext *pc = &(pNode->pc);
     pc->pid = generatePid();
     memcpy(pc->name, name, strlen(name));
-    pc->rbp = (uint64_t)pNode + STACK_SIZE + sizeof(process) - sizeof(char *);
+    pc->rbp = (uint64_t)pNode + PROCESS_STACK_SIZE + sizeof(process) - sizeof(char *);
     pc->rsp = (uint64_t)(pc->rbp - sizeof(stackFrame));
     pc->state = READY;
     // pc->priority = INIT_PRIORITY;
