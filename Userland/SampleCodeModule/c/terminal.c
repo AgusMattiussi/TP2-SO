@@ -25,7 +25,6 @@ void startCommands(){
     commandBuilder("time", "Displays the current time and date.", &printTime);
     commandBuilder("divzero", "Displays exception of division by zero.", &divZero);
     commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode);
-    commandBuilder("gamemode", "Changes the system to game mode + chronometer", &gamemode);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)()){
@@ -76,7 +75,7 @@ void printmem(int argSize, char *args[]){
         return;
     }
     unsigned long address = hexaStringToInt(args[0]);
-    sys_PrintMem(address);
+    sys_PrintMem((char *) address);
 }
 
 void printTime(){
@@ -109,15 +108,10 @@ void printTime(){
     putChar('\n');
 }
 
-void gamemode(){
-    clear();
-    drawGameMode();
-    gamemodeManager();
-    clear();     
-}
-
 void divZero(){
     int x = 1/0;
+    if(x){
+    }
 }
 
 void invalidOpCode(){

@@ -3,10 +3,8 @@
 
 #include <stdio.h>
 #include <strings.h>
-#include <gamemode.h>
-#include <drawings.h>
 
-#define COMMANDS_COUNT 8
+#define COMMANDS_COUNT 7
 #define BUFFER_SIZE 50
 
 #define MINUTES 2
@@ -73,12 +71,5 @@ void divZero();
  * Función del comando 'invalidopcode'. Verifica el correcto funcionamiento de código de operación invalido.
 **/
 void invalidOpCode();
-
-/**
- * Función del comando 'gamemode'. Divide la pantalla en cuatro: 
- * en una zona muestra la hora en formato hh:mm:ss, en otra hay un cronómetro funcional y en las restantes 
- * se puede jugar al sudoku y al ahorcado respectivamente.
-**/
-void gamemode();
 
 #endif
