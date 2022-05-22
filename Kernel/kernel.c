@@ -5,6 +5,7 @@
 #include <naiveConsole.h>
 #include <keyboardDriver.h>
 #include <exceptions.h>
+#include <idtLoader.h>
 
 
 extern uint8_t text;

@@ -38,8 +38,9 @@ static memoryBlock_t firstBlock;
 static memoryBlock_t lastBlock;
 
 static size_t freeBytesRemaining = HEAP_MAX_SIZE;
-static uint8_t heap[ HEAP_MAX_SIZE ];
-static wasHeapInitialized = FALSE;
+//static uint8_t heap[ HEAP_MAX_SIZE ];
+static uint8_t * heap = (uint8_t *) HEAP_START;
+static wasHeapInitialized = FALSE; 
 
 static void insertBlockIntoFreeList(memoryBlock_t * blockToInsert){                                                                                                                               
     memoryBlock_t * blockIterator;                                                                                                   
@@ -59,7 +60,7 @@ static void insertBlockIntoFreeList(memoryBlock_t * blockToInsert){
 *  lastBlock, a la vez que crea un primer bloque libre cuyo tamanio es todo el heap */
 static void initializeHeap() {
     memoryBlock_t * firstFreeBlock;
-    uint8_t alignedHeap;
+    uint8_t * alignedHeap;
 
     /* Me aseguro de que el heap comience en una posicion alineada */
     alignedHeap = (uint8_t *) (((POINTER_SIZE_TYPE) & heap[BYTE_ALIGNMENT-1]) & (~((POINTER_SIZE_TYPE) BYTE_ALIGNMENT_MASK)));
@@ -81,7 +82,7 @@ void * malloc(size_t wantedSize){
     void * retPointer = NULL;
     size_t aditionalRequiredSize;
 
-    if(wasHeapInitialized = FALSE){
+    if(wasHeapInitialized == FALSE){
         initializeHeap();
         wasHeapInitialized = TRUE;
     }
@@ -135,6 +136,11 @@ void * malloc(size_t wantedSize){
         freeBytesRemaining -= currentBlock->size;
     }
 
+    /* Puedo chequear que el puntero sea valido
+    if(retPointer < HEAP_START || retPointer > HEAP_START + HEAP_MAX_SIZE)
+        return NULL;
+     */
+    
     return retPointer;
 }
 
