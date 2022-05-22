@@ -1,6 +1,7 @@
 GLOBAL cpuVendor
 GLOBAL saveRegisterInfo
 GLOBAL getSP
+GLOBAL timerInterrupt
 EXTERN savereg
 
 section .text
@@ -58,6 +59,9 @@ getSP:
 	mov rax, rsp
 	ret
 
+timerInterrupt:
+	int 20h
+	ret
 
 section .bss
 buffer: resb 128
