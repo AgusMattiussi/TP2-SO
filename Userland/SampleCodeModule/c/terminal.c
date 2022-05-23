@@ -25,6 +25,12 @@ void startCommands(){
     commandBuilder("time", "Displays the current time and date.", &printTime);
     commandBuilder("divzero", "Displays exception of division by zero.", &divZero);
     commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode);
+    // commandBuilder("mem", "Displays the current memory state.", &mem);
+    commandBuilder("ps", "Displays a list with all running processes.", &ps);
+    commandBuilder("loop", "Displays current PID with a message.", &loop);
+    // commandBuilder("kill", "Kills a running process given its pid..", &kill);
+    // commandBuilder("nice", "Changes a process priority.", &nice);
+    // commandBuilder("block", "Blocks a running process given its pid.", &block);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)()){
@@ -118,3 +124,19 @@ void invalidOpCode(){
     sys_raiseInvOpCodeExc();
 }
 
+void ps(){
+    sys_ps();
+}
+
+void loop(){
+    unsigned long long pid = sys_getPid();
+    char pidStr[3];
+    itoa(pid, pidStr);
+
+    while(1){
+        // sleep(5);
+        print("Hola!!! Soy el proceso con pid: ");
+        print(pidStr);
+        putChar('\n');
+    }
+}

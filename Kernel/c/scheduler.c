@@ -2,6 +2,8 @@
 #include <memory.h>
 #include <buddy.h>
 #include <strings.h>
+#include <scheduler.h>
+#include <naiveConsole.h>
 
 #define NAME_MAX_SIZE 25
 #define PROCESS_STACK_SIZE 0x1000
@@ -58,7 +60,7 @@ process * getProcess(pid_t pid);
 int changeProcessState(pid_t pid, states state);
 void exitPs();
 void forceExitAfterExec(int argc, char *argv[], void *processFn(int, char **));
-pid_t getPid();
+// pid_t getPid();
 uint64_t kill(pid_t pid);
 uint64_t block(pid_t pid);
 uint64_t unblock(pid_t pid);
@@ -293,6 +295,33 @@ uint64_t unblock(pid_t pid){
     if(pid < 1)
         return -1;
     return changeProcessState(pid, READY);
+}
+
+void printListOfProcesses(){
+    // ncPrint("Lista de procesos\n");
+    process * toPrint = currentList->first;
+    if(toPrint == NULL){
+        ncPrint("No processes to show\n");
+        return;
+    }
+    // Falta prioridad
+    ncPrint("PID\tNAME\tRSP\tRBP\tSTATE");
+    int i=0;
+    while(i < currentList->size) {
+        
+        ncPrintDec(toPrint->pc.pid);
+        ncPrint("\t");
+        ncPrint(toPrint->pc.name);
+        ncPrint("\t");
+        ncPrintHex(toPrint->pc.rsp);
+        ncPrint("\t");
+        ncPrintHex(toPrint->pc.rbp);
+        ncPrint("\t");
+        ncPrint((char *)toPrint->pc.state);
+
+        toPrint = toPrint->next;
+        i++;
+    }
 }
 
 // static void freeProcess(process * process){

@@ -6,6 +6,7 @@
 #include <rtcDriver.h>
 #include <memory.h>
 #include <naiveConsole.h>
+#include <scheduler.h>
 
 extern void saveRegisterInfo();
 

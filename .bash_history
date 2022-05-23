@@ -60,3 +60,11 @@ ls
 make clean
 clear
 exit
+ls
+ls
+exit
+ls
+cd ..
+cd root
+ls
+exit

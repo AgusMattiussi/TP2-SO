@@ -8,6 +8,8 @@ GLOBAL sys_printCharInPos
 GLOBAL sys_raiseInvOpCodeExc
 GLOBAL sys_getDeciseconds
 GLOBAL sys_saveRegs
+GLOBAL sys_ps
+GLOBAL sys_getPid
 
 SECTION .text
 
@@ -79,6 +81,10 @@ sys_getDeciseconds:
 	syscall 7
 sys_getRegistersInfo:
 	syscall 8
+sys_ps:
+	syscall 9
+sys_getPid:
+	syscall 10
 
 ;Fuente: https://www.felixcloutier.com/x86/ud
 sys_raiseInvOpCodeExc:

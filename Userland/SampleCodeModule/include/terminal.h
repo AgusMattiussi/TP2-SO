@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <strings.h>
 
-#define COMMANDS_COUNT 7
+#define COMMANDS_COUNT 8
 #define BUFFER_SIZE 50
 
 #define MINUTES 2
@@ -71,5 +71,9 @@ void divZero();
  * Función del comando 'invalidopcode'. Verifica el correcto funcionamiento de código de operación invalido.
 **/
 void invalidOpCode();
+
+void ps();
+
+void loop();
 
 #endif
