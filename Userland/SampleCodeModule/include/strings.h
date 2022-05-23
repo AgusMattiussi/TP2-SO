@@ -25,6 +25,11 @@ int strtok(char * input, char delim, char * tokenArray[], int maxTokens);
 void itoa(int num, char *str);
 
 /**
+ * Convierte el string 'str' a unsigned long long y lo devuelve
+**/
+unsigned long long atoull(char *str);
+
+/**
  * Transforma el string 's' que representa un numero en formato hexadecimal
  * en un entero (base 10) y lo devuelve
 **/
