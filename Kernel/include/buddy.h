@@ -7,6 +7,7 @@
 // #include <stdio.h>
 
 #include <types.h>
+#include <stdint.h>
 
 
 void * b_malloc(size_t request);

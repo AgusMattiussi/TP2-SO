@@ -1,16 +1,10 @@
 #include <types.h>
+#include <memory.h>
+#include <buddy.h>
+#include <strings.h>
 
 #define NAME_MAX_SIZE 25
 #define PROCESS_STACK_SIZE 0x1000
-
-extern void timerInterrupt();
-process * getProcess(uint64_t pid);
-int changeProcessState(uint64_t pid, states state);
-void exit();
-uint64_t getPid();
-uint64_t kill(uint64_t pid);
-uint64_t block(uint64_t pid);
-uint64_t unblock(uint64_t pid);
 
 typedef enum {READY, BLOCKED, KILLED} states;
 
@@ -42,8 +36,7 @@ typedef struct processContext{
     pid_t pid;
     uint64_t rsp;
     uint64_t rbp;
-    // uint64_t priority;
-    // uint64_t tickets;
+    /* Priodad del proceso ? */
     states state;
 } processContext;
 
@@ -59,23 +52,24 @@ typedef struct processList{
     int readyCount;
 } processList;
 
+extern void timerInterrupt();
+extern void _hlt();
+process * getProcess(pid_t pid);
+int changeProcessState(pid_t pid, states state);
+void exitPs();
+void forceExitAfterExec(int argc, char *argv[], void *processFn(int, char **));
+pid_t getPid();
+uint64_t kill(pid_t pid);
+uint64_t block(pid_t pid);
+uint64_t unblock(pid_t pid);
+static int firstProcess(int argc, char **argv);
+static pid_t initProcess(process *pNode, char *name);
+static void initStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), pid_t pid);
+static pid_t generatePid();
+
 static pid_t lastGivenPid = 1;
 static processList *currentList;
 static process * executingP;
-
-static int dummyP(int argc, char **argv);
-static uint64_t initProcess(process *pNode, char *name);
-static void initStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), uint64_t pid);
-static uint64_t generatePid();
-
-extern void timerInterrupt();
-process * getProcess(uint64_t pid);
-int changeProcessState(uint64_t pid, states state);
-void exit();
-uint64_t getPid();
-uint64_t kill(uint64_t pid);
-uint64_t block(uint64_t pid);
-uint64_t unblock(uint64_t pid);
 
 static void enqProcess(process * pr) {
 
@@ -155,17 +149,14 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
     return new->pc.pid;
 }
 
-static int dummyP(int argc, char **argv)
-{
-    while (1) {
+static int firstProcess(int argc, char **argv) {
+    while (1)
         _hlt();
-    }
-
+    
     return 0;
 }
 
-void initScheduler()
-{
+void initScheduler() {
     // Se inicializa la lista
     currentList->first = NULL;
     currentList->last = NULL;
@@ -174,61 +165,60 @@ void initScheduler()
     executingP = NULL;
 
     // Se agrega el proceso dummy manualmente al inicio
-    char *argv[] = {"dummyP"};
-    createProcess((void *)&dummyP, 1, argv);
-    // dummyProcess = removeProcess(&currentList);
+    char *argv[] = {"firstProcess"};
+    createProcess((void *)&firstProcess, 1, argv);
+    // fp = removeProcess(&currentList);
 }
 
 // Setea el PCB con los valores nuevos
-static uint64_t initProcess(process *pNode, char *name) {
+static pid_t initProcess(process *pNode, char *name) {
     processContext *pc = &(pNode->pc);
     pc->pid = generatePid();
     memcpy(pc->name, name, strlen(name));
     pc->rbp = (uint64_t)pNode + PROCESS_STACK_SIZE + sizeof(process) - sizeof(char *);
     pc->rsp = (uint64_t)(pc->rbp - sizeof(stackFrame));
+
+    /* Se asume que todos los procesos comienzan en READY */
     pc->state = READY;
-    // pc->priority = INIT_PRIORITY;
-    // pc->tickets = INIT_PRIORITY * QUANTUM;
+
+    /* IMPLEMENTAR PRIORIDADES */
     return pc->pid;
 }
 
-static void initStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), uint64_t pid)
-{
+static void initStackFrame(int argc, char **argv, process *pNode, void (*processFn)(int, char **), pid_t pid) {
     stackFrame *stack = (stackFrame *)(pNode->pc.rsp);
 
-    stack->r15 = 0x001;
-    stack->r14 = 0x002;
-    stack->r13 = 0x003;
-    stack->r12 = 0x004;
-    stack->r11 = 0x005;
-    stack->r10 = 0x006;
-    stack->r9 = 0x007;
-    stack->r8 = 0x008;
+    stack->r15 = 0x1;
+    stack->r14 = 0x2;
+    stack->r13 = 0x3;
+    stack->r12 = 0x4;
+    stack->r11 = 0x5;
+    stack->r10 = 0x6;
+    stack->r9 = 0x7;
+    stack->r8 = 0x8;
 
     stack->rsi = (uint64_t)argv;
     stack->rdi = argc;
     stack->rbp = 0;
-    stack->rdx = (uint64_t)fn;
+    stack->rdx = (uint64_t)processFn;
     stack->rcx = pid;
-    stack->rip = (uint64_t)bootStart;
+    stack->rip = (uint64_t)forceExitAfterExec;
     stack->cs = 0x8;
     stack->rflags = 0x202;
     stack->rsp = (uint64_t)(pNode->pc.rsp);
     stack->ss = 0x0;
 }
 
-static uint64_t generatePid()
-{
-    return ++lastGivenPid;
+static pid_t generatePid() {
+    return lastGivenPid++;
 }
 
-void bootStart(int argc, char *argv[], void *fn(int, char **))
-{
-    fn(argc, argv);
-    exit();
+void forceExitAfterExec(int argc, char *argv[], void *processFn(int, char **)) {
+    processFn(argc, argv);
+    exitPs();
 }
 
-process * getProcess(uint64_t pid){
+process * getProcess(pid_t pid){
     if(pid == executingP->pc.pid)
         return executingP;
 
@@ -245,7 +235,7 @@ process * getProcess(uint64_t pid){
     return NULL;
 }
 
-int changeProcessState(uint64_t pid, states state){
+int changeProcessState(pid_t pid, states state){
     if(pid == executingP->pc.pid){
         executingP->pc.state = state;
         return 0;
@@ -266,16 +256,16 @@ int changeProcessState(uint64_t pid, states state){
     return 0;
 }
 
-void exit(){
+void exitPs(){
     kill(executingP->pc.pid);
 }
 
-uint64_t getPid(){
+pid_t getPid(){
     return executingP->pc.pid;
 }
 
 
-uint64_t kill(uint64_t pid){
+uint64_t kill(pid_t pid){
     if(pid < 1)
         return -1;
 
@@ -287,7 +277,7 @@ uint64_t kill(uint64_t pid){
     return result;
 }
 
-uint64_t block(uint64_t pid){
+uint64_t block(pid_t pid){
     if(pid < 1)
         return -1;
 
@@ -299,7 +289,7 @@ uint64_t block(uint64_t pid){
     return result;
 }
 
-uint64_t unblock(uint64_t pid){
+uint64_t unblock(pid_t pid){
     if(pid < 1)
         return -1;
     return changeProcessState(pid, READY);
