@@ -93,6 +93,11 @@ extern void sys_raiseInvOpCodeExc();
 extern void sys_saveRegs();
 
 /**
+ * Syscall: Cambia el estado de un proceso entre bloqueado y listo dado su ID
+**/
+extern void sys_togglePsState(unsigned long long pid);
+
+/**
  * Devuelve un caracter ingresado por el usuario siempre que este no
  * sea nulo (distinto de 0)
 **/

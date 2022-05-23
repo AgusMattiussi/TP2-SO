@@ -118,3 +118,12 @@ void invalidOpCode(){
     sys_raiseInvOpCodeExc();
 }
 
+void block(int argSize, char *args[]) {
+    if (argSize != 1) {
+        print("Invalid amount of arguments.\n");
+        return;
+    }
+    
+    unsigned long long pid = atoull(args[0]);
+    sys_togglePsState(pid);
+}

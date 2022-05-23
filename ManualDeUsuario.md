@@ -78,4 +78,5 @@ Retorna los decisegundos desde que se inicio el sistema
 [8] void ***sys_getRegistersInfo***();
 Imprime en pantalla cada registro del procesador con su contenido
 
-
+[9] void ***sys_togglePsState***(unsigned long long pid);
+Cambia el estado de un proceso entre bloqueado y listo dado su ID.
