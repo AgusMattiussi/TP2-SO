@@ -92,6 +92,10 @@ extern void sys_raiseInvOpCodeExc();
 **/
 extern void sys_saveRegs();
 
+extern void sys_ps();
+
+extern void sys_getPid();
+
 /**
  * Devuelve un caracter ingresado por el usuario siempre que este no
  * sea nulo (distinto de 0)

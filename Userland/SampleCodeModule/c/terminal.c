@@ -129,14 +129,14 @@ void ps(){
 }
 
 void loop(){
-    unsigned long long pid = sys_getPid();
+    // unsigned long long pid = sys_getPid();
     char pidStr[3];
-    itoa(pid, pidStr);
+    // itoa(pid, pidStr);
 
     while(1){
         // sleep(5);
         print("Hola!!! Soy el proceso con pid: ");
-        print(pidStr);
+        // print(pidStr);
         putChar('\n');
     }
 }

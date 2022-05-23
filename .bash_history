@@ -68,3 +68,107 @@ cd ..
 cd root
 ls
 exit
+ls
+clear
+make all
+make all
+clear
+make clean
+clear
+make all
+make clean
+clear
+make all
+cd Image/
+chmod 777 *
+cd ..
+clear
+make clean
+make all
+chmod 777 Image/*
+make clean
+make all
+make clean
+make all
+make clean
+make all
+make all
+make all
+make clean
+make all
+chmod 777 Image/*
+make clean
+make all
+chmod 777 Image/*
+make clean
+make all
+gdb -v
+clear
+cd ..
+ls
+cd $HOME
+ls
+make clean
+make all
+make all
+make clean
+make all
+make clean
+make all
+make clean
+make all
+make clean
+make all
+make clean
+make all
+make clean
+make all
+make all
+make clean
+make all
+make clean
+make all
+make clean
+make all
+make all
+make all
+make clean
+makea ll
+make
+make clean
+make all
+chmod 777 Image/*
+gdb
+make clean
+make all
+chmod 777 Image/*
+gdb
+make all
+chmod 777 Image/*
+gdb
+make clean
+makea all
+make
+chmod 777 Image/*
+gdb
+clear
+make clean
+clear
+make all
+chmod 777 Image/*
+clear
+make all
+make clean
+make all
+make clean
+make all
+make clean
+make all
+make clean
+make all
+chmod 777 Image/*
+make all
+make clean
+make all
+chmod 777 Image/*
+exit
