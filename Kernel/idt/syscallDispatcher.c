@@ -27,8 +27,7 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 			getRegistersInfo(); 													// <-- void getRegisters() || terminal.c
 			return 8;
 		case 9:
-			printMemory(rsi);														// <-- void block(int argSize, char *args[]) || terminal.c
-			return 9;
+			return toggleBlocked(rsi);												// <-- void block(int argSize, char *args[]) || terminal.c
 	}
     // Por default devuelve 0
 	return 0;
