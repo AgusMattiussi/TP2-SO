@@ -19,18 +19,18 @@ typedef struct stackFrame{
     uint64_t r10;
     uint64_t r9;
     uint64_t r8;
-    uint64_t rsi;   // argv
-    uint64_t rdi;   // argc
+    uint64_t rsi;   // <- argv
+    uint64_t rdi;   // <- argc
     uint64_t rbp;
-    uint64_t rdx;   // function
-    uint64_t rcx;   // pid
+    uint64_t rdx;   // <- funcion del proceso
+    uint64_t rcx;   // <- pid
     uint64_t rbx;
     uint64_t rax;
-    uint64_t rip;    // loader
-    uint64_t cs;     // 0x8
-    uint64_t rflags; // 0x202
-    uint64_t rsp;    // rbp
-    uint64_t ss;     // 0
+    uint64_t rip;    // <- Proxima instruccion
+    uint64_t cs;     // <- 0x8
+    uint64_t rflags; // <- 0x202
+    uint64_t rsp;    // <- rbp
+    uint64_t ss;     // <- 0x0
 } stackFrame;
 
 typedef struct processContext{
@@ -68,10 +68,28 @@ static int firstProcess(int argc, char **argv);
 static pid_t initProcess(process *pNode, char *name);
 static void initStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), pid_t pid);
 static pid_t generatePid();
+static process * getReadyPs();
+void scheduler();
+static void enqProcess(process * pr);
+static process * deqProcess();
 
 static pid_t lastGivenPid = 1;
 static processList *currentList;
 static process * executingP;
+
+/* Scheduler FIFO */
+//TODO: Cambiar a Round Robin con Prioridades
+void scheduler(){
+
+    process * nextPs = getReadyPs();
+    if(nextPs == NULL)
+        return;
+
+    enqProcess(executingP);
+    executingP = nextPs;
+
+    //TODO: Hay que devolver RIP?
+}
 
 static void enqProcess(process * pr) {
 
@@ -129,6 +147,26 @@ static process * deqProcess() {
     return deq;
 }
 
+static process * getReadyPs() {
+    process * currentPs;
+    size_t psCount = currentList->size;
+
+    for (size_t i = 0; i < psCount; i++){
+        currentPs = deqProcess();
+        if(currentPs == NULL || currentPs->pc.state == READY)
+            return currentPs;
+
+        if(currentPs->pc.state == KILLED){
+            //TODO: Liberar recursos del proceso
+        } else {
+            enqProcess(currentPs);
+        }
+    }
+    
+    /* Si llego hasta este punto, no se encontraron procesos READY */
+    return NULL;
+}
+
 pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
 
     //TODO: Cambiar a malloc a secas
@@ -166,10 +204,14 @@ void initScheduler() {
     currentList->readyCount = 0;
     executingP = NULL;
 
-    // Se agrega el proceso dummy manualmente al inicio
+    // Se agrega el primer proceso manualmente al inicio
+    createFirstProcess();
+    // fp = removeProcess(&currentList);
+}
+
+void createFirstProcess(){
     char *argv[] = {"firstProcess"};
     createProcess((void *)&firstProcess, 1, argv);
-    // fp = removeProcess(&currentList);
 }
 
 // Setea el PCB con los valores nuevos
