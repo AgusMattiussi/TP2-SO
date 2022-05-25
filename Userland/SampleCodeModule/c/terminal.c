@@ -7,6 +7,7 @@ static void (*commandsFn[COMMANDS_COUNT])(int argSize, char *args[]);
 static int commandIndex = 0;
 
 void startTerminal(){
+    printWithColor("GOLAZO\n", GREEN_BLACK);
     startCommands();
     char buffer[BUFFER_SIZE] = {0};
     while(1){

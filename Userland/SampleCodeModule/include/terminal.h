@@ -103,4 +103,6 @@ void block(int argSize, char *args[]);
 **/
 void kill(int argSize, char *args[]);
 
+extern unsigned long long sys_createProcess(void (*pFunction)(int, char **), int argc, char **argv);
+
 #endif
