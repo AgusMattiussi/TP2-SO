@@ -29,9 +29,9 @@ void startCommands(){
     commandBuilder("ps", "Displays a list with all running processes.", &ps);
     commandBuilder("sleep", "Delay for a specified amount of time.", &sleep);
     commandBuilder("loop", "Displays current PID with a message.", &loop);
-    // commandBuilder("kill", "Kills a running process given its pid..", &kill);
     // commandBuilder("nice", "Changes a process priority.", &nice);
     commandBuilder("block", "Blocks a running process given its pid.", &block);
+    commandBuilder("kill", "Kills a running process given its pid.", &kill);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)()){

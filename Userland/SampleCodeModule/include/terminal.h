@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <strings.h>
 
-#define COMMANDS_COUNT 11
+#define COMMANDS_COUNT 13
 #define BUFFER_SIZE 50
 
 #define MINUTES 2
