@@ -148,6 +148,7 @@ static void freeProcess(process * p){
     /* Libero los argumentos */
     for (int i = 0; i < argc; i++)
         free(argv[i]);
+    free(argv);
     
     /* Libero el nodo del proceso */
     free(p);
