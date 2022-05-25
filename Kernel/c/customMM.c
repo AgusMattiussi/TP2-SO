@@ -253,4 +253,21 @@ size_t getFreeHeapSize() {
     return freeBytesRemaining;
 }
 
+void mem(){
+    size_t freeMemory = getFreeHeapSize();
+
+    ncPrint("Memoria total: ");
+    ncPrintDec(HEAP_MAX_SIZE);
+    ncPrint(" bytes\n");
+
+    ncPrint("Memoria en uso: ");
+    // TODO: revisar esta conversion
+    ncPrintDec(HEAP_MAX_SIZE - freeBytesRemaining);
+    ncPrint(" bytes\n");
+
+    ncPrint("Memoria libre: ");
+    ncPrintDec(freeBytesRemaining);
+    ncPrint(" bytes\n");
+
+}
 

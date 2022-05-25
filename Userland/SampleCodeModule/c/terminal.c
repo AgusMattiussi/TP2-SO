@@ -25,13 +25,13 @@ void startCommands(){
     commandBuilder("time", "Displays the current time and date.", &printTime);
     commandBuilder("divzero", "Displays exception of division by zero.", &divZero);
     commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode);
-    // commandBuilder("mem", "Displays the current memory state.", &mem);
+    commandBuilder("mem", "Displays the current memory state.", &mem);
     commandBuilder("ps", "Displays a list with all running processes.", &ps);
     commandBuilder("sleep", "Delay for a specified amount of time.", &sleep);
     commandBuilder("loop", "Displays current PID with a message.", &loop);
-    // commandBuilder("kill", "Kills a running process given its pid..", &kill);
     // commandBuilder("nice", "Changes a process priority.", &nice);
     commandBuilder("block", "Blocks a running process given its pid.", &block);
+    commandBuilder("kill", "Kills a running process given its pid.", &kill);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)()){
@@ -125,6 +125,10 @@ void invalidOpCode(){
     sys_raiseInvOpCodeExc();
 }
 
+void mem(){
+    sys_mem();
+}
+
 void ps(){
     sys_ps();
 }
@@ -143,14 +147,16 @@ void loop(){
     // unsigned long long pid = sys_getPid();
     // char pidStr[3];
     // itoa(pid, pidStr);
+    char *loopTime[1] = {"3"};
 
     while(1){
-        sleep(1, 5);
+        sleep(1, loopTime);
         print("Hola!!! Soy el proceso con pid: ");
         // print(pidStr);
         putChar('\n');
     }
 }
+
 void block(int argSize, char *args[]) {
     if (argSize != 1) {
         print("Invalid amount of arguments.\n");
@@ -161,6 +167,21 @@ void block(int argSize, char *args[]) {
     
     if (sys_togglePsState(pid)) {
         print("The process is currently killed or it does not exist.\n");
+    } else {
+        print("Success!\n");
+    }
+}
+
+void kill(int argSize, char *args[]) {
+    if (argSize != 1) {
+        print("Invalid amount of arguments.\n");
+        return;
+    }
+    
+    unsigned long long pid = atoull(args[0]);
+    
+    if (sys_killPs(pid)) {
+        print("The process has been killed already or it does not exist.\n");
     } else {
         print("Success!\n");
     }

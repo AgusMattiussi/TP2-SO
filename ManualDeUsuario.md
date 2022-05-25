@@ -28,26 +28,19 @@ Una vez ejecutado el run.sh, se abrirá una ventana con una terminal donde usted
 
 - ***invalidopcode***: Verifica el correcto funcionamiento de la excepción de código de operación invalido.
 
-- ***gamemode***: Divide la pantalla en cuatro: en una zona muestra la hora en formato hh:mm:ss, en otra hay un cronómetro funcional y en las restantes se puede jugar al sudoku y al ahorcado respectivamente.
+- ***mem***: Imprime el estado de la memoria.
 
+- ***ps***: Imprime la lista de todos los procesos en ejecución con sus propiedades.
 
-## Gamemode
+- ***sleep***: Retrasa el funcionamiento de la terminal una cantidad especifica de segundos.
 
-Si usted ejecuta el comando `gamemode`, dispondrá de las siguientes funcionalidades:
+- ***loop***: Imprime el ID del proceso actual con un saludo cada una cantidad de segundos.
 
-- ***Reloj***: Arriba a la izquierda observará un reloj en tiempo real en formato hh:mm:ss.
+- ***block***: Cambia el estado de un proceso entre BLOCKED y READY dado su ID.
 
-- ***Cronómetro***: Por debajo del reloj, se encontrara con un cronómetro, su funcionamiento consiste en lo siguiente:
-	- `Ctrl` ==> Comienza / pausa / reanuda el cronómetro.
-	- `Alt` ==> Reinicia.
+- ***kill***: Mata un proceso dado su ID.
 
-- ***Ahorcado***: Por la parte inferior izquierda, usted podrá jugar un juego de ahorcado. Dispondrá de 7 vidas y para jugar simplemente debera pulsar la letra que desee. Si es correcta, aparecerá en la palabra. Si no, se le descontará una vida y la letra se sumará a las ya utilizadas, por lo que no perderá otra vida si vuelve a ingresar la misma.
-Si termina el juego, ya sea porque adivinó la palabra o porque perdió, presionando la tecla `R` podrá jugar de nuevo.
-
-- ***Sudoku***: Por la zona derecha, tambien se podra jugar a un sudoku de 9x9, para ello usted debe ingresar la columna (1-9), luego la fila (1-9) y por último el número a ingresar. Si el número es válido, figurará al instante en el sudoku actualizado, si no lo es se reiniciará el proceso.
-	Si termina el juego, usted podrá reiniciarlo pulsando al tecla `0`.
-
-Si usted desea salir del gamemode, pulse la tecla `Esc`.
+- ***nice***: Cambia la prioridad de un proceso dado su ID y la nueva prioridad.
 
 ## Syscalls
 
@@ -78,5 +71,20 @@ Retorna los decisegundos desde que se inicio el sistema
 [8] void ***sys_getRegistersInfo***();
 Imprime en pantalla cada registro del procesador con su contenido
 
-[9] void ***sys_togglePsState***(unsigned long long pid);
-Cambia el estado de un proceso entre bloqueado y listo dado su ID.
+[9] void ***sys_ps***();
+Imprime una lista con todos los procesos en ejecución
+
+[10] unsigned long long ***sys_getPid***();
+Retorna el Process ID del proceso actual
+
+[11] void ***sys_togglePsState***(unsigned long long pid);
+Cambia el estado de un proceso entre bloqueado y listo dado su ID
+
+[12] void ***sys_killPs***(unsigned long long pid);
+Mata un proceso dado su ID.
+
+[13] int ***sys_getSeconds***();
+Retorna los segundos desde que se inicio el sistema
+
+[14] void ***sys_mem***();
+Imprime el estado actual de la memoria

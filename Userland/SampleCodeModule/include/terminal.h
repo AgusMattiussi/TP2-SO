@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <strings.h>
 
-#define COMMANDS_COUNT 11
+#define COMMANDS_COUNT 13
 #define BUFFER_SIZE 50
 
 #define MINUTES 2
@@ -72,12 +72,34 @@ void divZero();
 **/
 void invalidOpCode();
 
+/**
+ * Función del comando 'mem'. Imprime en pantalla el estado de la memoria.
+**/
+void mem();
+
+/**
+ * Función del comando 'ps'. Imprime en pantalla una lista con todos los procesos en ejecución.
+**/
 void ps();
 
+/**
+ * Función del comando 'sleep'. Retrasa el funcionamiento de la terminal por un tiempo especifico.
+**/
 void sleep(int argSize, char *args[]);
 
+/**
+ * Función del comando 'loop'. Imprime el ID del proceso actual con un saludo cada una cantidad de segundos.
+**/
 void loop();
 
+/**
+ * Función del comando 'block'. Cambia el estado de un proceso entre bloqueado y listo dado su ID.
+**/
 void block(int argSize, char *args[]);
+
+/**
+ * Función del comando 'kill'. Mata un proceso dado su ID.
+**/
+void kill(int argSize, char *args[]);
 
 #endif

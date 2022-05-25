@@ -229,3 +229,18 @@ void b_free(void *ptr) {
 
   list_push(&buckets[bucket], (list_t *)ptr_for_node(i, bucket));
 }
+
+void b_mem(){
+    // TODO: terminar
+    ncPrint("Memoria total: ");
+    ncPrintDec(MAX_ALLOC);
+    ncPrint(" bytes\n");
+
+    ncPrint("Memoria en uso: ");
+    // ncPrintDec(MAX_ALLOC - freeBytesRemaining);
+    ncPrint(" bytes\n");
+
+    ncPrint("Memoria libre: ");
+    // ncPrintDec(freeBytesRemaining);
+    ncPrint(" bytes\n");
+}
