@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include <strings.h>
 
-#define COMMANDS_COUNT 13
+#define COMMANDS_COUNT 13 // 14
+#define TESTS_COUNT 4
 #define BUFFER_SIZE 50
 
 #define MINUTES 2
