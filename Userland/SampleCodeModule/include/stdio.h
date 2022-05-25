@@ -97,6 +97,11 @@ extern void sys_ps();
 extern void sys_getPid();
 
 /**
+ * Syscall: Cambia el estado de un proceso entre bloqueado y listo dado su ID
+**/
+extern int sys_togglePsState(unsigned long long pid);
+
+/**
  * Devuelve un caracter ingresado por el usuario siempre que este no
  * sea nulo (distinto de 0)
 **/

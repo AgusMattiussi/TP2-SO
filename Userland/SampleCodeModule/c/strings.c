@@ -69,6 +69,16 @@ void itoa(int num, char *str){
     return;
 }
 
+unsigned long long atoull(char *str) {
+	unsigned long long res = 0;
+
+	for (int i = 0; str[i] != 0; i++) {
+		res = res * 10 + str[i] - '0';
+	}
+
+	return res;
+}
+
 static int pow(int base, unsigned int exp){
 	int rta = 1;
 	for (int i = 0; i < exp; i++)

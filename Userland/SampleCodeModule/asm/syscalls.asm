@@ -10,6 +10,7 @@ GLOBAL sys_getDeciseconds
 GLOBAL sys_saveRegs
 GLOBAL sys_ps
 GLOBAL sys_getPid
+GLOBAL sys_togglePsState
 
 SECTION .text
 
@@ -85,6 +86,8 @@ sys_ps:
 	syscall 9
 sys_getPid:
 	syscall 10
+sys_togglePsState:
+	syscall 11
 
 ;Fuente: https://www.felixcloutier.com/x86/ud
 sys_raiseInvOpCodeExc:
