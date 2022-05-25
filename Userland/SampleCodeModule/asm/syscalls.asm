@@ -80,7 +80,7 @@ sys_getDeciseconds:
 	syscall 7
 sys_getRegistersInfo:
 	syscall 8
-sys_sys_togglePsState:
+sys_togglePsState:
 	syscall 9
 
 ;Fuente: https://www.felixcloutier.com/x86/ud

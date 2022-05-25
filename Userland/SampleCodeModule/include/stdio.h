@@ -95,7 +95,7 @@ extern void sys_saveRegs();
 /**
  * Syscall: Cambia el estado de un proceso entre bloqueado y listo dado su ID
 **/
-extern void sys_togglePsState(unsigned long long pid);
+extern int sys_togglePsState(unsigned long long pid);
 
 /**
  * Devuelve un caracter ingresado por el usuario siempre que este no
