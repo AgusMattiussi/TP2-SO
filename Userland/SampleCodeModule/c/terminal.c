@@ -156,6 +156,7 @@ void loop(){
         putChar('\n');
     }
 }
+
 void block(int argSize, char *args[]) {
     if (argSize != 1) {
         print("Invalid amount of arguments.\n");

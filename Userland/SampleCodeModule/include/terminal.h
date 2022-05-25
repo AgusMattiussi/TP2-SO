@@ -73,7 +73,7 @@ void divZero();
 void invalidOpCode();
 
 /**
- * Función del comando 'mem'. Imprime en pantalla el estado actual de la memoria.
+ * Función del comando 'mem'. Imprime en pantalla el estado de la memoria.
 **/
 void mem();
 
