@@ -92,9 +92,15 @@ extern void sys_raiseInvOpCodeExc();
 **/
 extern void sys_saveRegs();
 
+/**
+ * Syscall: 
+**/
 extern void sys_ps();
 
-extern void sys_getPid();
+/**
+ * Syscall: 
+**/
+extern unsigned long long sys_getPid();
 
 /**
  * Syscall: Cambia el estado de un proceso entre bloqueado y listo dado su ID

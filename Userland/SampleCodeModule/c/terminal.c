@@ -30,7 +30,7 @@ void startCommands(){
     commandBuilder("loop", "Displays current PID with a message.", &loop);
     // commandBuilder("kill", "Kills a running process given its pid..", &kill);
     // commandBuilder("nice", "Changes a process priority.", &nice);
-    // commandBuilder("block", "Blocks a running process given its pid.", &block);
+    commandBuilder("block", "Blocks a running process given its pid.", &block);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)()){
@@ -129,14 +129,14 @@ void ps(){
 }
 
 void loop(){
-    // unsigned long long pid = sys_getPid();
+    unsigned long long pid = sys_getPid();
     char pidStr[3];
-    // itoa(pid, pidStr);
+    itoa(pid, pidStr);
 
     while(1){
         // sleep(5);
         print("Hola!!! Soy el proceso con pid: ");
-        // print(pidStr);
+        print(pidStr);
         putChar('\n');
     }
 }
