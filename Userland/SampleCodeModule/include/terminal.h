@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <strings.h>
 
-#define COMMANDS_COUNT 10
+#define COMMANDS_COUNT 11
 #define BUFFER_SIZE 50
 
 #define MINUTES 2
@@ -73,6 +73,8 @@ void divZero();
 void invalidOpCode();
 
 void ps();
+
+void sleep(int argSize, char *args[]);
 
 void loop();
 

@@ -16,4 +16,9 @@ uint8_t getTime(uint64_t descriptor);
 **/
 uint64_t getDecis();
 
+/**
+ * Devuelve el tiempo desde que se inicio el sistema en segundos
+**/
+uint64_t getSeconds();
+
 #endif
