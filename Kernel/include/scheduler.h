@@ -58,9 +58,7 @@ typedef struct processList{
 
 extern void timerInterrupt();
 extern void _hlt();
-process * getProcess(pid_t pid);
 int changeProcessState(pid_t pid, states state);
-void exitPs();
 void forceExitAfterExec(int argc, char *argv[], void *processFn(int, char **));
 pid_t getPid();
 uint64_t kill(pid_t pid);
