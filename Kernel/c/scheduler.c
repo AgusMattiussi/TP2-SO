@@ -99,7 +99,7 @@ static process * getReadyPs() {
             return currentPs;
 
         if(currentPs->pc.state == KILLED){
-            free(currentPs);
+            freeProcess(currentPs);
         } else {
             enqProcess(currentPs);
         }
