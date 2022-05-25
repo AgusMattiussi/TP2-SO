@@ -12,6 +12,7 @@ static process * getReadyPs();
 static void enqProcess(process * pr);
 static process * deqProcess();
 static void setArgs(char ** to, char ** from, int argc);
+static void freeProcess(process * p);
 
 static pid_t lastGivenPid = 1;
 static processList * currentList;
@@ -83,6 +84,7 @@ static process * deqProcess() {
     if(deq->pc.state == READY)
         currentList->readyCount--;
 
+    /* Actualizo el tamaño de la lista */
     currentList->size--;
     return deq;
 }
@@ -97,7 +99,7 @@ static process * getReadyPs() {
             return currentPs;
 
         if(currentPs->pc.state == KILLED){
-            //TODO: Liberar recursos del proceso
+            free(currentPs);
         } else {
             enqProcess(currentPs);
         }
@@ -111,6 +113,7 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
 
     /* Reservo espacio para el nuevo nodo de proceso. Notemos que new incluye
      * al proceso y al stack del mismo */ 
+    //TODO: Chequear si esto esta bien
     process * new = malloc(sizeof(process) + PROCESS_STACK_SIZE);
     if(new == NULL)
         return 0;
@@ -134,6 +137,20 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
     /* Se agrega el nuevo proceso a la lista*/
     enqProcess(new);
     return new->pc.pid;
+}
+
+static void freeProcess(process * p){
+    //TODO: Chequear si esto esta bien
+    /* Obtengo argc y argv desde el stack del proceso */
+    int argc = *(&(p->pc.rsp) + 11 * sizeof(uint64_t)); // rdi
+    char ** argv = *(&(p->pc.rsp) + 12 * sizeof(uint64_t)); // rsi
+
+    /* Libero los argumentos */
+    for (int i = 0; i < argc; i++)
+        free(argv[i]);
+    
+    /* Libero el nodo del proceso */
+    free(p);
 }
 
 static void setArgs(char ** to, char ** from, int argc){
