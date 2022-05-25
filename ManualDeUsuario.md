@@ -80,3 +80,6 @@ Imprime en pantalla cada registro del procesador con su contenido
 
 [9] void ***sys_togglePsState***(unsigned long long pid);
 Cambia el estado de un proceso entre bloqueado y listo dado su ID.
+
+[10] void ***sys_killPs***(unsigned long long pid);
+Mata un proceso dado su ID.

@@ -78,6 +78,14 @@ void sleep(int argSize, char *args[]);
 
 void loop();
 
+/**
+ * Función del comando 'block'. Cambia el estado de un proceso entre bloqueado y listo dado su ID.
+**/
 void block(int argSize, char *args[]);
+
+/**
+ * Función del comando 'kill'. Mata un proceso dado su ID.
+**/
+void kill(int argSize, char *args[]);
 
 #endif

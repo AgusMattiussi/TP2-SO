@@ -108,6 +108,11 @@ extern unsigned long long sys_getPid();
 extern int sys_togglePsState(unsigned long long pid);
 
 /**
+ * Syscall: Mata un proceso dado su ID
+**/
+extern int sys_killPs(unsigned long long pid);
+
+/**
  * Syscall: Cambia el estado de un proceso entre bloqueado y listo dado su ID
 **/
 extern int sys_getSeconds();

@@ -165,3 +165,18 @@ void block(int argSize, char *args[]) {
         print("Success!\n");
     }
 }
+
+void kill(int argSize, char *args[]) {
+    if (argSize != 1) {
+        print("Invalid amount of arguments.\n");
+        return;
+    }
+    
+    unsigned long long pid = atoull(args[0]);
+    
+    if (sys_killPs(pid)) {
+        print("The process has been killed already or it does not exist.\n");
+    } else {
+        print("Success!\n");
+    }
+}
