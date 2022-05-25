@@ -27,6 +27,7 @@ void startCommands(){
     commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode);
     // commandBuilder("mem", "Displays the current memory state.", &mem);
     commandBuilder("ps", "Displays a list with all running processes.", &ps);
+    commandBuilder("sleep", "Delay for a specified amount of time.", &sleep);
     commandBuilder("loop", "Displays current PID with a message.", &loop);
     // commandBuilder("kill", "Kills a running process given its pid..", &kill);
     // commandBuilder("nice", "Changes a process priority.", &nice);
@@ -128,15 +129,25 @@ void ps(){
     sys_ps();
 }
 
+void sleep(int argSize, char *args[]){
+    if (argSize != 1) {
+        print("Invalid amount of arguments.\n");
+        return;
+    }
+    int secondsElapsed = sys_getSeconds();
+    int final = secondsElapsed + atoull(args[0]);
+    while(sys_getSeconds() <= final);
+}
+
 void loop(){
-    unsigned long long pid = sys_getPid();
-    char pidStr[3];
-    itoa(pid, pidStr);
+    // unsigned long long pid = sys_getPid();
+    // char pidStr[3];
+    // itoa(pid, pidStr);
 
     while(1){
-        // sleep(5);
+        sleep(1, 5);
         print("Hola!!! Soy el proceso con pid: ");
-        print(pidStr);
+        // print(pidStr);
         putChar('\n');
     }
 }
