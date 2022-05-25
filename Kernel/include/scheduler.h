@@ -3,7 +3,7 @@
 
 #include <types.h>
 #include <memory.h>
-#include <buddy.h>
+#include <memoryManager.h>
 #include <strings.h>
 #include <naiveConsole.h>
 

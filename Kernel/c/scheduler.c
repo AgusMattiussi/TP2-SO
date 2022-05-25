@@ -1,15 +1,18 @@
 #include <scheduler.h>
 
+void scheduler();
+void createFirstProcess();
 static uint64_t block(pid_t pid);
 static uint64_t unblock(pid_t pid);
 static int firstProcess(int argc, char **argv);
 static pid_t initProcess(process *pNode, char *name);
-static void initStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), pid_t pid);
+static void setStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), pid_t pid);
 static pid_t generatePid();
 static process * getReadyPs();
-void scheduler();
 static void enqProcess(process * pr);
 static process * deqProcess();
+static void setArgs(char ** to, char ** from, int argc);
+static void freeProcess(process * p);
 
 static pid_t lastGivenPid = 1;
 static processList * currentList;
@@ -81,6 +84,7 @@ static process * deqProcess() {
     if(deq->pc.state == READY)
         currentList->readyCount--;
 
+    /* Actualizo el tamaño de la lista */
     currentList->size--;
     return deq;
 }
@@ -95,7 +99,7 @@ static process * getReadyPs() {
             return currentPs;
 
         if(currentPs->pc.state == KILLED){
-            //TODO: Liberar recursos del proceso
+            freeProcess(currentPs);
         } else {
             enqProcess(currentPs);
         }
@@ -107,24 +111,63 @@ static process * getReadyPs() {
 
 pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
 
-    //TODO: Cambiar a malloc a secas
-    process * new = b_malloc(sizeof(process) + PROCESS_STACK_SIZE);
+    /* Reservo espacio para el nuevo nodo de proceso. Notemos que new incluye
+     * al proceso y al stack del mismo */ 
+    //TODO: Chequear si esto esta bien
+    process * new = malloc(sizeof(process) + PROCESS_STACK_SIZE);
     if(new == NULL)
         return 0;
 
+    /* El primer parametro de argv es el nombre del proceso. Lo guardo en
+     * prName e inicializo el proceso new con dicho nombre */
     char * prName = argv[0];
     if(initProcess(new, prName) == 0)
         return 0;
 
-    //TODO: Cambiar a malloc a secas
-    char **prArgs = b_malloc(sizeof(char *) * argc);
+    /* Reservamos espacio para 'argc' argumentos */
+    char **prArgs = malloc(sizeof(char *) * argc);
     if(prArgs == NULL)
         return 0;
 
-    //TODO: Implementar copyArguments
-    //TODO: Llamar a initializeStackFrame
+    /* Copiamos uno por uno los argumentos recibidos como parametro a prArgs */
+    setArgs(prArgs, argv, argc);
+    /* Creamos un stack frame para el proceso, simulando que 'siempre existio' */
+    setStackFrame(argc, prArgs, new, pFunction, new->pc.pid);
+
+    /* Se agrega el nuevo proceso a la lista*/
     enqProcess(new);
     return new->pc.pid;
+}
+
+static void freeProcess(process * p){
+    //TODO: Chequear si esto esta bien
+    /* Obtengo argc y argv desde el stack del proceso */
+    int argc = *(&(p->pc.rsp) + 11 * sizeof(uint64_t)); // rdi
+    char ** argv = *(&(p->pc.rsp) + 12 * sizeof(uint64_t)); // rsi
+
+    /* Libero los argumentos */
+    for (int i = 0; i < argc; i++)
+        free(argv[i]);
+    free(argv);
+    
+    /* Libero el nodo del proceso */
+    free(p);
+}
+
+static void setArgs(char ** to, char ** from, int argc){
+    int argLen;
+
+    for (int i = 0; i < argc; i++){
+        argLen = strlen(from[i]);
+
+        /* Reservo espacio para el argumento i */
+        to[i] = malloc(argLen + 1);
+        if(to[i] == NULL)
+            return;
+
+        /* Copio el argumento i al nuevo arreglo */
+        memcpy(to[i], from[i], argLen);
+    }  
 }
 
 static int firstProcess(int argc, char **argv) {
@@ -167,7 +210,7 @@ static pid_t initProcess(process *pNode, char *name) {
     return pc->pid;
 }
 
-static void initStackFrame(int argc, char **argv, process *pNode, void (*processFn)(int, char **), pid_t pid) {
+static void setStackFrame(int argc, char **argv, process *pNode, void (*processFn)(int, char **), pid_t pid) {
     stackFrame *stack = (stackFrame *)(pNode->pc.rsp);
 
     stack->r15 = 0x1;
@@ -266,6 +309,8 @@ uint64_t toggleBlocked(pid_t pid) {
         case BLOCKED:
             return unblock(pid);
         case KILLED:
+            return -1;
+        default:
             return -1;
     }
 }
