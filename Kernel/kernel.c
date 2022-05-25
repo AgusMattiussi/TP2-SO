@@ -57,16 +57,19 @@ void * initializeKernelBinary()
 
 int main()
 {	
-	//_cli();
+	_cli();
+
 	load_idt();
 	ncClear();
 	
 	initScheduler();
 
+	_sti();
+	
 	saveInitialState((uint64_t)sampleCodeModuleAddress, getSP());
 	
 	((EntryPoint)sampleCodeModuleAddress)();
-	//_sti();
+
 	
 	return 0;
 }

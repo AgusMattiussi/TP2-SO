@@ -22,8 +22,10 @@ static process * executingP;
 //TODO: Cambiar a Round Robin con Prioridades
 uint64_t scheduler(uint64_t prevRsp){
 
-    /* if(executingP == NULL)
-        return prevRsp; */
+    if(executingP == NULL)
+        return prevRsp;
+
+    ncPrint("scheduler\n");
 
     process * nextPs = getReadyPs();
     if(nextPs == NULL)
@@ -213,6 +215,9 @@ static void setArgs(char ** to, char ** from, int argc){
 void initScheduler() {
     ncPrintWithColor("INICIALIZANDO SCHEDULER\n", 0x02);
     /* Se inicializa la lista circular */
+    currentList = malloc(sizeof(processList));
+    if(currentList == NULL)
+        return;
     currentList->first = NULL;
     currentList->last = NULL;
     currentList->size = 0;
@@ -221,8 +226,9 @@ void initScheduler() {
 
     /* Se agrega el primer proceso manualmente */
     createFirstProcess();
-    ncPrintWithColor(executingP->pc.name, 0x02);
+    // ncPrintWithColor(executingP->pc.name, 0x02);
     // TODO: deqProcess();
+    // free(deqProcess());
 }
 
 /* Crea el primer proceso y le asigna su nombre */
@@ -234,9 +240,12 @@ void createFirstProcess(){
 /* Primer proceso creado. Su unica funcion es esperar a que llegue un
  * proceso real */
 static int firstProcess(int argc, char **argv) {
-    ncPrintWithColor("Primer Proceso", 0x02);
-    while (1)
+    ncPrintWithColor("Primer Proceso\n", 0x02);
+    
+    while (1){
+        ncPrintWithColor("Halt", 0x02);
         _hlt();
+    }
     
     return 0;
 }

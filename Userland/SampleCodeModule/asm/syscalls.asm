@@ -14,6 +14,7 @@ GLOBAL sys_togglePsState
 GLOBAL sys_killPs
 GLOBAL sys_getSeconds
 GLOBAL sys_mem
+GLOBAL sys_createProcess
 
 SECTION .text
 
@@ -97,6 +98,8 @@ sys_getSeconds:
 	syscall 13
 sys_mem:
 	syscall 14
+sys_createProcess:
+	syscall 15
 
 ;Fuente: https://www.felixcloutier.com/x86/ud
 sys_raiseInvOpCodeExc:

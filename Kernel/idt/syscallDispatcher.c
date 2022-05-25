@@ -40,6 +40,8 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 		case 14:
 			mem();
 			return 14;
+		case 15:
+			return createProcess((void (*)(int, char **))rsi, (int)rdx, (char **)rcx);
 	}
     // Por default devuelve 0
 	return 0;
