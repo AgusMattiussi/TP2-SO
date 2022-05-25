@@ -11,8 +11,10 @@ static pid_t generatePid();
 static process * getReadyPs();
 static void enqProcess(process * pr);
 static process * deqProcess();
+static process * getProcess(pid_t pid);
 static void setArgs(char ** to, char ** from, int argc);
 static void freeProcess(process * p);
+static void exitPs();
 
 static pid_t lastGivenPid = 1;
 static processList * currentList;
@@ -32,6 +34,7 @@ void scheduler(){
     //TODO: Hay que devolver RIP?
 }
 
+/* Agrega un proceso a la lista */
 static void enqProcess(process * pr) {
 
     /* Si la lista no existe o el proceso es nulo, no puedo encolarlo */
@@ -55,6 +58,7 @@ static void enqProcess(process * pr) {
     currentList->size++;
 }
 
+/* Elimina y devuelve el primer proceso de la lista */
 static process * deqProcess() {
 
     /* Si la lista no existe o el proceso es nulo, no puedo sacarlo */
@@ -89,18 +93,43 @@ static process * deqProcess() {
     return deq;
 }
 
+/* Obtiene un proceso especifico de la lista, pero no lo elimina de la misma */
+static process * getProcess(pid_t pid){
+    /* Si justo es el proceso en ejecucion, entonces no esta en la lista */
+    if(pid == executingP->pc.pid)
+        return executingP;
+
+    /* Itero por la lista de procesos buscando el que me piden por parametro */
+    process * aux = currentList->first;
+    for(int i = 0; i < currentList->size; i++) {
+        if(pid == aux->pc.pid)
+            return aux;
+        aux = aux->next;
+    }
+
+    /* Si llegue a este punto, no se encontro el proceso */
+    return NULL;
+}
+
+/* Obtiene el proximo proceso READY de la lista y elimina cualquier proceso
+ * KILLED que encuentre en el recorrido */
 static process * getReadyPs() {
     process * currentPs;
     size_t psCount = currentList->size;
 
     for (size_t i = 0; i < psCount; i++){
+        /* Tomo el proximo proceso */
         currentPs = deqProcess();
+
+        /* Si es nulo, devuelvo NULL. Si esta READY, lo devuelvo. */
         if(currentPs == NULL || currentPs->pc.state == READY)
             return currentPs;
 
+        /* Si esta KILLED, lo libero */
         if(currentPs->pc.state == KILLED){
             freeProcess(currentPs);
         } else {
+        /* En caso contrario, esta BLOCKED, por lo que lo devuelvo a la lista */
             enqProcess(currentPs);
         }
     }
@@ -109,6 +138,7 @@ static process * getReadyPs() {
     return NULL;
 }
 
+/* Crea un nuevo proceso y lo agrega a la lista de procesos. Retorna el nuevo PID */
 pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
 
     /* Reservo espacio para el nuevo nodo de proceso. Notemos que new incluye
@@ -139,11 +169,12 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
     return new->pc.pid;
 }
 
+/* Libera el proceso p y todos sus recursos */
 static void freeProcess(process * p){
     //TODO: Chequear si esto esta bien
     /* Obtengo argc y argv desde el stack del proceso */
-    int argc = *(&(p->pc.rsp) + 11 * sizeof(uint64_t)); // rdi
-    char ** argv = *(&(p->pc.rsp) + 12 * sizeof(uint64_t)); // rsi
+    int argc = *((uint64_t *)(p->pc.rbp) + 9 * sizeof(uint64_t)); // rdi
+    char ** argv = *((char ***)((uint64_t *)(p->pc.rbp) + 8 * sizeof(uint64_t))); // rsi
 
     /* Libero los argumentos */
     for (int i = 0; i < argc; i++)
@@ -154,6 +185,7 @@ static void freeProcess(process * p){
     free(p);
 }
 
+/* Reserva espacio y asigna los argumentos de un proceso nuevo */
 static void setArgs(char ** to, char ** from, int argc){
     int argLen;
 
@@ -170,6 +202,29 @@ static void setArgs(char ** to, char ** from, int argc){
     }  
 }
 
+/* Se llama a esta funcion antes de comenzar a operar con el scheduler. Inicializa
+ * la lista de procesos y crea el primer proceso */
+void initScheduler() {
+    /* Se inicializa la lista circular */
+    currentList->first = NULL;
+    currentList->last = NULL;
+    currentList->size = 0;
+    currentList->readyCount = 0;
+    executingP = NULL;
+
+    /* Se agrega el primer proceso manualmente */
+    createFirstProcess();
+    // TODO: fp = removeProcess(&currentList);
+}
+
+/* Crea el primer proceso y le asigna su nombre */
+void createFirstProcess(){
+    char *argv[] = {"firstProcess"};
+    createProcess((void *)&firstProcess, 1, argv);
+}
+
+/* Primer proceso creado. Su unica funcion es esperar a que llegue un
+ * proceso real */
 static int firstProcess(int argc, char **argv) {
     while (1)
         _hlt();
@@ -177,39 +232,32 @@ static int firstProcess(int argc, char **argv) {
     return 0;
 }
 
-void initScheduler() {
-    // Se inicializa la lista
-    currentList->first = NULL;
-    currentList->last = NULL;
-    currentList->size = 0;
-    currentList->readyCount = 0;
-    executingP = NULL;
-
-    // Se agrega el primer proceso manualmente al inicio
-    createFirstProcess();
-    // fp = removeProcess(&currentList);
-}
-
-void createFirstProcess(){
-    char *argv[] = {"firstProcess"};
-    createProcess((void *)&firstProcess, 1, argv);
-}
-
-// Setea el PCB con los valores nuevos
+/* Inicializa Process Context de un nuevo proceso con los valores
+ * correspondientes */
 static pid_t initProcess(process *pNode, char *name) {
     processContext *pc = &(pNode->pc);
+    
+    /* Genero un nuevo PID para el proceso */
     pc->pid = generatePid();
+    /* Copio el nombre recibido por parametro al campo name de pc */
     memcpy(pc->name, name, strlen(name));
+    /* rbp apunta a la base del stack */
+    //TODO: Es necesario restar sizeof(char *)?
     pc->rbp = (uint64_t)pNode + PROCESS_STACK_SIZE + sizeof(process) - sizeof(char *);
+    /* Stack pointer apunta a la primera direccion libre del stack: despues del
+     * stackFrame */
     pc->rsp = (uint64_t)(pc->rbp - sizeof(stackFrame));
 
     /* Se asume que todos los procesos comienzan en READY */
     pc->state = READY;
 
-    /* IMPLEMENTAR PRIORIDADES */
+    //TODO: IMPLEMENTAR PRIORIDADES
     return pc->pid;
 }
 
+/* Se inicializa el Stack Frame de un nuevo proceso. En los registros r8 a r9, se asignan
+ * numeros consecutivos con el objetivo de facilitar el debugging. El significado
+ * de lo que se asigna en el resto de los registros, se explica en scheduler.h */
 static void setStackFrame(int argc, char **argv, process *pNode, void (*processFn)(int, char **), pid_t pid) {
     stackFrame *stack = (stackFrame *)(pNode->pc.rsp);
 
@@ -234,62 +282,57 @@ static void setStackFrame(int argc, char **argv, process *pNode, void (*processF
     stack->ss = 0x0;
 }
 
+/* Genera un nuevo PID consecutivo al ultimo generado y actualiza lastGivenPid */
 static pid_t generatePid() {
     return lastGivenPid++;
 }
 
+/* Le agrega a la funcion principal del proceso, una llamada a exitPs para que pase
+ * su estado a KILLED despues de ejecutarse */
 void forceExitAfterExec(int argc, char *argv[], void *processFn(int, char **)) {
     processFn(argc, argv);
     exitPs();
 }
 
-process * getProcess(pid_t pid){
-    if(pid == executingP->pc.pid)
-        return executingP;
-
-    process * aux = currentList->first;
-    int i=0;
-
-    while(i < currentList->size){
-        if(pid == aux->pc.pid)
-            return aux;
-        aux = aux->next;
-        i++;
-    }
-
-    return NULL;
-}
-
+/* Cambia el estado de un proceso cuyo PID se envia por parametro. Devuelve 0 si fue
+ * exitoso o -1 en caso de error */
 int changeProcessState(pid_t pid, states state){
-    if(pid == executingP->pc.pid){
-        executingP->pc.state = state;
-        return 0;
-    }
-
+    /* Busco el proceso indicado por pid */
     process * aux = getProcess(pid);
 
+    /* Si no se encontro el proceso o su estado es KILLED, no puedo cambiarle
+     * el estado */
     if(aux == NULL || aux->pc.state == KILLED)
         return -1;
     
+    /* Si el proceso no estaba READY y ahora se lo quiere cambiar a READY,
+     * actualizo el readyCount */
     if(aux->pc.state != READY && state == READY)
         currentList->readyCount++;
     
+    /* Si el proceso estaba READY y ahora se lo quiere cambiar a otro estado,
+     * actualizo el readyCount */
     if(aux->pc.state == READY && state != READY)
         currentList->readyCount--;
 
+    /* Actualizo el estado del proceso */
     aux->pc.state = state;
     return 0;
 }
 
-void exitPs(){
+/* Se cambia el estado a KILLED de un proceso que haya terminado su ejecucion */
+static void exitPs(){
     kill(executingP->pc.pid);
 }
 
+/* Devuelve el PID del proceso en ejecucion */
+//TODO: que pasa si executingP es NULL?
 pid_t getPid(){
     return executingP->pc.pid;
 }
 
-
+/* Cambia el estado de un proceso a KILLED. Devuelve 0 si fue
+ * exitoso o -1 en caso de error */
 uint64_t kill(pid_t pid){
     if(pid < 1)
         return -1;
@@ -302,6 +345,7 @@ uint64_t kill(pid_t pid){
     return result;
 }
 
+/* Alterna el estado de un proceso entre READY y BLOCKED */
 uint64_t toggleBlocked(pid_t pid) {
     switch (getProcess(pid)->pc.state) {
         case READY:
@@ -315,6 +359,8 @@ uint64_t toggleBlocked(pid_t pid) {
     }
 }
 
+/* Cambia el estado de un proceso a BLOCKED. Devuelve 0 si fue
+ * exitoso o -1 en caso de error */
 static uint64_t block(pid_t pid){
     if(pid < 1)
         return -1;
@@ -327,12 +373,14 @@ static uint64_t block(pid_t pid){
     return result;
 }
 
+/* Cambia el estado de un proceso BLOCKED a READY */
 static uint64_t unblock(pid_t pid){
     if(pid < 1)
         return -1;
     return changeProcessState(pid, READY);
 }
 
+/* Imprime cada proceso junto con su informacion */
 void printListOfProcesses(){
     // ncPrint("Lista de procesos\n");
     process * toPrint = currentList->first;
@@ -359,7 +407,3 @@ void printListOfProcesses(){
         i++;
     }
 }
-
-// static void freeProcess(process * process){
-//     my_free((void *)process)
-// }
