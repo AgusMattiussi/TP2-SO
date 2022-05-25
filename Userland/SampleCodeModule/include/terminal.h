@@ -72,12 +72,29 @@ void divZero();
 **/
 void invalidOpCode();
 
+/**
+ * Función del comando 'mem'. Imprime en pantalla el estado actual de la memoria.
+**/
+void mem();
+
+/**
+ * Función del comando 'ps'. Imprime en pantalla una lista con todos los procesos en ejecución.
+**/
 void ps();
 
+/**
+ * Función del comando 'sleep'. Retrasa el funcionamiento de la terminal por un tiempo especifico.
+**/
 void sleep(int argSize, char *args[]);
 
+/**
+ * Función del comando 'loop'. Imprime el ID del proceso actual con un saludo cada una cantidad de segundos.
+**/
 void loop();
 
+/**
+ * Función del comando 'block'. Cambia el estado de un proceso entre BLOCKED y READY dado su id.
+**/
 void block(int argSize, char *args[]);
 
 #endif

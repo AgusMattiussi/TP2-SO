@@ -36,7 +36,7 @@
 #define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
 
 /**
- * Syscall: devuelve un caracter ingresado por el usuario o 0 en
+ * Syscall: Devuelve un caracter ingresado por el usuario o 0 en
  * su defecto
 **/
 extern char sys_getChar();
@@ -82,23 +82,28 @@ extern void sys_printCharInPos(char c, int row, int col, unsigned char colorCode
 extern unsigned long sys_getDeciseconds();
 
 /**
- * Syscall: dispara la excepcion de Operando Invalido
+ * Syscall: Dispara la excepcion de Operando Invalido
 **/
 extern void sys_raiseInvOpCodeExc();
 
 /**
- * Syscall: crea un backup de los registros para luego imprimirlos cuando se llame
+ * Syscall: Crea un backup de los registros para luego imprimirlos cuando se llame
  * a 'inforeg'
 **/
 extern void sys_saveRegs();
 
 /**
- * Syscall: 
+ * Syscall: Imprime el estado actual de la memoria
+**/
+extern void sys_mem();
+
+/**
+ * Syscall: Imprime una lista con todos los procesos en ejecución
 **/
 extern void sys_ps();
 
 /**
- * Syscall: 
+ * Syscall: Retorna el Process ID del proceso actual
 **/
 extern unsigned long long sys_getPid();
 
@@ -108,7 +113,7 @@ extern unsigned long long sys_getPid();
 extern int sys_togglePsState(unsigned long long pid);
 
 /**
- * Syscall: Cambia el estado de un proceso entre bloqueado y listo dado su ID
+ * Syscall: Retorna los segundos desde que se inicio el sistema
 **/
 extern int sys_getSeconds();
 

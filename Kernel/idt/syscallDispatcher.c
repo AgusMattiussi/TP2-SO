@@ -35,6 +35,9 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 			return toggleBlocked(rsi);												// <-- void block(int argSize, char *args[]) || terminal.c
 		case 12:
 			return getSeconds();
+		case 13:
+			mem();
+			return 13;
 	}
     // Por default devuelve 0
 	return 0;
