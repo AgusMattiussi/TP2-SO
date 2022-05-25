@@ -1,7 +1,5 @@
 #include <scheduler.h>
 
-void scheduler();
-void createFirstProcess();
 static uint64_t block(pid_t pid);
 static uint64_t unblock(pid_t pid);
 static int firstProcess(int argc, char **argv);
@@ -22,21 +20,24 @@ static process * executingP;
 
 /* Scheduler FIFO */
 //TODO: Cambiar a Round Robin con Prioridades
-void scheduler(){
+uint64_t scheduler(uint64_t prevRsp){
+
+    /* if(executingP == NULL)
+        return prevRsp; */
 
     process * nextPs = getReadyPs();
     if(nextPs == NULL)
-        return;
+        return prevRsp;
 
     enqProcess(executingP);
     executingP = nextPs;
 
-    //TODO: Hay que devolver RIP?
+    //TODO: Hay que devolver RSP?
+    return nextPs->pc.rsp;
 }
 
 /* Agrega un proceso a la lista */
 static void enqProcess(process * pr) {
-
     /* Si la lista no existe o el proceso es nulo, no puedo encolarlo */
     if(pr == NULL || currentList == NULL)
         return;
@@ -56,6 +57,8 @@ static void enqProcess(process * pr) {
     /* Por default asumimos que el proceso se crea en READY */
     currentList->readyCount++;
     currentList->size++;
+
+    ncPrintWithColor(currentList->last->pc.name, 0x02);
 }
 
 /* Elimina y devuelve el primer proceso de la lista */
@@ -140,6 +143,8 @@ static process * getReadyPs() {
 
 /* Crea un nuevo proceso y lo agrega a la lista de procesos. Retorna el nuevo PID */
 pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
+    
+
 
     /* Reservo espacio para el nuevo nodo de proceso. Notemos que new incluye
      * al proceso y al stack del mismo */ 
@@ -153,6 +158,7 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
     char * prName = argv[0];
     if(initProcess(new, prName) == 0)
         return 0;
+    
 
     /* Reservamos espacio para 'argc' argumentos */
     char **prArgs = malloc(sizeof(char *) * argc);
@@ -205,6 +211,7 @@ static void setArgs(char ** to, char ** from, int argc){
 /* Se llama a esta funcion antes de comenzar a operar con el scheduler. Inicializa
  * la lista de procesos y crea el primer proceso */
 void initScheduler() {
+    ncPrintWithColor("INICIALIZANDO SCHEDULER\n", 0x02);
     /* Se inicializa la lista circular */
     currentList->first = NULL;
     currentList->last = NULL;
@@ -214,7 +221,8 @@ void initScheduler() {
 
     /* Se agrega el primer proceso manualmente */
     createFirstProcess();
-    // TODO: fp = removeProcess(&currentList);
+    ncPrintWithColor(executingP->pc.name, 0x02);
+    // TODO: deqProcess();
 }
 
 /* Crea el primer proceso y le asigna su nombre */
@@ -226,6 +234,7 @@ void createFirstProcess(){
 /* Primer proceso creado. Su unica funcion es esperar a que llegue un
  * proceso real */
 static int firstProcess(int argc, char **argv) {
+    ncPrintWithColor("Primer Proceso", 0x02);
     while (1)
         _hlt();
     
@@ -241,6 +250,7 @@ static pid_t initProcess(process *pNode, char *name) {
     pc->pid = generatePid();
     /* Copio el nombre recibido por parametro al campo name de pc */
     memcpy(pc->name, name, strlen(name));
+    
     /* rbp apunta a la base del stack */
     //TODO: Es necesario restar sizeof(char *)?
     pc->rbp = (uint64_t)pNode + PROCESS_STACK_SIZE + sizeof(process) - sizeof(char *);
@@ -388,7 +398,7 @@ void printListOfProcesses(){
         ncPrint("No processes to show\n");
         return;
     }
-    // Falta prioridad
+    //TODO: Falta prioridad
     ncPrint("PID\tNAME\tRSP\tRBP\tSTATE");
     int i=0;
     while(i < currentList->size) {

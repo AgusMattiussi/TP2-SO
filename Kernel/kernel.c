@@ -1,11 +1,12 @@
 #include <stdint.h>
-#include <string.h>
+#include <strings.h>
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <keyboardDriver.h>
 #include <exceptions.h>
 #include <idtLoader.h>
+#include <scheduler.h>
 
 
 extern uint8_t text;
@@ -14,6 +15,9 @@ extern uint8_t data;
 extern uint8_t bss;
 extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
+
+extern void _cli();
+extern void _sti();
 
 static const uint64_t PageSize = 0x1000;
 
@@ -53,10 +57,16 @@ void * initializeKernelBinary()
 
 int main()
 {	
+	//_cli();
 	load_idt();
 	ncClear();
 	
+	initScheduler();
+
 	saveInitialState((uint64_t)sampleCodeModuleAddress, getSP());
+	
 	((EntryPoint)sampleCodeModuleAddress)();
+	//_sti();
+	
 	return 0;
 }
