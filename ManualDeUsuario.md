@@ -80,8 +80,11 @@ Retorna el Process ID del proceso actual
 [11] void ***sys_togglePsState***(unsigned long long pid);
 Cambia el estado de un proceso entre bloqueado y listo dado su ID
 
-[12] int ***sys_getSeconds***();
+[12] void ***sys_killPs***(unsigned long long pid);
+Mata un proceso dado su ID.
+
+[13] int ***sys_getSeconds***();
 Retorna los segundos desde que se inicio el sistema
 
-[13] void ***sys_mem***();
+[14] void ***sys_mem***();
 Imprime el estado actual de la memoria
