@@ -76,4 +76,6 @@ void ps();
 
 void loop();
 
+void block(int argSize, char *args[]);
+
 #endif
