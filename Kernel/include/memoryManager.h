@@ -1,7 +1,10 @@
-#ifndef _MEMORY_MANAGER_H_
-#define _MEMORY_MANAGER_H_
+#ifndef _MEMORY_MANAGER_H
+#define _MEMORY_MANAGER_H
 
-#include <types.h>
-#include <stdint.h>
+#ifdef BUDDY
+    #include <buddy.h>
+#else
+    #include <customMM.h>
+#endif
 
 #endif

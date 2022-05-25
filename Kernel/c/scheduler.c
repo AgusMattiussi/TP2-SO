@@ -12,7 +12,7 @@ static void enqProcess(process * pr);
 static process * deqProcess();
 
 static pid_t lastGivenPid = 1;
-static processList *currentList;
+static processList * currentList;
 static process * executingP;
 
 /* Scheduler FIFO */
