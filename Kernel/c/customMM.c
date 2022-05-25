@@ -1,4 +1,4 @@
-#include <memoryManager.h>
+#include <customMM.h>
 
 #define HEAP_START 0x800000
 #define HEAP_MAX_SIZE 0x200000
@@ -114,7 +114,7 @@ static void insertBlockIntoFreeList(memoryBlock_t * blockToInsert) {
     blockIterator->nextBlock = blockToInsert;
 }
 
-void * my_malloc(size_t wantedSize){
+void * malloc(size_t wantedSize){
     memoryBlock_t * currentBlock;
     memoryBlock_t * previousBlock;
     memoryBlock_t * newBlock;
@@ -218,7 +218,7 @@ void * my_malloc(size_t wantedSize){
 //     return retPointer;
 // }
 
-void my_free(void * p) {
+void free(void * p) {
     uint8_t * blockPointer = (uint8_t *) p;
     memoryBlock_t * toFree;
 

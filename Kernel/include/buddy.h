@@ -9,9 +9,7 @@
 #include <types.h>
 #include <stdint.h>
 
-
-void * b_malloc(size_t request);
-
-void b_free(void *ptr);
+void * malloc(size_t request);
+void free(void *ptr);
 
 #endif
