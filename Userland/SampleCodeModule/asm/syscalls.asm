@@ -15,6 +15,7 @@ GLOBAL sys_killPs
 GLOBAL sys_getSeconds
 GLOBAL sys_mem
 GLOBAL sys_createProcess
+GLOBAL sys_sem
 
 SECTION .text
 
@@ -100,6 +101,8 @@ sys_mem:
 	syscall 14
 sys_createProcess:
 	syscall 15
+sys_sem:
+	syscall 16
 
 ;Fuente: https://www.felixcloutier.com/x86/ud
 sys_raiseInvOpCodeExc:

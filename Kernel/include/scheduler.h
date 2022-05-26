@@ -63,6 +63,7 @@ void forceExitAfterExec(int argc, char *argv[], void *processFn(int, char **));
 pid_t getPid();
 uint64_t kill(pid_t pid);
 uint64_t toggleBlocked(pid_t pid);
+uint64_t block(pid_t pid);
 void printListOfProcesses();
 void initScheduler();
 uint64_t scheduler(uint64_t prevRsp);

@@ -4,8 +4,7 @@
 #include <stdio.h>
 #include <strings.h>
 
-#define COMMANDS_COUNT 14
-#define TESTS_COUNT 4
+#define COMMANDS_COUNT 18
 #define BUFFER_SIZE 50
 
 #define MINUTES 2
@@ -102,6 +101,8 @@ void block(int argSize, char *args[]);
  * Función del comando 'kill'. Mata un proceso dado su ID.
 **/
 void kill(int argSize, char *args[]);
+
+void sem();
 
 extern unsigned long long sys_createProcess(void (*pFunction)(int, char **), int argc, char **argv);
 

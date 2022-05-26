@@ -39,7 +39,12 @@ void startCommands(){
     // commandBuilder("nice", "Changes a process priority.", &nice);
     commandBuilder("block", "Blocks a running process given its pid.", &block);
     commandBuilder("kill", "Kills a running process given its pid.", &kill);
-    commandBuilder("funca", "Con suerte crea un nuevo proceso", &help); //Cambiar a funca
+    commandBuilder("sem", "Displays a list with all the semaphores.", &sem);
+    // commandBuilder("funca", "Con suerte crea un nuevo proceso", &help); //Cambiar a funca
+    commandBuilder("test_mm", "Test for the memory manager.", &kill);
+    commandBuilder("test_processes", "Test for the creation of processes.", &kill);
+    commandBuilder("test_priority", "Test for the priority of the scheduler.", &kill);
+    commandBuilder("test_synchro", "Test for the synchronization of processes", &kill);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)()){
@@ -72,23 +77,6 @@ void help(){
         printWithColor(commandsNames[i], YELLOW_BLACK);
         print(" - ");
         print(commandsDesc[i]);
-        putChar('\n');
-    }
-
-    putChar('\n');
-
-    char *testNames[TESTS_COUNT] = {"test_mm", "test_processes", "test_priority", "test_synchro"};
-    char *testDescriptions[TESTS_COUNT] = {
-        "Pide todos los bloques de memoria posibles y verifica que la información de ellos se guarde correctamente en cada uno",
-        "Crea la mayor cantidad de procesos posibles y los bloquea/debloquea/mata de forma aleatoria hasta que estén todos muertos",
-        "Crea una cantidad dada de procesos de un ciclo infinito de prints, los prioriza a todos distinto y luego espera un tiempo dado, los bloquea, cambia sus prioridades, los desbloquea, espera y los mata",
-        "Recibe 3 argumentos que pueden aumentar o disminuir la manipulación de una variable global, crea procesos que incrementan o decrementan la variable, se crean condiciones de carrera y luego imprime el resultado",
-    };
-
-    for (int i = 0; i < TESTS_COUNT; i++){
-        printWithColor(testNames[i], GREEN_BLACK);
-        print(" - ");
-        print(testDescriptions[i]);
         putChar('\n');
     }
 }
@@ -168,6 +156,7 @@ void sleep(int argSize, char *args[]){
     while(sys_getSeconds() <= final);
 }
 
+//TODO: cambiar para que sea un nuevo proceso
 void loop(){
     // unsigned long long pid = sys_getPid();
     // char pidStr[3];
@@ -212,14 +201,7 @@ void kill(int argSize, char *args[]) {
     }
 }
 
-/* void paredesufrir () {
-    for (int i = 0; i < 5; i++)
-        print("HOLAXD\n");
-	while(1);
-} */
-
-/* void funca() {
-    char * argv[] = {"FUNCAAAA"};
-    sys_createProcess(&paredesufrir, 1, argv);
-} */
+void sem(){
+    sys_sem();
+}
 	

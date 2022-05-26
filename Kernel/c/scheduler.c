@@ -1,6 +1,5 @@
 #include <scheduler.h>
 
-static uint64_t block(pid_t pid);
 static uint64_t unblock(pid_t pid);
 static int firstProcess(int argc, char **argv);
 static pid_t initProcess(process *pNode, char *name);
@@ -390,7 +389,7 @@ uint64_t toggleBlocked(pid_t pid) {
 
 /* Cambia el estado de un proceso a BLOCKED. Devuelve 0 si fue
  * exitoso o -1 en caso de error */
-static uint64_t block(pid_t pid){
+uint64_t block(pid_t pid){
     if(pid < 1)
         return -1;
 
@@ -418,7 +417,7 @@ void printListOfProcesses(){
         return;
     }
     //TODO: Falta prioridad
-    ncPrint("PID    NAME    RSP    RBP   STATE\n");
+    ncPrintWithColor("PID    NAME           RSP       RBP      STATE\n", ORANGE_BLACK);
     for (int i = 0; i < currentList->size; i++){
         ncPrintDec(toPrint->pc.pid);
         ncPrint("    ");
@@ -454,7 +453,7 @@ void printListOfProcesses(){
     ncPrintDec(toPrint->pc.pid);
     ncPrint("    ");
     ncPrint(toPrint->pc.name);
-    ncPrint("    ");
+    ncPrint("        ");
     ncPrintHex(toPrint->pc.rsp);
     ncPrint("    ");
     ncPrintHex(toPrint->pc.rbp);

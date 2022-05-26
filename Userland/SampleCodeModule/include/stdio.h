@@ -123,6 +123,11 @@ extern int sys_killPs(unsigned long long pid);
 extern int sys_getSeconds();
 
 /**
+ * Syscall: Imprime una lista con todos los semaforos
+**/
+extern void sys_sem();
+
+/**
  * Devuelve un caracter ingresado por el usuario siempre que este no
  * sea nulo (distinto de 0)
 **/
