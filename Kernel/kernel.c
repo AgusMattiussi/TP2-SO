@@ -7,6 +7,7 @@
 #include <exceptions.h>
 #include <idtLoader.h>
 #include <scheduler.h>
+#include <interrupts.h>
 
 
 extern uint8_t text;
@@ -15,9 +16,6 @@ extern uint8_t data;
 extern uint8_t bss;
 extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
-
-extern void _cli();
-extern void _sti();
 
 static const uint64_t PageSize = 0x1000;
 
@@ -57,19 +55,18 @@ void * initializeKernelBinary()
 
 int main()
 {	
-	_cli();
-
 	load_idt();
 	ncClear();
-	
-	initScheduler();
 
+	_cli();
+	initScheduler();
 	_sti();
-	
+
 	saveInitialState((uint64_t)sampleCodeModuleAddress, getSP());
 	
 	((EntryPoint)sampleCodeModuleAddress)();
-
+	while(1);
+	ncPrintWithColor("Game over\n", 0x04);
 	
 	return 0;
 }

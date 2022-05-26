@@ -1,5 +1,8 @@
 #include <terminal.h>
 
+//void funca();
+//void paredesufrir ();
+
 static char * commandsNames[COMMANDS_COUNT];
 static char * commandsDesc[COMMANDS_COUNT];
 static void (*commandsFn[COMMANDS_COUNT])(int argSize, char *args[]);
@@ -7,15 +10,18 @@ static void (*commandsFn[COMMANDS_COUNT])(int argSize, char *args[]);
 static int commandIndex = 0;
 
 void startTerminal(){
-    printWithColor("GOLAZO\n", GREEN_BLACK);
+    //printWithColor("GOLAZO\n", GREEN_BLACK);
     startCommands();
-    char buffer[BUFFER_SIZE] = {0};
+    //char buffer[BUFFER_SIZE] = {0};
+    
     while(1){
+        char buffer[BUFFER_SIZE] = {0};
         printWithColor("$> ", GREEN_BLACK);
         scan(buffer, BUFFER_SIZE);
         putChar('\n');
         executeCommand(buffer);
     }
+    
 }
 
 void startCommands(){
@@ -33,6 +39,7 @@ void startCommands(){
     // commandBuilder("nice", "Changes a process priority.", &nice);
     commandBuilder("block", "Blocks a running process given its pid.", &block);
     commandBuilder("kill", "Kills a running process given its pid.", &kill);
+    commandBuilder("funca", "Con suerte crea un nuevo proceso", &help); //Cambiar a funca
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)()){
@@ -187,3 +194,15 @@ void kill(int argSize, char *args[]) {
         print("Success!\n");
     }
 }
+
+/* void paredesufrir () {
+    for (int i = 0; i < 5; i++)
+        print("HOLAXD\n");
+	while(1);
+} */
+
+/* void funca() {
+    char * argv[] = {"FUNCAAAA"};
+    sys_createProcess(&paredesufrir, 1, argv);
+} */
+	

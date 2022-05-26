@@ -22,20 +22,30 @@ static process * executingP;
 //TODO: Cambiar a Round Robin con Prioridades
 uint64_t scheduler(uint64_t prevRsp){
 
-    if(executingP == NULL)
+    //ncPrint("\nscheduler");
+
+    if(currentList == NULL)
         return prevRsp;
 
-    ncPrint("scheduler\n");
+    /* for (int i = 0; i < currentList->size; i++){
+        ncPrint(currentList->last->pc.name);
+    }
+     */
+
+    if(executingP == NULL){
+        //ncPrint("penis\n");
+        return prevRsp;}
 
     process * nextPs = getReadyPs();
     if(nextPs == NULL)
         return prevRsp;
 
+    executingP->pc.rsp = prevRsp;
     enqProcess(executingP);
     executingP = nextPs;
 
-    //TODO: Hay que devolver RSP?
-    return nextPs->pc.rsp;
+    
+    return executingP->pc.rsp;
 }
 
 /* Agrega un proceso a la lista */
@@ -60,7 +70,7 @@ static void enqProcess(process * pr) {
     currentList->readyCount++;
     currentList->size++;
 
-    ncPrintWithColor(currentList->last->pc.name, 0x02);
+    //ncPrintWithColor(currentList->last->pc.name, 0x02);
 }
 
 /* Elimina y devuelve el primer proceso de la lista */
@@ -101,7 +111,7 @@ static process * deqProcess() {
 /* Obtiene un proceso especifico de la lista, pero no lo elimina de la misma */
 static process * getProcess(pid_t pid){
     /* Si justo es el proceso en ejecucion, entonces no esta en la lista */
-    if(pid == executingP->pc.pid)
+    if(executingP != NULL && pid == executingP->pc.pid)
         return executingP;
 
     /* Itero por la lista de procesos buscando el que me piden por parametro */
@@ -146,8 +156,6 @@ static process * getReadyPs() {
 /* Crea un nuevo proceso y lo agrega a la lista de procesos. Retorna el nuevo PID */
 pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
     
-
-
     /* Reservo espacio para el nuevo nodo de proceso. Notemos que new incluye
      * al proceso y al stack del mismo */ 
     //TODO: Chequear si esto esta bien
@@ -226,7 +234,8 @@ void initScheduler() {
 
     /* Se agrega el primer proceso manualmente */
     createFirstProcess();
-    // ncPrintWithColor(executingP->pc.name, 0x02);
+    executingP = deqProcess();
+    //ncPrintWithColor(executingP->pc.name, 0x02);
     // TODO: deqProcess();
     // free(deqProcess());
 }
@@ -240,10 +249,10 @@ void createFirstProcess(){
 /* Primer proceso creado. Su unica funcion es esperar a que llegue un
  * proceso real */
 static int firstProcess(int argc, char **argv) {
-    ncPrintWithColor("Primer Proceso\n", 0x02);
+    //ncPrintWithColor("Primer Proceso\n", 0x02);
     
     while (1){
-        ncPrintWithColor("Halt", 0x02);
+        //ncPrintWithColor("Halt", 0x02);
         _hlt();
     }
     
@@ -295,6 +304,7 @@ static void setStackFrame(int argc, char **argv, process *pNode, void (*processF
     stack->rdx = (uint64_t)processFn;
     stack->rcx = pid;
     stack->rip = (uint64_t)forceExitAfterExec;
+    // stack->rip = (uint64_t)processFn;
     stack->cs = 0x8;
     stack->rflags = 0x202;
     stack->rsp = (uint64_t)(pNode->pc.rsp);
@@ -408,21 +418,62 @@ void printListOfProcesses(){
         return;
     }
     //TODO: Falta prioridad
-    ncPrint("PID\tNAME\tRSP\tRBP\tSTATE");
-    int i=0;
-    while(i < currentList->size) {
-        
+    ncPrint("PID    NAME    RSP    RBP   STATE\n");
+    for (int i = 0; i < currentList->size; i++){
         ncPrintDec(toPrint->pc.pid);
-        ncPrint("\t");
+        ncPrint("    ");
         ncPrint(toPrint->pc.name);
-        ncPrint("\t");
+        ncPrint("    ");
         ncPrintHex(toPrint->pc.rsp);
-        ncPrint("\t");
+        ncPrint("    ");
         ncPrintHex(toPrint->pc.rbp);
-        ncPrint("\t");
-        ncPrint((char *)toPrint->pc.state);
+        ncPrint("    ");
+
+
+        switch(toPrint->pc.state) {
+            case READY: 
+                ncPrint("READY");
+                break;
+            case BLOCKED:
+                ncPrint("BLOCKED");
+                break;
+            case KILLED:
+                ncPrint("KILLED");
+                break;
+            default:
+                ncPrint("?????");
+        }
+
+
+        ncPrint("\n");
 
         toPrint = toPrint->next;
         i++;
     }
+    toPrint = executingP;
+    ncPrintDec(toPrint->pc.pid);
+    ncPrint("    ");
+    ncPrint(toPrint->pc.name);
+    ncPrint("    ");
+    ncPrintHex(toPrint->pc.rsp);
+    ncPrint("    ");
+    ncPrintHex(toPrint->pc.rbp);
+    ncPrint("    ");
+    
+    switch(toPrint->pc.state) {
+            case READY: 
+                ncPrint("READY");
+                break;
+            case BLOCKED:
+                ncPrint("BLOCKED");
+                break;
+            case KILLED:
+                ncPrint("KILLED");
+                break;
+            default:
+                ncPrint("?????");
+        }
+
+
+    ncPrint("\n");
 }

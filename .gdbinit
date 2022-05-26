@@ -1,4 +1,4 @@
-target remote 172.23.146.175:1234
+target remote 172.30.153.208:1234
 add-symbol-file Kernel/kernel.elf 0x100000
 add-symbol-file Userland/0000-sampleCodeModule.elf 0x400000
 
@@ -2326,6 +2326,7 @@ set print pretty on
 set print array off
 set print array-indexes on
 set python print-stack full
+set auto-load safe-path /
 
 # Start ------------------------------------------------------------------------
 

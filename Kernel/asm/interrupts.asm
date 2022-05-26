@@ -163,11 +163,12 @@ _irq00Handler:
 	mov rdi, 0
 	call irqDispatcher
 
+	call _cli
 	; ==== SCHEDULER ====
 	mov rdi, rsp 	; Guardo rsp
 	call scheduler	
 	mov rsp, rax 	; Recupero rsp
-
+	call _sti
 	; signal pic EOI (End of Interrupt)
 	mov al, 20h
 	out 20h, al
