@@ -10,7 +10,7 @@
 #define NAME_MAX_SIZE 25
 #define PROCESS_STACK_SIZE 0x1000
 
-typedef enum {READY, BLOCKED, KILLED} states;
+typedef enum {READY, BLOCKED/* , KILLED */} states;
 
 typedef struct stackFrame{
     uint64_t r15;
@@ -52,8 +52,9 @@ typedef struct process{
 typedef struct processList{
     process * first;
     process * last;
+    process * iterator;
     int size;
-    int readyCount;
+    //int readyCount;
 } processList;
 
 extern void timerInterrupt();
@@ -63,7 +64,7 @@ void forceExitAfterExec(int argc, char *argv[], void *processFn(int, char **));
 pid_t getPid();
 uint64_t kill(pid_t pid);
 uint64_t toggleBlocked(pid_t pid);
-void printListOfProcesses();
+void printAllProcessesInfo();
 void initScheduler();
 uint64_t scheduler(uint64_t prevRsp);
 void createFirstProcess();

@@ -27,7 +27,7 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 			getRegistersInfo(); 													// <-- void getRegisters() || terminal.c
 			return 8;
 		case 9:
-			printListOfProcesses();
+			printAllProcessesInfo();
 			return 9;
 		case 10:
 			return getPid();

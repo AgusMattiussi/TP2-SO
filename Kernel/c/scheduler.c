@@ -6,154 +6,140 @@ static int firstProcess(int argc, char **argv);
 static pid_t initProcess(process *pNode, char *name);
 static void setStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), pid_t pid);
 static pid_t generatePid();
-static process * getReadyPs();
-static void enqProcess(process * pr);
-static process * deqProcess();
-static process * getProcess(pid_t pid);
+static process * getNext(processList * list);
+static void enqProcess(processList * list, process * p);
+static process * getProcess(processList * list, pid_t pid);
+static process * getProcessAndPrevious(processList * list, pid_t pid, process * prev);
 static void setArgs(char ** to, char ** from, int argc);
 static void freeProcess(process * p);
 static void exitPs();
+static processList * initializeProcessList();
+static void printProcessListInfo(processList * list);
+static void printProcessInfo(process * p);
 
 static pid_t lastGivenPid = 1;
-static processList * currentList;
+static processList * readyList;
+static processList * blockedList;
 static process * executingP;
 
 /* Scheduler FIFO */
 //TODO: Cambiar a Round Robin con Prioridades
 uint64_t scheduler(uint64_t prevRsp){
+    //ncPrint("scheduler\n");
 
-    //ncPrint("\nscheduler");
-
-    if(currentList == NULL)
-        return prevRsp;
-
-    /* for (int i = 0; i < currentList->size; i++){
-        ncPrint(currentList->last->pc.name);
-    }
-     */
-
-    if(executingP == NULL){
-        //ncPrint("penis\n");
-        return prevRsp;}
-
-    process * nextPs = getReadyPs();
-    if(nextPs == NULL)
+    if(readyList == NULL || executingP == NULL)
         return prevRsp;
 
     executingP->pc.rsp = prevRsp;
-    enqProcess(executingP);
-    executingP = nextPs;
-
-    
+    executingP = getNext(readyList);
+    //ncPrintWithColor(executingP->pc.name, executingP->pc.name[0] == 'T' ? RED_BLACK : GREEN_BLACK);
     return executingP->pc.rsp;
 }
 
 /* Agrega un proceso a la lista */
-static void enqProcess(process * pr) {
+static void enqProcess(processList * list, process * p) {
     /* Si la lista no existe o el proceso es nulo, no puedo encolarlo */
-    if(pr == NULL || currentList == NULL)
+    if(p == NULL || list == NULL)
         return;
     
     /* Si no habia procesos en la lista, este es el primero */
-    if(currentList->first == NULL)
-        currentList->first = pr;
+    if(list->size == 0) {
+        list->first = p;
+        list->iterator = p;
     /* Si no, es el nuevo ultimo */
-    else
-        currentList->last->next = pr;
+    } else {
+        list->last->next = p;
+    }
     
-    /* Actualizo el puntero al ultimo */
-    currentList->last = pr;
+    /* Actualizo el puntero al ultimo (que ahora es este proceso)*/
+    list->last = p;
     /* Como es lista circular, el siguiente del ultimo es el primero */
-    pr->next = currentList->first;
+    p->next = list->first;
 
-    /* Por default asumimos que el proceso se crea en READY */
-    currentList->readyCount++;
-    currentList->size++;
-
-    //ncPrintWithColor(currentList->last->pc.name, 0x02);
+    list->size++;
 }
 
-/* Elimina y devuelve el primer proceso de la lista */
-static process * deqProcess() {
+/* Elimina un proceso de la lista y lo retorna */
+static process * delProcess(processList * list, pid_t pid) {
 
     /* Si la lista no existe o el proceso es nulo, no puedo sacarlo */
-    if(currentList == NULL || currentList->size == 0)
+    if(list == NULL || list->size == 0)
         return NULL;
 
-    /* Tomo el primero (asumo FIFO). No puede ser NULL */
-    process * deq = currentList->first;
-
-    /* Si habia un solo elemento, entonces first == last. Seteo ambos en
+    process * prev = NULL;
+    process * toDel = getProcessAndPrevious(list, pid, prev);
+    
+    if(toDel == NULL)
+        return NULL;
+    
+    /* Si habia un solo elemento, entonces first == last == iterator. Seteo todos en
      * NULL, pues ahora la lista quedara vacia */
-    if(currentList->size == 1){
-        currentList->first = NULL;
-        /* Creo que es redundante, porque first==last */
-        currentList->last = NULL;
+    if(list->size == 1){
+        list->first = NULL;
+        /* FIXME: Creo que es redundante, porque first == last == iterator */
+        list->last = NULL;
+        list->iterator = NULL;
     } else {
-        /* Si no, el first sera el siguiente al que voy a sacar */
-        currentList->first = deq->next;
-        /* Como habia sacado first, el siguiente de last quedo NULL. Lo actualizo */
-        currentList->last->next = currentList->first;
+        /* Si justo estoy por borrar el nodo al que apunta iterator, entonces hago que
+         * este utlimo avance */
+        if(toDel == list->iterator)
+            list->iterator = list->iterator->next;
+        /* Salteo a toDel en la lista */
+        prev->next = toDel->next;
     }
 
     /* Elimino la referencia al siguiente */
-    deq->next = NULL;
-
-    /* Si estaba READY, actualizo readyCount*/
-    if(deq->pc.state == READY)
-        currentList->readyCount--;
-
+    toDel->next = NULL;
     /* Actualizo el tamaño de la lista */
-    currentList->size--;
-    return deq;
+    list->size--;
+    return toDel;
 }
 
-/* Obtiene un proceso especifico de la lista, pero no lo elimina de la misma */
-static process * getProcess(pid_t pid){
-    /* Si justo es el proceso en ejecucion, entonces no esta en la lista */
-    if(executingP != NULL && pid == executingP->pc.pid)
-        return executingP;
-
-    /* Itero por la lista de procesos buscando el que me piden por parametro */
-    process * aux = currentList->first;
-    for(int i = 0; i < currentList->size; i++) {
-        if(pid == aux->pc.pid)
-            return aux;
-        aux = aux->next;
-    }
-
-    /* Si llegue a este punto, no se encontro el proceso */
-    return NULL;
+static process * getProcess(processList * list, pid_t pid){
+    process * toDiscard = NULL;
+    return getProcessAndPrevious(list, pid, toDiscard);
 }
 
-/* Obtiene el proximo proceso READY de la lista y elimina cualquier proceso
- * KILLED que encuentre en el recorrido */
-static process * getReadyPs() {
-    process * currentPs;
-    size_t psCount = currentList->size;
+/* Obtiene un proceso especifico de la lista por PID, pero no lo elimina de la misma.
+ * Adicionalmente, en el puntero *previous devuelve el nodo anterior al retornado */
+static process * getProcessAndPrevious(processList * list, pid_t pid, process * prev){
+    /* Si la lista no existe, esta vacia o el PID es invalido, retorno */
+    if(list == NULL || list->size == 0 || pid <= 0)
+        return NULL;
 
-    for (size_t i = 0; i < psCount; i++){
-        /* Tomo el proximo proceso */
-        currentPs = deqProcess();
-
-        /* Si es nulo, devuelvo NULL. Si esta READY, lo devuelvo. */
-        if(currentPs == NULL || currentPs->pc.state == READY)
-            return currentPs;
-
-        /* Si esta KILLED, lo libero */
-        if(currentPs->pc.state == KILLED){
-            freeProcess(currentPs);
-        } else {
-        /* En caso contrario, esta BLOCKED, por lo que lo devuelvo a la lista */
-            enqProcess(currentPs);
-        }
+    /* Tomo el primero. En este punto, no puede ser NULL */
+    process * toRet = list->first;
+    prev = toRet;
+    /* Recorro la lista buscando aquel proceso que coincida en PID */
+    int i;
+    for (i = 0; i < list->size; i++){
+        if(toRet->pc.pid == pid)
+            break;
+        prev = toRet;
+        toRet = toRet->next;
     }
+
+    /* Si se recorrio toda la lista, significa que no se encontro */
+    if(i == list->size){
+        prev = NULL;
+        return NULL;
+    }
+
+    return toRet;
+}
+
+/* Devuelve el proximo proceso listo de la lista y actualiza el iterador */
+static process * getNext(processList * list) {
+    if(list == NULL || list->size == 0)
+        return NULL;
+
+    process * next = list->iterator;
     
-    /* Si llego hasta este punto, no se encontraron procesos READY */
-    return NULL;
+    list->iterator = list->iterator->next;
+    return next;
 }
 
-/* Crea un nuevo proceso y lo agrega a la lista de procesos. Retorna el nuevo PID */
+/* Crea un nuevo proceso y lo agrega a la lista de procesos READY. Retorna el nuevo PID */
 pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
     
     /* Reservo espacio para el nuevo nodo de proceso. Notemos que new incluye
@@ -162,13 +148,11 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
     process * new = malloc(sizeof(process) + PROCESS_STACK_SIZE);
     if(new == NULL)
         return 0;
-
     /* El primer parametro de argv es el nombre del proceso. Lo guardo en
      * prName e inicializo el proceso new con dicho nombre */
     char * prName = argv[0];
     if(initProcess(new, prName) == 0)
         return 0;
-    
 
     /* Reservamos espacio para 'argc' argumentos */
     char **prArgs = malloc(sizeof(char *) * argc);
@@ -181,7 +165,7 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
     setStackFrame(argc, prArgs, new, pFunction, new->pc.pid);
 
     /* Se agrega el nuevo proceso a la lista*/
-    enqProcess(new);
+    enqProcess(readyList, new);
     return new->pc.pid;
 }
 
@@ -219,25 +203,40 @@ static void setArgs(char ** to, char ** from, int argc){
 }
 
 /* Se llama a esta funcion antes de comenzar a operar con el scheduler. Inicializa
- * la lista de procesos y crea el primer proceso */
+ * las listas de procesos y crea el primer proceso */
 void initScheduler() {
-    ncPrintWithColor("INICIALIZANDO SCHEDULER\n", 0x02);
-    /* Se inicializa la lista circular */
-    currentList = malloc(sizeof(processList));
-    if(currentList == NULL)
-        return;
-    currentList->first = NULL;
-    currentList->last = NULL;
-    currentList->size = 0;
-    currentList->readyCount = 0;
-    executingP = NULL;
+    //ncPrintWithColor("INICIALIZANDO SCHEDULER\n", 0x02);
 
+     /* Se inicializa la lista circular de READY */
+    readyList = initializeProcessList();
+    if(readyList == NULL)
+        return;
+    /* Se inicializa la lista circular de BLOCKED */
+    blockedList = initializeProcessList();
+    if(blockedList == NULL)
+        return;
     /* Se agrega el primer proceso manualmente */
     createFirstProcess();
-    executingP = deqProcess();
+
+    //TODO: Chequear si no hay que sacarlo
+    executingP = readyList->first;
     //ncPrintWithColor(executingP->pc.name, 0x02);
     // TODO: deqProcess();
     // free(deqProcess());
+}
+
+/* Inicializa una lista de procesos. Devuelve 0 en caso de error o
+ * 1 en caso contrario */
+static processList * initializeProcessList() {
+    processList * list = malloc(sizeof(processList));
+    if(list == NULL)
+        return NULL;
+    list->first = NULL;
+    list->last = NULL;
+    list->iterator = NULL;
+    list->size = 0;
+
+    return list;
 }
 
 /* Crea el primer proceso y le asigna su nombre */
@@ -249,13 +248,9 @@ void createFirstProcess(){
 /* Primer proceso creado. Su unica funcion es esperar a que llegue un
  * proceso real */
 static int firstProcess(int argc, char **argv) {
-    //ncPrintWithColor("Primer Proceso\n", 0x02);
-    
-    while (1){
-        //ncPrintWithColor("Halt", 0x02);
+    while (1)
         _hlt();
-    }
-    
+
     return 0;
 }
 
@@ -323,35 +318,9 @@ void forceExitAfterExec(int argc, char *argv[], void *processFn(int, char **)) {
     exitPs();
 }
 
-/* Cambia el estado de un proceso cuyo PID se envia por parametro. Devuelve 0 si fue
- * exitoso o -1 en caso de error */
-int changeProcessState(pid_t pid, states state){
-    /* Busco el proceso indicado por pid */
-    process * aux = getProcess(pid);
-
-    /* Si no se encontro el proceso o su estado es KILLED, no puedo cambiarle
-     * el estado */
-    if(aux == NULL || aux->pc.state == KILLED)
-        return -1;
-    
-    /* Si el proceso no estaba READY y ahora se lo quiere cambiar a READY,
-     * actualizo el readyCount */
-    if(aux->pc.state != READY && state == READY)
-        currentList->readyCount++;
-    
-    /* Si el proceso estaba READY y ahora se lo quiere cambiar a otro estado,
-     * actualizo el readyCount */
-    if(aux->pc.state == READY && state != READY)
-        currentList->readyCount--;
-
-    /* Actualizo el estado del proceso */
-    aux->pc.state = state;
-    return 0;
-}
-
-/* Se cambia el estado a KILLED de un proceso que haya terminado su ejecucion */
+/* Se liberan los recursos de un proceso que haya terminado su ejecucion */
 static void exitPs(){
-    kill(executingP->pc.pid);
+    freeProcess(executingP);
 }
 
 /* Devuelve el PID del proceso en ejecucion */
@@ -360,120 +329,107 @@ pid_t getPid(){
     return executingP->pc.pid;
 }
 
-/* Cambia el estado de un proceso a KILLED. Devuelve 0 si fue
- * exitoso o -1 en caso de error */
+/* Se mata un proceso segun su PID, eliminando sus recursos. Devuelve 1 si fue
+ * exitoso o 0 en caso de error */
 uint64_t kill(pid_t pid){
-    if(pid < 1)
-        return -1;
+    /* Buscamos el proceso a eliminar en ambas listas */
+    process * toKill;
+    toKill = delProcess(readyList, pid);
+    if(toKill == NULL)
+        toKill = delProcess(blockedList, pid);
+    if(toKill == NULL)
+        return 0;
 
-    int result = changeProcessState(pid, KILLED);
-
+    // TODO: Hace falta?
     if(pid == executingP->pc.pid)
         timerInterrupt();
 
-    return result;
+    freeProcess(toKill);
+    return 1;
 }
 
 /* Alterna el estado de un proceso entre READY y BLOCKED */
 uint64_t toggleBlocked(pid_t pid) {
-    switch (getProcess(pid)->pc.state) {
-        case READY:
-            return block(pid);
-        case BLOCKED:
-            return unblock(pid);
-        case KILLED:
-            return -1;
-        default:
-            return -1;
-    }
+    int aux = block(pid);
+    if(aux == 0)
+        aux = unblock(pid);
+    return aux;
 }
 
-/* Cambia el estado de un proceso a BLOCKED. Devuelve 0 si fue
- * exitoso o -1 en caso de error */
+/* Cambia el estado de un proceso a BLOCKED. Devuelve 1 si fue
+ * exitoso o 0 en caso de error */
 static uint64_t block(pid_t pid){
-    if(pid < 1)
-        return -1;
+    process * p = delProcess(readyList, pid);
+    if(p == NULL)
+        return 0;
+    
+    enqProcess(blockedList, p);
 
-    int result = changeProcessState(pid, BLOCKED);
-
+    //TODO: Hace falta?
     if(pid == executingP->pc.pid)
         timerInterrupt();
 
-    return result;
+    return 1;
 }
 
 /* Cambia el estado de un proceso BLOCKED a READY */
 static uint64_t unblock(pid_t pid){
-    if(pid < 1)
-        return -1;
-    return changeProcessState(pid, READY);
+    process * p = delProcess(blockedList, pid);
+    if(p == NULL)
+        return 0;
+    enqProcess(readyList, p);
+    return 1;
 }
 
+// FIXME: Rehacer teniendo en cuenta las dos listas.
 /* Imprime cada proceso junto con su informacion */
-void printListOfProcesses(){
+void printAllProcessesInfo(){
     // ncPrint("Lista de procesos\n");
-    process * toPrint = currentList->first;
-    if(toPrint == NULL){
-        ncPrint("No processes to show\n");
+    if(readyList->size == 0 && blockedList->size == 0){
+        ncPrint("No hay ningun proceso ejecutandose");
         return;
     }
-    //TODO: Falta prioridad
-    ncPrint("PID    NAME    RSP    RBP   STATE\n");
-    for (int i = 0; i < currentList->size; i++){
-        ncPrintDec(toPrint->pc.pid);
-        ncPrint("    ");
-        ncPrint(toPrint->pc.name);
-        ncPrint("    ");
-        ncPrintHex(toPrint->pc.rsp);
-        ncPrint("    ");
-        ncPrintHex(toPrint->pc.rbp);
-        ncPrint("    ");
-
-
-        switch(toPrint->pc.state) {
-            case READY: 
-                ncPrint("READY");
-                break;
-            case BLOCKED:
-                ncPrint("BLOCKED");
-                break;
-            case KILLED:
-                ncPrint("KILLED");
-                break;
-            default:
-                ncPrint("?????");
-        }
-
-
-        ncPrint("\n");
-
-        toPrint = toPrint->next;
-        i++;
-    }
-    toPrint = executingP;
-    ncPrintDec(toPrint->pc.pid);
-    ncPrint("    ");
-    ncPrint(toPrint->pc.name);
-    ncPrint("    ");
-    ncPrintHex(toPrint->pc.rsp);
-    ncPrint("    ");
-    ncPrintHex(toPrint->pc.rbp);
-    ncPrint("    ");
     
-    switch(toPrint->pc.state) {
-            case READY: 
-                ncPrint("READY");
-                break;
-            case BLOCKED:
-                ncPrint("BLOCKED");
-                break;
-            case KILLED:
-                ncPrint("KILLED");
-                break;
-            default:
-                ncPrint("?????");
-        }
+    //TODO: Falta prioridad
+    ncPrint("PID    NAME            RSP    RBP   STATE\n");
+    printProcessListInfo(readyList);
+    printProcessListInfo(blockedList);
+}
 
+static void printProcessListInfo(processList * list) {
+    process * toPrint;
+    if(list->size > 0){
+        toPrint = list->first;
+        for (int i = 0; i < list->size; i++){
+            printProcessInfo(toPrint);
+            toPrint = toPrint->next;
+        }
+    }
+}
+
+static void printProcessInfo(process * p){
+    ncPrintDec(p->pc.pid);
+    ncPrint(TAB);
+
+    ncPrint(p->pc.name);
+    ncPrint(TAB);
+
+    ncPrintHex(p->pc.rsp);
+    ncPrint(TAB);
+
+    ncPrintHex(p->pc.rbp);
+    ncPrint(TAB);
+
+    switch(p->pc.state) {
+        case READY: 
+            ncPrint("READY");
+            break;
+        case BLOCKED:
+            ncPrint("BLOCKED");
+            break;
+        default:
+            ncPrint("?????");
+    }
 
     ncPrint("\n");
 }

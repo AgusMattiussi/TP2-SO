@@ -10,6 +10,8 @@
 #define DEFAULT_COLOR WHITE_BLACK
 #define PROMPT_SIZE 5 // chars que ocupa el prompt
 
+#define TAB "    "
+
 // Colores. El formato es COLORLETRA_COLORFONDO
 #define BLUE_BLACK 0x01
 #define GREEN_BLACK 0x02

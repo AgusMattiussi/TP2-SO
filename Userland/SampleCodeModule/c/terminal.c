@@ -190,8 +190,8 @@ void block(int argSize, char *args[]) {
     
     unsigned long long pid = atoull(args[0]);
     
-    if (sys_togglePsState(pid)) {
-        print("The process is currently killed or it does not exist.\n");
+    if (sys_togglePsState(pid) == 0) {
+        print("The process does not exist.\n");
     } else {
         print("Success!\n");
     }
@@ -205,7 +205,7 @@ void kill(int argSize, char *args[]) {
     
     unsigned long long pid = atoull(args[0]);
     
-    if (sys_killPs(pid)) {
+    if (sys_killPs(pid) == 0) {
         print("The process has been killed already or it does not exist.\n");
     } else {
         print("Success!\n");
