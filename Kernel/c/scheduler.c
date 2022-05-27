@@ -3,19 +3,20 @@
 static uint64_t block(pid_t pid);
 static uint64_t unblock(pid_t pid);
 static int firstProcess(int argc, char **argv);
-static pid_t initProcess(process *pNode, char *name);
+static pid_t initProcess(process *pNode, char *name, uint8_t priority);
 static void setStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), pid_t pid);
 static pid_t generatePid();
 static process * getNext(processList * list);
 static void enqProcess(processList * list, process * p);
 static process * getProcess(processList * list, pid_t pid);
-static process * getProcessAndPrevious(processList * list, pid_t pid, process * prev);
+static process * getProcessAndPrevious(processList * list, pid_t pid, process ** prev);
 static void setArgs(char ** to, char ** from, int argc);
 static void freeProcess(process * p);
 static void exitPs();
 static processList * initializeProcessList();
 static void printProcessListInfo(processList * list);
 static void printProcessInfo(process * p);
+static int initialTickets(int priority);
 
 static pid_t lastGivenPid = 1;
 static processList * readyList;
@@ -31,7 +32,15 @@ uint64_t scheduler(uint64_t prevRsp){
         return prevRsp;
 
     executingP->pc.rsp = prevRsp;
+
+    if(executingP->pc.ticketsLeft > 0){
+        executingP->pc.ticketsLeft--;
+        return executingP->pc.rsp;
+    }
+
+    executingP->pc.ticketsLeft = initialTickets(executingP->pc.priority);
     executingP = getNext(readyList);
+
     //ncPrintWithColor(executingP->pc.name, executingP->pc.name[0] == 'T' ? RED_BLACK : GREEN_BLACK);
     return executingP->pc.rsp;
 }
@@ -67,7 +76,7 @@ static process * delProcess(processList * list, pid_t pid) {
         return NULL;
 
     process * prev = NULL;
-    process * toDel = getProcessAndPrevious(list, pid, prev);
+    process * toDel = getProcessAndPrevious(list, pid, &prev);
     
     if(toDel == NULL)
         return NULL;
@@ -97,31 +106,31 @@ static process * delProcess(processList * list, pid_t pid) {
 
 static process * getProcess(processList * list, pid_t pid){
     process * toDiscard = NULL;
-    return getProcessAndPrevious(list, pid, toDiscard);
+    return getProcessAndPrevious(list, pid, &toDiscard);
 }
 
 /* Obtiene un proceso especifico de la lista por PID, pero no lo elimina de la misma.
  * Adicionalmente, en el puntero *previous devuelve el nodo anterior al retornado */
-static process * getProcessAndPrevious(processList * list, pid_t pid, process * prev){
+static process * getProcessAndPrevious(processList * list, pid_t pid, process ** prev){
     /* Si la lista no existe, esta vacia o el PID es invalido, retorno */
     if(list == NULL || list->size == 0 || pid <= 0)
         return NULL;
 
     /* Tomo el primero. En este punto, no puede ser NULL */
     process * toRet = list->first;
-    prev = toRet;
+    *prev = toRet;
     /* Recorro la lista buscando aquel proceso que coincida en PID */
     int i;
     for (i = 0; i < list->size; i++){
         if(toRet->pc.pid == pid)
             break;
-        prev = toRet;
+        *prev = toRet;
         toRet = toRet->next;
     }
 
     /* Si se recorrio toda la lista, significa que no se encontro */
     if(i == list->size){
-        prev = NULL;
+        *prev = NULL;
         return NULL;
     }
 
@@ -132,7 +141,7 @@ static process * getProcessAndPrevious(processList * list, pid_t pid, process * 
 static process * getNext(processList * list) {
     if(list == NULL || list->size == 0)
         return NULL;
-
+    
     process * next = list->iterator;
     
     list->iterator = list->iterator->next;
@@ -140,7 +149,7 @@ static process * getNext(processList * list) {
 }
 
 /* Crea un nuevo proceso y lo agrega a la lista de procesos READY. Retorna el nuevo PID */
-pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
+pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint8_t priority){
     
     /* Reservo espacio para el nuevo nodo de proceso. Notemos que new incluye
      * al proceso y al stack del mismo */ 
@@ -151,7 +160,7 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
     /* El primer parametro de argv es el nombre del proceso. Lo guardo en
      * prName e inicializo el proceso new con dicho nombre */
     char * prName = argv[0];
-    if(initProcess(new, prName) == 0)
+    if(initProcess(new, prName, priority) == 0)
         return 0;
 
     /* Reservamos espacio para 'argc' argumentos */
@@ -173,13 +182,14 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
 static void freeProcess(process * p){
     //TODO: Chequear si esto esta bien
     /* Obtengo argc y argv desde el stack del proceso */
-    int argc = *((uint64_t *)(p->pc.rbp) + 9 * sizeof(uint64_t)); // rdi
-    char ** argv = *((char ***)((uint64_t *)(p->pc.rbp) + 8 * sizeof(uint64_t))); // rsi
+    //int argc = *((uint64_t *)(p->pc.rbp) - 11 * sizeof(uint64_t)); // rdi
+    //char ** argv = *((char ***)((uint64_t *)(p->pc.rbp) - 12 * sizeof(uint64_t))); // rsi
 
     /* Libero los argumentos */
-    for (int i = 0; i < argc; i++)
-        free(argv[i]);
-    free(argv);
+    /* for (int i = 0; i < argc; i++){
+        ncPrintWithColor(argv[i], CYAN_BLACK);
+        free(argv[i]);}
+    free(argv); */
     
     /* Libero el nodo del proceso */
     free(p);
@@ -242,7 +252,7 @@ static processList * initializeProcessList() {
 /* Crea el primer proceso y le asigna su nombre */
 void createFirstProcess(){
     char *argv[] = {"firstProcess"};
-    createProcess((void *)&firstProcess, 1, argv);
+    createProcess((void *)&firstProcess, 1, argv, MIN_PRIORITY);
 }
 
 /* Primer proceso creado. Su unica funcion es esperar a que llegue un
@@ -256,7 +266,7 @@ static int firstProcess(int argc, char **argv) {
 
 /* Inicializa Process Context de un nuevo proceso con los valores
  * correspondientes */
-static pid_t initProcess(process *pNode, char *name) {
+static pid_t initProcess(process *pNode, char *name, uint8_t priority) {
     processContext *pc = &(pNode->pc);
     
     /* Genero un nuevo PID para el proceso */
@@ -271,11 +281,19 @@ static pid_t initProcess(process *pNode, char *name) {
      * stackFrame */
     pc->rsp = (uint64_t)(pc->rbp - sizeof(stackFrame));
 
-    /* Se asume que todos los procesos comienzan en READY */
+    /* Todos los procesos comienzan en READY */
     pc->state = READY;
+    // TODO: Poder elegir la prioridad del proceso
+    /* Todos los procesos comienzan en con la prioridad elegida. Si es invalida se
+     * setea en DEFAULT_PRIORITY */
+    pc->priority = VALID_PRIORITY(priority) ? priority : DEFAULT_PRIORITY;
+    pc->ticketsLeft = initialTickets(pc->priority);
 
-    //TODO: IMPLEMENTAR PRIORIDADES
     return pc->pid;
+}
+
+static int initialTickets(int priority) {
+    return (MIN_PRIORITY + 1 - priority) * TQ; 
 }
 
 /* Se inicializa el Stack Frame de un nuevo proceso. En los registros r8 a r9, se asignan
@@ -320,7 +338,7 @@ void forceExitAfterExec(int argc, char *argv[], void *processFn(int, char **)) {
 
 /* Se liberan los recursos de un proceso que haya terminado su ejecucion */
 static void exitPs(){
-    freeProcess(executingP);
+    kill(executingP->pc.pid);
 }
 
 /* Devuelve el PID del proceso en ejecucion */
@@ -332,6 +350,8 @@ pid_t getPid(){
 /* Se mata un proceso segun su PID, eliminando sus recursos. Devuelve 1 si fue
  * exitoso o 0 en caso de error */
 uint64_t kill(pid_t pid){
+    int isExecuting = pid == executingP->pc.pid;
+
     /* Buscamos el proceso a eliminar en ambas listas */
     process * toKill;
     toKill = delProcess(readyList, pid);
@@ -340,11 +360,12 @@ uint64_t kill(pid_t pid){
     if(toKill == NULL)
         return 0;
 
+    freeProcess(toKill);
+
     // TODO: Hace falta?
-    if(pid == executingP->pc.pid)
+    if(isExecuting)
         timerInterrupt();
 
-    freeProcess(toKill);
     return 1;
 }
 
@@ -363,6 +384,7 @@ static uint64_t block(pid_t pid){
     if(p == NULL)
         return 0;
     
+    p->pc.state = BLOCKED;
     enqProcess(blockedList, p);
 
     //TODO: Hace falta?
@@ -377,11 +399,11 @@ static uint64_t unblock(pid_t pid){
     process * p = delProcess(blockedList, pid);
     if(p == NULL)
         return 0;
+    p->pc.state = READY;
     enqProcess(readyList, p);
     return 1;
 }
 
-// FIXME: Rehacer teniendo en cuenta las dos listas.
 /* Imprime cada proceso junto con su informacion */
 void printAllProcessesInfo(){
     // ncPrint("Lista de procesos\n");

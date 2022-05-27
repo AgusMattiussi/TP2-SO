@@ -15,6 +15,7 @@ void exceptionDispatcher(int exception, uint64_t *registers) {
 	}
 	saveRegisterInfo();
 	getRegistersInfo();
+
 	restartTerminal(registers);
 }
 
