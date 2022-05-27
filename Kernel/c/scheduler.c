@@ -17,6 +17,9 @@ static processList * initializeProcessList();
 static void printProcessListInfo(processList * list);
 static void printProcessInfo(process * p);
 static int initialTickets(int priority);
+static pid_t getPidOf(process * p);
+static int getTicketsLeft(process * p);
+static uint8_t getPriority(process * p);
 
 static pid_t lastGivenPid = 1;
 static processList * readyList;
@@ -33,12 +36,12 @@ uint64_t scheduler(uint64_t prevRsp){
 
     executingP->pc.rsp = prevRsp;
 
-    if(executingP->pc.ticketsLeft > 0){
+    if(getTicketsLeft(executingP) > 0){
         executingP->pc.ticketsLeft--;
         return executingP->pc.rsp;
     }
 
-    executingP->pc.ticketsLeft = initialTickets(executingP->pc.priority);
+    executingP->pc.ticketsLeft = initialTickets(getPriority(executingP));
     executingP = getNext(readyList);
 
     //ncPrintWithColor(executingP->pc.name, executingP->pc.name[0] == 'T' ? RED_BLACK : GREEN_BLACK);
@@ -175,7 +178,7 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint
 
     /* Se agrega el nuevo proceso a la lista*/
     enqProcess(readyList, new);
-    return new->pc.pid;
+    return getPidOf(new);
 }
 
 /* Libera el proceso p y todos sus recursos */
@@ -482,4 +485,22 @@ void nice(pid_t pid, uint8_t newPriority){
         ncPrintDec(pid);
         ncPrintChar('\n');
     }
+}
+
+static pid_t getPidOf(process * p){
+    if(p == NULL)
+        return 0;
+    return p->pc.pid;
+}
+
+static int getTicketsLeft(process * p) {
+    if(p == NULL)
+        return 0;
+    return p->pc.ticketsLeft;
+}
+
+static uint8_t getPriority(process * p) {
+    if(p == NULL)
+        return 0;
+    return p->pc.priority;
 }
