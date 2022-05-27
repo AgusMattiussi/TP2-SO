@@ -74,15 +74,13 @@ void help(){
         print(commandsDesc[i]);
         putChar('\n');
     }
-
-    putChar('\n');
-
+    
     char *testNames[TESTS_COUNT] = {"test_mm", "test_processes", "test_priority", "test_synchro"};
     char *testDescriptions[TESTS_COUNT] = {
-        "Pide todos los bloques de memoria posibles y verifica que la información de ellos se guarde correctamente en cada uno",
-        "Crea la mayor cantidad de procesos posibles y los bloquea/debloquea/mata de forma aleatoria hasta que estén todos muertos",
-        "Crea una cantidad dada de procesos de un ciclo infinito de prints, los prioriza a todos distinto y luego espera un tiempo dado, los bloquea, cambia sus prioridades, los desbloquea, espera y los mata",
-        "Recibe 3 argumentos que pueden aumentar o disminuir la manipulación de una variable global, crea procesos que incrementan o decrementan la variable, se crean condiciones de carrera y luego imprime el resultado",
+        "Requests all possible memory blocks and verifies that their information is correctly stored in each one.",
+        "Creates as many processes as possible and randomly blocks/unblocks/kills them until all have been killed.",
+        "Creates a given number of processes that consist of an infinite print loop, prioritizes them all differently, then waits a given time, blocks them, changes their priorities, unblocks them, waits and kills them.",
+        "Receives 3 arguments that can increase or decrease the manipulation of a global variable, creates processes that increment or decrement the variable, race conditions are created, and then prints the result.",
     };
 
     for (int i = 0; i < TESTS_COUNT; i++){
