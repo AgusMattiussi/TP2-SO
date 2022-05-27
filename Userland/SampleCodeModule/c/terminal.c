@@ -189,7 +189,7 @@ void kill(int argSize, char *args[]) {
     unsigned long long pid = atoull(args[0]);
     
     if (sys_killPs(pid) == 0) {
-        print("The process has been killed already or it does not exist.\n");
+        print("The process does not exist or cannot be killed.\n");
     } else {
         print("Success!\n");
     }

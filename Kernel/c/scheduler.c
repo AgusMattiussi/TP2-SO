@@ -30,10 +30,14 @@ static process * executingP;
 /* Scheduler FIFO */
 //TODO: Cambiar a Round Robin con Prioridades
 uint64_t scheduler(uint64_t prevRsp){
-    //ncPrint("scheduler\n");
 
-    if(readyList == NULL || executingP == NULL)
+    if(readyList == NULL || readyList->size == 0)
         return prevRsp;
+
+    if(executingP == NULL){
+        executingP = getNext(readyList);
+        return executingP->pc.rsp;
+    }
 
     executingP->pc.rsp = prevRsp;
 
@@ -42,6 +46,7 @@ uint64_t scheduler(uint64_t prevRsp){
         return executingP->pc.rsp;
     }
 
+    //ncPrint("Scheduler\n");
     executingP->pc.ticketsLeft = initialTickets(getPriority(executingP));
     executingP = getNext(readyList);
 
@@ -97,6 +102,12 @@ static process * delProcess(processList * list, pid_t pid) {
          * este utlimo avance */
         if(toDel == list->iterator)
             list->iterator = list->iterator->next;
+        /* Si justo estoy borrando el primer proceso de la lista, actualizo first */
+        if(toDel == list->first)
+            list->first = list->first->next;
+        /* Si justo estoy borrando el ultimo proceso de la lista, actualizo last*/
+        if(toDel == list->last);
+            list->last = prev;
         /* Salteo a toDel en la lista */
         prev->next = toDel->next;
     }
@@ -234,9 +245,6 @@ void initScheduler() {
 
     //TODO: Chequear si no hay que sacarlo
     executingP = readyList->first;
-    //ncPrintWithColor(executingP->pc.name, 0x02);
-    // TODO: deqProcess();
-    // free(deqProcess());
 }
 
 /* Inicializa una lista de procesos. Devuelve 0 en caso de error o
@@ -354,6 +362,10 @@ pid_t getPid(){
 /* Se mata un proceso segun su PID, eliminando sus recursos. Devuelve 1 si fue
  * exitoso o 0 en caso de error */
 uint64_t kill(pid_t pid){
+    /* No se puede eliminar firstProcess */
+    if(pid <= 1)
+        return 0;
+
     int isExecuting = pid == executingP->pc.pid;
 
     /* Buscamos el proceso a eliminar en ambas listas */
