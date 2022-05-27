@@ -20,6 +20,7 @@ static int initialTickets(int priority);
 static pid_t getPidOf(process * p);
 static int getTicketsLeft(process * p);
 static uint8_t getPriority(process * p);
+static void printPriority(uint8_t priority);
 
 static pid_t lastGivenPid = 1;
 static processList * readyList;
@@ -433,7 +434,7 @@ static void printProcessListInfo(processList * list) {
 }
 
 static void printProcessInfo(process * p){
-    ncPrintDec(p->pc.pid);
+    ncPrintDec(getPidOf(p));
     ncPrint(TAB);
 
     ncPrint(p->pc.name);
@@ -456,9 +457,17 @@ static void printProcessInfo(process * p){
             ncPrint("?????");
     }
     ncPrint(TAB);
-    ncPrintChar(p->pc.priority);
+    printPriority(getPriority(p));
 
     ncPrint("\n");
+}
+
+static void printPriority(uint8_t priority){
+    char c1 = (priority/10) + '0';
+    char c2 = (priority%10) + '0';
+
+    ncPrintChar(c1);
+    ncPrintChar(c2);
 }
 
 void nice(pid_t pid, uint8_t newPriority){
@@ -466,7 +475,7 @@ void nice(pid_t pid, uint8_t newPriority){
         ncPrint("La prioridad debe ser un numero entre 0 y 19\n");
         return;
     }
-    if(executingP->pc.pid == pid){
+    if(getPidOf(executingP) == pid){
         executingP->pc.pid = newPriority;
         return;
     }
