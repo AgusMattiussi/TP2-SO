@@ -129,6 +129,11 @@ extern int sys_getSeconds();
 unsigned char getChar();
 
 /**
+ * Syscall: Cambia la prioridad de un proceso dado su ID y la nueva prioridad
+**/
+extern void sys_nice(unsigned long long pid, char newPriority);
+
+/**
  * Devuelve un caracter ingresado por el usuario o en su defecto 0. Se
  * utiliza para que la ejecucion de funciones como la impresion de la hora
  * y el cronometro puedan seguir su ejecucion aunque el usuario no haya

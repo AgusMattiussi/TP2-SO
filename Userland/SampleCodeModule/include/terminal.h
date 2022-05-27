@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <strings.h>
 
-#define COMMANDS_COUNT 14
+#define COMMANDS_COUNT 18
 #define TESTS_COUNT 4
 #define BUFFER_SIZE 50
 
@@ -102,6 +102,12 @@ void block(int argSize, char *args[]);
  * Función del comando 'kill'. Mata un proceso dado su ID.
 **/
 void kill(int argSize, char *args[]);
+
+/**
+ * Función del comando 'nice'. Cambia la prioridad de un proceso.
+**/
+void nice(int argSize, char *args[]);
+
 
 extern unsigned long long sys_createProcess(void (*pFunction)(int, char **), int argc, char **argv, char priority);
 

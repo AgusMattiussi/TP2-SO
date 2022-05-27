@@ -254,7 +254,6 @@ size_t getFreeHeapSize() {
 }
 
 void mem(){
-    size_t freeMemory = getFreeHeapSize();
 
     ncPrint("Memoria total: ");
     ncPrintDec(HEAP_MAX_SIZE);

@@ -413,7 +413,7 @@ void printAllProcessesInfo(){
     }
     
     //TODO: Falta prioridad
-    ncPrint("PID    NAME            RSP    RBP   STATE\n");
+    ncPrintWithColor("PID    NAME            RSP    RBP       STATE    PRIORITY\n", ORANGE_BLACK);
     printProcessListInfo(readyList);
     printProcessListInfo(blockedList);
 }
@@ -452,6 +452,34 @@ static void printProcessInfo(process * p){
         default:
             ncPrint("?????");
     }
+    ncPrint(TAB);
+    ncPrintChar(p->pc.priority);
 
     ncPrint("\n");
+}
+
+void nice(pid_t pid, uint8_t newPriority){
+    if(newPriority < MAX_PRIORITY || newPriority > MIN_PRIORITY){
+        ncPrint("La prioridad debe ser un numero entre 0 y 19\n");
+        return;
+    }
+    if(executingP->pc.pid == pid){
+        executingP->pc.pid = newPriority;
+        return;
+    }
+    
+    process * process = getProcess(readyList, pid);
+    if(process != NULL){
+        process->pc.priority = newPriority;
+        return;
+    }
+    process = getProcess(blockedList, pid);
+    if(process != NULL){
+        process->pc.priority = newPriority;
+        return;
+    } else{
+        ncPrint("No existe un proceso con PID ");
+        ncPrintDec(pid);
+        ncPrintChar('\n');
+    }
 }

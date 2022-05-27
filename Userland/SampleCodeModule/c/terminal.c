@@ -1,7 +1,5 @@
 #include <terminal.h>
 
-//void funca();
-//void paredesufrir ();
 
 static char * commandsNames[COMMANDS_COUNT];
 static char * commandsDesc[COMMANDS_COUNT];
@@ -10,10 +8,8 @@ static void (*commandsFn[COMMANDS_COUNT])(int argSize, char *args[]);
 static int commandIndex = 0;
 
 void startTerminal(){
-    //printWithColor("GOLAZO\n", GREEN_BLACK);
     startCommands();
-    //char buffer[BUFFER_SIZE] = {0};
-    
+
     while(1){
         char buffer[BUFFER_SIZE] = {0};
         printWithColor("$> ", GREEN_BLACK);
@@ -36,10 +32,14 @@ void startCommands(){
     commandBuilder("ps", "Displays a list with all running processes.", &ps);
     commandBuilder("sleep", "Delay for a specified amount of time.", &sleep);
     commandBuilder("loop", "Displays current PID with a message.", &loop);
-    // commandBuilder("nice", "Changes a process priority.", &nice);
+    commandBuilder("nice", "Changes a process priority.", &nice);
     commandBuilder("block", "Blocks a running process given its pid.", &block);
     commandBuilder("kill", "Kills a running process given its pid.", &kill);
-    commandBuilder("funca", "Con suerte crea un nuevo proceso", &help); //Cambiar a funca
+    // commandBuilder("funca", "Con suerte crea un nuevo proceso", &help); //Cambiar a funca
+    commandBuilder("test_mm", "Test for the memory manager.", &kill);
+    commandBuilder("test_processes", "Test for the creation of processes.", &kill);
+    commandBuilder("test_priority", "Test for the priority of the scheduler.", &kill);
+    commandBuilder("test_synchro", "Test for the synchronization of processes.", &kill);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)()){
@@ -53,7 +53,7 @@ void executeCommand(char *buffer){
     char *arguments[3];
     int argumentsCount = strtok(buffer, ' ', arguments, 3);
 
-    if(argumentsCount <= 0 || argumentsCount > 2){
+    if(argumentsCount <= 0 || argumentsCount > 3){
         print("Invalid amount of arguments.\n");
         return;
     }
@@ -72,23 +72,6 @@ void help(){
         printWithColor(commandsNames[i], YELLOW_BLACK);
         print(" - ");
         print(commandsDesc[i]);
-        putChar('\n');
-    }
-
-    putChar('\n');
-
-    char *testNames[TESTS_COUNT] = {"test_mm", "test_processes", "test_priority", "test_synchro"};
-    char *testDescriptions[TESTS_COUNT] = {
-        "Pide todos los bloques de memoria posibles y verifica que la información de ellos se guarde correctamente en cada uno",
-        "Crea la mayor cantidad de procesos posibles y los bloquea/debloquea/mata de forma aleatoria hasta que estén todos muertos",
-        "Crea una cantidad dada de procesos de un ciclo infinito de prints, los prioriza a todos distinto y luego espera un tiempo dado, los bloquea, cambia sus prioridades, los desbloquea, espera y los mata",
-        "Recibe 3 argumentos que pueden aumentar o disminuir la manipulación de una variable global, crea procesos que incrementan o decrementan la variable, se crean condiciones de carrera y luego imprime el resultado",
-    };
-
-    for (int i = 0; i < TESTS_COUNT; i++){
-        printWithColor(testNames[i], GREEN_BLACK);
-        print(" - ");
-        print(testDescriptions[i]);
         putChar('\n');
     }
 }
@@ -212,14 +195,16 @@ void kill(int argSize, char *args[]) {
     }
 }
 
-/* void paredesufrir () {
-    for (int i = 0; i < 5; i++)
-        print("HOLAXD\n");
-	while(1);
-} */
+void nice(int argSize, char *args[]){
+    if (argSize != 2) {
+        print("Invalid amount of arguments.\n");
+        return;
+    }
 
-/* void funca() {
-    char * argv[] = {"FUNCAAAA"};
-    sys_createProcess(&paredesufrir, 1, argv);
-} */
-	
+    unsigned long long pid = atoull(args[0]);
+
+    // char newPriority = args[1]; TODO: revisar casteo
+    char newPriority = 12;
+
+    sys_nice(pid, newPriority);
+}
