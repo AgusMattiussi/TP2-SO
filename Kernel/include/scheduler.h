@@ -26,6 +26,8 @@
 #define MIN_PRIORITY 19
 #define DEFAULT_PRIORITY (MAX_PRIORITY + MIN_PRIORITY + 1)/2
 
+#define VALID_PRIORITY(p) ((p) >= MAX_PRIORITY && (p) <= MIN_PRIORITY)
+
 typedef enum {READY, BLOCKED} states;
 
 typedef struct stackFrame{
@@ -85,7 +87,7 @@ void printAllProcessesInfo();
 void initScheduler();
 uint64_t scheduler(uint64_t prevRsp);
 void createFirstProcess();
-pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv);
+pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint8_t priority);
 
 
 #endif

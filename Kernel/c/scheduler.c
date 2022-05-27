@@ -3,7 +3,7 @@
 static uint64_t block(pid_t pid);
 static uint64_t unblock(pid_t pid);
 static int firstProcess(int argc, char **argv);
-static pid_t initProcess(process *pNode, char *name);
+static pid_t initProcess(process *pNode, char *name, uint8_t priority);
 static void setStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), pid_t pid);
 static pid_t generatePid();
 static process * getNext(processList * list);
@@ -149,7 +149,7 @@ static process * getNext(processList * list) {
 }
 
 /* Crea un nuevo proceso y lo agrega a la lista de procesos READY. Retorna el nuevo PID */
-pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
+pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint8_t priority){
     
     /* Reservo espacio para el nuevo nodo de proceso. Notemos que new incluye
      * al proceso y al stack del mismo */ 
@@ -160,7 +160,7 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
     /* El primer parametro de argv es el nombre del proceso. Lo guardo en
      * prName e inicializo el proceso new con dicho nombre */
     char * prName = argv[0];
-    if(initProcess(new, prName) == 0)
+    if(initProcess(new, prName, priority) == 0)
         return 0;
 
     /* Reservamos espacio para 'argc' argumentos */
@@ -252,7 +252,7 @@ static processList * initializeProcessList() {
 /* Crea el primer proceso y le asigna su nombre */
 void createFirstProcess(){
     char *argv[] = {"firstProcess"};
-    createProcess((void *)&firstProcess, 1, argv);
+    createProcess((void *)&firstProcess, 1, argv, MIN_PRIORITY);
 }
 
 /* Primer proceso creado. Su unica funcion es esperar a que llegue un
@@ -266,7 +266,7 @@ static int firstProcess(int argc, char **argv) {
 
 /* Inicializa Process Context de un nuevo proceso con los valores
  * correspondientes */
-static pid_t initProcess(process *pNode, char *name) {
+static pid_t initProcess(process *pNode, char *name, uint8_t priority) {
     processContext *pc = &(pNode->pc);
     
     /* Genero un nuevo PID para el proceso */
@@ -284,8 +284,9 @@ static pid_t initProcess(process *pNode, char *name) {
     /* Todos los procesos comienzan en READY */
     pc->state = READY;
     // TODO: Poder elegir la prioridad del proceso
-    /* Todos los procesos comienzan en con prioridad DEFAULT_PRIORITY */
-    pc->priority = DEFAULT_PRIORITY;
+    /* Todos los procesos comienzan en con la prioridad elegida. Si es invalida se
+     * setea en DEFAULT_PRIORITY */
+    pc->priority = VALID_PRIORITY(priority) ? priority : DEFAULT_PRIORITY;
     pc->ticketsLeft = initialTickets(pc->priority);
 
     return pc->pid;
