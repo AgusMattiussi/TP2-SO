@@ -16,6 +16,7 @@ static void exitPs();
 static processList * initializeProcessList();
 static void printProcessListInfo(processList * list);
 static void printProcessInfo(process * p);
+static int initialTickets(int priority);
 
 static pid_t lastGivenPid = 1;
 static processList * readyList;
@@ -31,6 +32,13 @@ uint64_t scheduler(uint64_t prevRsp){
         return prevRsp;
 
     executingP->pc.rsp = prevRsp;
+
+    if(executingP->pc.ticketsLeft > 0){
+        executingP->pc.ticketsLeft--;
+        return executingP->pc.rsp;
+    }
+
+    executingP->pc.ticketsLeft = initialTickets(executingP->pc.priority);
     executingP = getNext(readyList);
 
     //ncPrintWithColor(executingP->pc.name, executingP->pc.name[0] == 'T' ? RED_BLACK : GREEN_BLACK);
@@ -273,11 +281,18 @@ static pid_t initProcess(process *pNode, char *name) {
      * stackFrame */
     pc->rsp = (uint64_t)(pc->rbp - sizeof(stackFrame));
 
-    /* Se asume que todos los procesos comienzan en READY */
+    /* Todos los procesos comienzan en READY */
     pc->state = READY;
+    // TODO: Poder elegir la prioridad del proceso
+    /* Todos los procesos comienzan en con prioridad DEFAULT_PRIORITY */
+    pc->priority = DEFAULT_PRIORITY;
+    pc->ticketsLeft = initialTickets(pc->priority);
 
-    //TODO: IMPLEMENTAR PRIORIDADES
     return pc->pid;
+}
+
+static int initialTickets(int priority) {
+    return (MIN_PRIORITY + 1 - priority) * TQ; 
 }
 
 /* Se inicializa el Stack Frame de un nuevo proceso. En los registros r8 a r9, se asignan
