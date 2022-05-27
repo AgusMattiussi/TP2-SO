@@ -44,7 +44,7 @@ void startCommands(){
     commandBuilder("test_mm", "Test for the memory manager.", &kill);
     commandBuilder("test_processes", "Test for the creation of processes.", &kill);
     commandBuilder("test_priority", "Test for the priority of the scheduler.", &kill);
-    commandBuilder("test_synchro", "Test for the synchronization of processes", &kill);
+    commandBuilder("test_synchro", "Test for the synchronization of processes.", &kill);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)()){
@@ -158,15 +158,15 @@ void sleep(int argSize, char *args[]){
 
 //TODO: cambiar para que sea un nuevo proceso
 void loop(){
-    // unsigned long long pid = sys_getPid();
-    // char pidStr[3];
-    // itoa(pid, pidStr);
+    unsigned long long pid = sys_getPid();
+    char pidStr[3];
+    itoa(pid, pidStr);
     char *loopTime[1] = {"3"};
 
     while(1){
         sleep(1, loopTime);
         print("Hola!!! Soy el proceso con pid: ");
-        // print(pidStr);
+        print(pidStr);
         putChar('\n');
     }
 }

@@ -3,9 +3,11 @@
 static int createSemaphore(char *name, int initialValue);
 static void enqSem(TSem * sem);
 static TSem * deqSem();
+static void enqPr(TSem * sem, pid_t pid);
+static pid_t deqPr(TSem * sem);
 static TSem * getSem(char * name);
 
-static uint64_t semLock;
+static uint64_t semLock = 0;
 static semList * semaphoresList;
 
 static int createSemaphore(char *name, int initialValue){
@@ -60,6 +62,46 @@ static TSem * deqSem() {
     return deq;
 }
 
+static void enqPr(TSem * sem, pid_t pid){
+    
+    pNode * process = malloc(sizeof(pNode));
+
+    if(process == NULL)
+        return;
+
+    process->pid = pid;
+
+    if(sem->firstProcess == NULL)
+        sem->firstProcess = process;
+    else
+        sem->lastProcess->next = process;
+
+    sem->lastProcess = process;
+    process->next = NULL;
+
+    sem->waitingProcesses++;
+}
+
+static pid_t deqPr(TSem * sem){
+    if(sem->waitingProcesses == 0)
+        return FAILED;
+
+    pNode * process = sem->firstProcess;
+    int pid = process->pid;
+
+    if(sem->waitingProcesses == 1){
+        sem->firstProcess = NULL;
+        sem->lastProcess = NULL;
+    } else {
+        sem->firstProcess = process->next;
+        sem->lastProcess->next = sem->firstProcess;
+    }
+
+    free(process);
+    sem->waitingProcesses--;
+    return pid;
+}
+
 static TSem * getSem(char * name){
     TSem * aux = semaphoresList->first;
 
@@ -90,7 +132,7 @@ uint64_t semOpen(char *name, int initialValue){
 uint64_t semClose(TSem * sem){
     _xchgLock(&semLock);
 
-    TSem * toClose = getSem(sem);
+    TSem * toClose = getSem(sem->name);
 
     deqSem(toClose);
 
@@ -102,31 +144,64 @@ uint64_t semClose(TSem * sem){
 
 uint64_t semWait(TSem * sem){
 
-    TSem * toWait = getSem(sem);
-    pid_t pid = getPid();
+    _xchgLock(&semLock);
 
-    while(toWait->value == 0){ // tengo que bloquear el proceso
-        
-        //TODO: Agregar proceso a lista del semaforo
+    TSem * toWait = getSem(sem->name);
 
-        if(block(pid) == -1)
-            return FAILED;
+    if(toWait == NULL){
+        _unlock(&semLock);
+        ncPrint("No existe el semaforo\n");
+        return FAILED;
     }
 
-    toWait->value--;
-    _unlock(&toWait->lock);
+    _xchgLock(&toWait->lock);
+    _unlock(&semLock);
+
+    pid_t pid = getPid();
+
+    while(toWait->value == 0){ // tengo que bloquear el proceso  
+        enqPr(toWait, pid);    // agrego el proceso en la cola del semaforo
+        _unlock(&toWait->lock); // desbloqueo el lock del semaforo
+        if(block(pid) == -1)   // bloqueo el proceso
+            return FAILED;
+        _xchgLock(&toWait->lock); // vuelvo a bloquear el lock semaforo
+    }
+
+    toWait->value--;     // el avlue era mayor a 0 -> solo lo decremento
+    _unlock(&toWait->lock); 
 
     return SUCCESS;
 }
 
 uint64_t semPost(TSem * sem){
-    TSem * toPost = getSem(sem);
+
+    _xchgLock(&semLock);
+
+    TSem * toPost = getSem(sem->name);
+
+    if(toPost == NULL){
+        _unlock(&semLock);
+        ncPrint("No existe el semaforo\n");
+        return FAILED;
+    }
+
+    _xchgLock(&toPost->lock);
+    _unlock(&semLock);
 
     toPost->value++;
 
-    // TODO: Desbloquear proceso de la lista del semaforo
+    int pid = deqPr(toPost);
+    if(pid == FAILED){
+        _unlock(&toPost->lock);
+        _unlock(&semLock);
+        ncPrint("No hay procesos para desbloquear\n");
+        return FAILED;
+    }
 
     _unlock(&toPost->lock);
+
+    if(unblock(pid) == -1)
+            return FAILED;
 
     return SUCCESS;
 }
@@ -147,7 +222,7 @@ void printListofSemaphores(){
         ncPrintDec(toPrint->value);
         ncPrint("    ");
 
-        pList * process = toPrint->firstProcess;
+        pNode * process = toPrint->firstProcess;
         for(int j = 0; j < toPrint->waitingProcesses; j++){
             ncPrintDec(process->pid);
             ncPrint("   ");

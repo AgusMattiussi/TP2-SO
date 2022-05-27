@@ -10,13 +10,13 @@
 #include <naiveConsole.h>
 
 #define NAME_MAX_SIZE 25
-#define FAILED 0
-#define SUCCESS 1
+#define FAILED -1
+#define SUCCESS 0
 
-typedef struct pList{
-    struct pList * next;
+typedef struct pNode{
+    struct pNode * next;
     pid_t pid;
-} pList;
+} pNode;
 
 typedef struct TSem {
     //TODO: Revisar si esta bien que un semaforo tenga un puntero al siguiente
@@ -25,8 +25,8 @@ typedef struct TSem {
     uint64_t lock;
     int value;
     // lista de procesos que tiene en un wait
-    pList * firstProcess;
-    pList * lastProcess;
+    pNode * firstProcess;
+    pNode * lastProcess;
     int waitingProcesses;
 } TSem;
 

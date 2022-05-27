@@ -1,6 +1,5 @@
 #include <scheduler.h>
 
-static uint64_t unblock(pid_t pid);
 static int firstProcess(int argc, char **argv);
 static pid_t initProcess(process *pNode, char *name);
 static void setStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), pid_t pid);
@@ -12,10 +11,14 @@ static process * getProcess(pid_t pid);
 static void setArgs(char ** to, char ** from, int argc);
 static void freeProcess(process * p);
 static void exitPs();
+static void printProcessListInfo(processList * list);
+static void printProcessInfo(process * p);
 
 static pid_t lastGivenPid = 1;
 static processList * currentList;
 static process * executingP;
+
+#define TAB "    "
 
 /* Scheduler FIFO */
 //TODO: Cambiar a Round Robin con Prioridades
@@ -188,13 +191,13 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv){
 static void freeProcess(process * p){
     //TODO: Chequear si esto esta bien
     /* Obtengo argc y argv desde el stack del proceso */
-    int argc = *((uint64_t *)(p->pc.rbp) + 9 * sizeof(uint64_t)); // rdi
-    char ** argv = *((char ***)((uint64_t *)(p->pc.rbp) + 8 * sizeof(uint64_t))); // rsi
+    // int argc = *((uint64_t *)(p->pc.rbp) - 11 * sizeof(uint64_t)); // rdi
+    // char ** argv = *((char ***)((uint64_t *)(p->pc.rbp) - 12 * sizeof(uint64_t))); // rsi
 
-    /* Libero los argumentos */
-    for (int i = 0; i < argc; i++)
-        free(argv[i]);
-    free(argv);
+    // /* Libero los argumentos */
+    // for (int i = 0; i < argc; i++)
+    //     free(argv[i]);
+    // free(argv);
     
     /* Libero el nodo del proceso */
     free(p);
@@ -402,7 +405,7 @@ uint64_t block(pid_t pid){
 }
 
 /* Cambia el estado de un proceso BLOCKED a READY */
-static uint64_t unblock(pid_t pid){
+uint64_t unblock(pid_t pid){
     if(pid < 1)
         return -1;
     return changeProcessState(pid, READY);
@@ -411,68 +414,52 @@ static uint64_t unblock(pid_t pid){
 /* Imprime cada proceso junto con su informacion */
 void printListOfProcesses(){
     // ncPrint("Lista de procesos\n");
-    process * toPrint = currentList->first;
-    if(toPrint == NULL){
-        ncPrint("No processes to show\n");
+    if(currentList->size == 0){
+        ncPrint("No hay ningun proceso ejecutandose");
         return;
     }
+    
     //TODO: Falta prioridad
     ncPrintWithColor("PID    NAME           RSP       RBP      STATE\n", ORANGE_BLACK);
-    for (int i = 0; i < currentList->size; i++){
-        ncPrintDec(toPrint->pc.pid);
-        ncPrint("    ");
-        ncPrint(toPrint->pc.name);
-        ncPrint("    ");
-        ncPrintHex(toPrint->pc.rsp);
-        ncPrint("    ");
-        ncPrintHex(toPrint->pc.rbp);
-        ncPrint("    ");
+    printProcessListInfo(currentList);
+}
 
-
-        switch(toPrint->pc.state) {
-            case READY: 
-                ncPrint("READY");
-                break;
-            case BLOCKED:
-                ncPrint("BLOCKED");
-                break;
-            case KILLED:
-                ncPrint("KILLED");
-                break;
-            default:
-                ncPrint("?????");
+static void printProcessListInfo(processList * list) {
+    process * toPrint;
+    if(list->size > 0){
+        toPrint = list->first;
+        for (int i = 0; i < list->size; i++){
+            printProcessInfo(toPrint);
+            toPrint = toPrint->next;
         }
-
-
-        ncPrint("\n");
-
-        toPrint = toPrint->next;
-        i++;
     }
     toPrint = executingP;
-    ncPrintDec(toPrint->pc.pid);
-    ncPrint("    ");
-    ncPrint(toPrint->pc.name);
-    ncPrint("        ");
-    ncPrintHex(toPrint->pc.rsp);
-    ncPrint("    ");
-    ncPrintHex(toPrint->pc.rbp);
-    ncPrint("    ");
-    
-    switch(toPrint->pc.state) {
-            case READY: 
-                ncPrint("READY");
-                break;
-            case BLOCKED:
-                ncPrint("BLOCKED");
-                break;
-            case KILLED:
-                ncPrint("KILLED");
-                break;
-            default:
-                ncPrint("?????");
-        }
+    printProcessInfo(toPrint);
+}
 
+static void printProcessInfo(process * p){
+    ncPrintDec(p->pc.pid);
+    ncPrint(TAB);
+
+    ncPrint(p->pc.name);
+    ncPrint(TAB);
+
+    ncPrintHex(p->pc.rsp);
+    ncPrint(TAB);
+
+    ncPrintHex(p->pc.rbp);
+    ncPrint(TAB);
+
+    switch(p->pc.state) {
+        case READY: 
+            ncPrint("READY");
+            break;
+        case BLOCKED:
+            ncPrint("BLOCKED");
+            break;
+        default:
+            ncPrint("?????");
+    }
 
     ncPrint("\n");
 }
