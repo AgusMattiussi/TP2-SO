@@ -45,6 +45,9 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 		case 17:
 			nice((uint64_t)rsi, (uint8_t)rdx);
 			return 17;
+		case 18:
+			yield();
+			return 18;
 	}
     // Por default devuelve 0
 	return 0;

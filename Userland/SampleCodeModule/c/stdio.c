@@ -79,6 +79,10 @@ void clear(){
     sys_clear();
 }
 
+void yield(){
+    sys_yield();
+}
+
 int getTime(int descriptor){
     return sys_getTime(descriptor);
 }

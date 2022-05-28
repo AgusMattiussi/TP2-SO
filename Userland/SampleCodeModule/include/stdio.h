@@ -133,6 +133,8 @@ unsigned char getChar();
 **/
 extern void sys_nice(unsigned long long pid, char newPriority);
 
+extern void sys_yield();
+
 /**
  * Devuelve un caracter ingresado por el usuario o en su defecto 0. Se
  * utiliza para que la ejecucion de funciones como la impresion de la hora

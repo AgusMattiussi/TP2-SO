@@ -1,9 +1,10 @@
 /* sampleCodeModule.c */
 #include <terminal.h>
 
+
 void paredesufrir () {
-    for (int i = 0; i < 5; i++)
-        print("HOLAXD\n");
+    /* for (int i = 0; i < 5; i++)
+        print("HOLAXD "); */
 	while(1);
 }
     

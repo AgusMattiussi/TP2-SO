@@ -16,6 +16,7 @@ GLOBAL sys_getSeconds
 GLOBAL sys_mem
 GLOBAL sys_createProcess
 GLOBAL sys_nice
+GLOBAL sys_yield
 
 SECTION .text
 
@@ -103,6 +104,8 @@ sys_createProcess:
 	syscall 15
 sys_nice:
 	syscall 17
+sys_yield:
+	syscall 18
 
 ;Fuente: https://www.felixcloutier.com/x86/ud
 sys_raiseInvOpCodeExc:

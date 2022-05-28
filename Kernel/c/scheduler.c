@@ -525,3 +525,8 @@ static uint8_t getPriority(process * p) {
         return 0;
     return p->pc.priority;
 }
+
+void yield() {
+    executingP->pc.ticketsLeft = 0;
+    timerInterrupt();
+}
