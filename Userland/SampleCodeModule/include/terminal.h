@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <strings.h>
+#include <tests.h>
+#include <loop.h>
 
 #define COMMANDS_COUNT 18
 #define TESTS_COUNT 4
@@ -84,14 +86,9 @@ void mem();
 void ps();
 
 /**
- * Función del comando 'sleep'. Retrasa el funcionamiento de la terminal por un tiempo especifico.
+ * Función del comando 'loop'. Crea un proceso que imprime su pid en pantalla cada cierto tiempo.
 **/
-void sleep(int argSize, char *args[]);
-
-/**
- * Función del comando 'loop'. Imprime el ID del proceso actual con un saludo cada una cantidad de segundos.
-**/
-void loop();
+void runLoop();
 
 /**
  * Función del comando 'block'. Cambia el estado de un proceso entre bloqueado y listo dado su ID.

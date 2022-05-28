@@ -43,11 +43,16 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 		case 15:
 			return createProcess((void (*)(int, char **))rsi, (int)rdx, (char **)rcx, (uint8_t) r8);
 		case 17:
-			nice((uint64_t)rsi, (uint8_t)rdx);
+			nice(rsi, (uint8_t)rdx);
 			return 17;
 		case 18:
 			yield();
 			return 18;
+		case 19:
+			return (uint64_t)malloc(rsi);
+		case 20:
+			free((void *)rsi);
+			return 20;
 	}
     // Por default devuelve 0
 	return 0;

@@ -17,6 +17,8 @@ GLOBAL sys_mem
 GLOBAL sys_createProcess
 GLOBAL sys_nice
 GLOBAL sys_yield
+GLOBAL sys_malloc
+GLOBAL sys_free
 
 SECTION .text
 
@@ -106,6 +108,10 @@ sys_nice:
 	syscall 17
 sys_yield:
 	syscall 18
+sys_malloc:
+	syscall 19	
+sys_free:
+	syscall 20
 
 ;Fuente: https://www.felixcloutier.com/x86/ud
 sys_raiseInvOpCodeExc:

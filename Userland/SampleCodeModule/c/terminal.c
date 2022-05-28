@@ -31,15 +31,15 @@ void startCommands(){
     commandBuilder("mem", "Displays the current memory state.", &mem);
     commandBuilder("ps", "Displays a list with all running processes.", &ps);
     commandBuilder("sleep", "Delay for a specified amount of time.", &sleep);
-    commandBuilder("loop", "Displays current PID with a message.", &loop);
+    commandBuilder("loop", "Displays current PID with a message.", &runLoop);
     commandBuilder("nice", "Changes a process priority.", &nice);
     commandBuilder("block", "Blocks a running process given its pid.", &block);
     commandBuilder("kill", "Kills a running process given its pid.", &kill);
     // commandBuilder("funca", "Con suerte crea un nuevo proceso", &help); //Cambiar a funca
-    commandBuilder("test_mm", "Test for the memory manager.", &kill);
-    commandBuilder("test_processes", "Test for the creation of processes.", &kill);
-    commandBuilder("test_priority", "Test for the priority of the scheduler.", &kill);
-    commandBuilder("test_synchro", "Test for the synchronization of processes.", &kill);
+    commandBuilder("testmm", "Test for the memory manager.", &test_mm);
+    commandBuilder("testprocesses", "Test for the creation of processes.", &test_processes);
+    commandBuilder("testpriority", "Test for the priority of the scheduler.", &test_prio);
+    commandBuilder("testsynchro", "Test for the synchronization of processes.", &help);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)()){
@@ -141,28 +141,9 @@ void ps(){
     sys_ps();
 }
 
-void sleep(int argSize, char *args[]){
-    if (argSize != 1) {
-        print("Invalid amount of arguments.\n");
-        return;
-    }
-    int secondsElapsed = sys_getSeconds();
-    int final = secondsElapsed + atoull(args[0]);
-    while(sys_getSeconds() <= final);
-}
-
-void loop(){
-    // unsigned long long pid = sys_getPid();
-    // char pidStr[3];
-    // itoa(pid, pidStr);
-    char *loopTime[1] = {"3"};
-
-    while(1){
-        sleep(1, loopTime);
-        print("Hola!!! Soy el proceso con pid: ");
-        // print(pidStr);
-        putChar('\n');
-    }
+void runLoop(){
+    char *argv[] = {"loop"};
+	sys_createProcess(&loop, 1, argv, 10);
 }
 
 void block(int argSize, char *args[]) {
