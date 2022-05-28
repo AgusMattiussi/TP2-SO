@@ -133,6 +133,9 @@ unsigned char getChar();
 **/
 extern void sys_nice(unsigned long long pid, char newPriority);
 
+/**
+ * Syscall: El proceso que la llama renuncia a la CPU forzando una interrupcion del timer tick
+**/
 extern void sys_yield();
 
 /**

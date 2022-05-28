@@ -202,9 +202,7 @@ void nice(int argSize, char *args[]){
     }
 
     unsigned long long pid = atoull(args[0]);
-
-    // char newPriority = args[1]; TODO: revisar casteo
-    char newPriority = 12;
+    char newPriority = atoull(args[1]);
 
     sys_nice(pid, newPriority);
 }
