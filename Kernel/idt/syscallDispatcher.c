@@ -57,6 +57,18 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 		case 20:
 			free((void *)rsi);
 			return 20;
+		case 21:
+			return semOpen((char *)rsi, (int)rdx);
+		case 22:
+			return semClose((char *)rsi);
+		case 23:
+			return semWait((char *)rsi);
+		case 24:
+			return semClose((char *)rsi);
+		case 25:
+			return block(rsi);
+		case 26:
+			return unblock(rsi);
 	}
     // Por default devuelve 0
 	return 0;

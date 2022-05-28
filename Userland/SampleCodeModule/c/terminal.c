@@ -40,7 +40,7 @@ void startCommands(){
     commandBuilder("testmm", "Test for the memory manager.", &test_mm);
     commandBuilder("testprocesses", "Test for the creation of processes.", &test_processes);
     commandBuilder("testpriority", "Test for the priority of the scheduler.", &test_prio);
-    commandBuilder("testsynchro", "Test for the synchronization of processes.", &help);
+    commandBuilder("testsynchro", "Test for the synchronization of processes.", &test_sync);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)()){

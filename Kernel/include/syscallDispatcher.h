@@ -7,6 +7,7 @@
 #include <memory.h>
 #include <naiveConsole.h>
 #include <scheduler.h>
+#include <semaphores.h>
 
 extern void saveRegisterInfo();
 

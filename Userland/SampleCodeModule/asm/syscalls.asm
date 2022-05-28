@@ -20,7 +20,12 @@ GLOBAL sys_nice
 GLOBAL sys_yield
 GLOBAL sys_malloc
 GLOBAL sys_free
-
+GLOBAL sys_sem_open
+GLOBAL sys_sem_close
+GLOBAL sys_sem_wait
+GLOBAL sys_sem_post
+GLOBAL sys_block
+GLOBAL sys_unblock
 
 SECTION .text
 
@@ -116,6 +121,18 @@ sys_malloc:
 	syscall 19	
 sys_free:
 	syscall 20
+sys_sem_open:
+	syscall 21
+sys_sem_close:
+	syscall 22
+sys_sem_wait:
+	syscall 23
+sys_sem_post:
+	syscall 24
+sys_block:
+	syscall 25
+sys_unblock:
+	syscall 26
 
 
 ;Fuente: https://www.felixcloutier.com/x86/ud

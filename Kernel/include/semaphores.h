@@ -19,7 +19,6 @@ typedef struct pNode{
 } pNode;
 
 typedef struct TSem {
-    //TODO: Revisar si esta bien que un semaforo tenga un puntero al siguiente
     struct TSem * next;
     char name[NAME_MAX_SIZE];
     uint64_t lock;
@@ -41,11 +40,11 @@ extern uint64_t _unlock(uint64_t * lock);
 
 uint64_t semOpen(char *name, int initialValue);
 
-uint64_t semClose(TSem * sem);
+uint64_t semClose(char * semName);
 
-uint64_t semWait(TSem * sem);
+uint64_t semWait(char * semName);
 
-uint64_t semPost(TSem * sem);
+uint64_t semPost(char * semName);
 
 void printListofSemaphores();
 

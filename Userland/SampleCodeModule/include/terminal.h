@@ -6,7 +6,7 @@
 #include <tests.h>
 #include <loop.h>
 
-#define COMMANDS_COUNT 18
+#define COMMANDS_COUNT 19
 #define BUFFER_SIZE 50
 
 #define MINUTES 2

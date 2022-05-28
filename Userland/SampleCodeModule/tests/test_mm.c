@@ -23,6 +23,7 @@ uint64_t test_mm(){
   // if ((max_memory = satoi(argv[0])) <= 0) return -1;
 
   while (1){
+    print("=== Vuelta ===\n");
     rq = 0;
     total = 0;
 

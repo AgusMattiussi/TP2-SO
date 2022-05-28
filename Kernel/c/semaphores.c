@@ -122,17 +122,17 @@ uint64_t semOpen(char *name, int initialValue){
     if(createSemaphore(name, initialValue) == FAILED){
         _unlock(&semLock);
         ncPrintWithColor("Error al crear semaforo\n", RED_BLACK);
-        return -1;
+        return FAILED;
     }
 
     _unlock(&semLock);
     return SUCCESS;
 }
 
-uint64_t semClose(TSem * sem){
+uint64_t semClose(char * semName){
     _xchgLock(&semLock);
 
-    TSem * toClose = getSem(sem->name);
+    TSem * toClose = getSem(semName);
 
     deqSem(toClose);
 
@@ -142,11 +142,11 @@ uint64_t semClose(TSem * sem){
     return SUCCESS;
 }
 
-uint64_t semWait(TSem * sem){
+uint64_t semWait(char * semName){
 
     _xchgLock(&semLock);
 
-    TSem * toWait = getSem(sem->name);
+    TSem * toWait = getSem(semName);
 
     if(toWait == NULL){
         _unlock(&semLock);
@@ -167,17 +167,17 @@ uint64_t semWait(TSem * sem){
         _xchgLock(&toWait->lock); // vuelvo a bloquear el lock semaforo
     }
 
-    toWait->value--;     // el avlue era mayor a 0 -> solo lo decremento
+    toWait->value--;     // el value era mayor a 0 -> solo lo decremento
     _unlock(&toWait->lock); 
 
     return SUCCESS;
 }
 
-uint64_t semPost(TSem * sem){
+uint64_t semPost(char * semName){
 
     _xchgLock(&semLock);
 
-    TSem * toPost = getSem(sem->name);
+    TSem * toPost = getSem(semName);
 
     if(toPost == NULL){
         _unlock(&semLock);

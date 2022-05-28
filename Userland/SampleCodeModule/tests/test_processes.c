@@ -59,7 +59,7 @@ int64_t test_processes(){
           //TODO: revisar la syscall toggle -> por ahi necesitemos una para block y otra para unblock
           case 1:
             if (p_rqs[rq].state == RUNNING){
-              if(sys_togglePsState(p_rqs[rq].pid) == -1){
+              if(sys_block(p_rqs[rq].pid) == -1){
                 print("test_processes: ERROR blocking process\n");
                 return -1;
               }
@@ -72,7 +72,7 @@ int64_t test_processes(){
       // Randomly unblocks processes
       for(rq = 0; rq < max_processes; rq++)
         if (p_rqs[rq].state == BLOCKED && GetUniform(100) % 2){
-          if(sys_togglePsState(p_rqs[rq].pid) == -1){
+          if(sys_unblock(p_rqs[rq].pid) == -1){
             print("test_processes: ERROR unblocking process\n");
             return -1;
           }
