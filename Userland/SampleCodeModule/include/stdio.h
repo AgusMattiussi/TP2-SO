@@ -5,6 +5,8 @@
 
 #define BACKSPACE '\b'
 #define SHIFT 201
+#define SLASH '/'
+#define DASH '-'
 
 // COLORES: El formato es COLORLETRA_COLORFONDO
 #define BLACK_BLACK 0x00
