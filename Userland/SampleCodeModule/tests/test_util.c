@@ -1,5 +1,5 @@
+#include <test_util.h>
 #include <stdio.h>
-#include <stdint.h>
 #include <syscall.h>
 #include <strings.h>
 
@@ -72,7 +72,7 @@ void endless_loop(){
 
 void endless_loop_print(){
   int64_t pid = sys_getPid();
-  int wait = 10;
+  int wait = 100000;
   while(1){
     printInt(pid);
     putChar('\n');

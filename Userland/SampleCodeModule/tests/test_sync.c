@@ -73,7 +73,7 @@ uint64_t test_sync(){ //{n, use_sem, 0}
 //     sys_wait(pids[i + TOTAL_PAIR_PROCESSES]);
 //   }
 
-  print("Final value: %d\n");
+  // print("Final value: %d\n");
 
   return 0;
 }

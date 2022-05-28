@@ -4,14 +4,14 @@
 #include <test_util.h>
 #include <syscall.h>
 
-
 #define MINOR_WAIT 1000000 // TODO: Change this value to prevent a process from flooding the screen
 #define WAIT      10000000 // TODO: Change this value to make the wait long enough to see theese processes beeing run at least twice
 
 #define TOTAL_PROCESSES 3
-#define LOWEST 0 //TODO: Change as required
-#define MEDIUM 1 //TODO: Change as required
-#define HIGHEST 2 //TODO: Change as required
+#define LOWEST 19 //TODO: Change as required
+#define MEDIUM 10 //TODO: Change as required
+#define HIGHEST 0 //TODO: Change as required
+
 
 int64_t prio[TOTAL_PROCESSES] = {LOWEST, MEDIUM, HIGHEST};
 
@@ -23,7 +23,8 @@ void test_prio(){
 
   for(i = 0; i < TOTAL_PROCESSES; i++)
     // pids[i] = my_create_process("endless_loop_print", 0, argv);
-      pids[i] = sys_createProcess(&endless_loop_print, 1, argv, 10);
+      pids[i] = sys_createProcess(&endless_loop_print, 1, argv, 0);
+  
 
   bussy_wait(WAIT);
   print("\nCHANGING PRIORITIES...\n");
@@ -35,7 +36,7 @@ void test_prio(){
   print("\nBLOCKING...\n");
 
   for(i = 0; i < TOTAL_PROCESSES; i++)
-    sys_togglePsState(pids[i]);
+    sys_block(pids[i]);
 
   print("CHANGING PRIORITIES WHILE BLOCKED...\n");
 
@@ -45,7 +46,7 @@ void test_prio(){
   print("UNBLOCKING...\n");
 
   for(i = 0; i < TOTAL_PROCESSES; i++)
-    sys_togglePsState(pids[i]);
+    sys_unblock(pids[i]);
 
   bussy_wait(WAIT);
   print("\nKILLING...\n");
