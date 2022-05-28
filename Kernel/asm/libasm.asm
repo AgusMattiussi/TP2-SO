@@ -15,7 +15,6 @@ cpuVendor:
 	mov rax, 0
 	cpuid
 
-
 	mov [rdi], ebx
 	mov [rdi + 4], edx
 	mov [rdi + 8], ecx

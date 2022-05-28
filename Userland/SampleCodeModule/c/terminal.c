@@ -35,6 +35,7 @@ void startCommands(){
     commandBuilder("nice", "Changes a process priority.", &nice);
     commandBuilder("block", "Blocks a running process given its pid.", &block);
     commandBuilder("kill", "Kills a running process given its pid.", &kill);
+    commandBuilder("sem", "Displays a list with all the semaphores.", &sem);
     // commandBuilder("funca", "Con suerte crea un nuevo proceso", &help); //Cambiar a funca
     commandBuilder("testmm", "Test for the memory manager.", &test_mm);
     commandBuilder("testprocesses", "Test for the creation of processes.", &test_processes);
@@ -187,3 +188,7 @@ void nice(int argSize, char *args[]){
 
     sys_nice(pid, newPriority);
 }
+void sem(){
+    sys_sem();
+}
+	

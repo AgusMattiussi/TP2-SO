@@ -17,7 +17,7 @@ int main() {
 	//sys_createProcess(&paredesufrir, 1, argv2);
 	//sys_createProcess(&paredesufrir, 1, argv2);
 	// startTerminal();
-	//while (1);
+	// while (1);
 	
 	return 0;
 }

@@ -66,7 +66,7 @@ int main()
 	
 	((EntryPoint)sampleCodeModuleAddress)();
 	while(1);
-	ncPrintWithColor("Game over\n", 0x04);
+	ncPrintWithColor("Game over\n", RED_BLACK);
 	
 	return 0;
 }

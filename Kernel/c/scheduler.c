@@ -1,7 +1,5 @@
 #include <scheduler.h>
 
-static uint64_t block(pid_t pid);
-static uint64_t unblock(pid_t pid);
 static int firstProcess(int argc, char **argv);
 static pid_t initProcess(process *pNode, char *name, uint8_t priority);
 static void setStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), pid_t pid);
@@ -26,6 +24,8 @@ static pid_t lastGivenPid = 1;
 static processList * readyList;
 static processList * blockedList;
 static process * executingP;
+
+#define TAB "    "
 
 /* Scheduler FIFO */
 //TODO: Cambiar a Round Robin con Prioridades
@@ -395,7 +395,7 @@ uint64_t toggleBlocked(pid_t pid) {
 
 /* Cambia el estado de un proceso a BLOCKED. Devuelve 1 si fue
  * exitoso o 0 en caso de error */
-static uint64_t block(pid_t pid){
+uint64_t block(pid_t pid){
     process * p = delProcess(readyList, pid);
     if(p == NULL)
         return 0;
@@ -411,7 +411,7 @@ static uint64_t block(pid_t pid){
 }
 
 /* Cambia el estado de un proceso BLOCKED a READY */
-static uint64_t unblock(pid_t pid){
+uint64_t unblock(pid_t pid){
     process * p = delProcess(blockedList, pid);
     if(p == NULL)
         return 0;
@@ -428,7 +428,6 @@ void printAllProcessesInfo(){
         return;
     }
     
-    //TODO: Falta prioridad
     ncPrintWithColor("PID    NAME            RSP    RBP       STATE    PRIORITY\n", ORANGE_BLACK);
     printProcessListInfo(readyList);
     printProcessListInfo(blockedList);

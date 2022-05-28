@@ -7,7 +7,6 @@
 #include <loop.h>
 
 #define COMMANDS_COUNT 18
-#define TESTS_COUNT 4
 #define BUFFER_SIZE 50
 
 #define MINUTES 2
@@ -105,6 +104,7 @@ void kill(int argSize, char *args[]);
 **/
 void nice(int argSize, char *args[]);
 
+void sem();
 
 extern unsigned long long sys_createProcess(void (*pFunction)(int, char **), int argc, char **argv, char priority);
 

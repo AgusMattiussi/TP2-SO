@@ -81,6 +81,8 @@ extern void _hlt();
 int changeProcessState(pid_t pid, states state);
 void forceExitAfterExec(int argc, char *argv[], void *processFn(int, char **));
 pid_t getPid();
+uint64_t block(pid_t pid);
+uint64_t unblock(pid_t pid);
 uint64_t kill(pid_t pid);
 uint64_t toggleBlocked(pid_t pid);
 void printAllProcessesInfo();
