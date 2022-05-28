@@ -1,6 +1,8 @@
 #ifndef _STDIO_H
 #define _STDIO_H
 
+#include <stdint.h>
+
 #define BACKSPACE '\b'
 #define SHIFT 201
 
@@ -206,5 +208,9 @@ void printInPos(char * string, int row, int col, unsigned char colorCode);
  * Wrapper de sys_printCharInPos
 **/
 void printCharInPos(char c, int row, int col, unsigned char colorCode);
+
+void printInt(int num);
+
+uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
 #endif

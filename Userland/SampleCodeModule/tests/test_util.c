@@ -70,14 +70,11 @@ void endless_loop(){
 //   }
 // }
 
-
 void endless_loop_print(){
   int64_t pid = sys_getPid();
-  char pidStr[3];
   int wait = 10;
   while(1){
-    itoa(pid, pidStr);
-    print(pidStr);
+    printInt(pid);
     putChar('\n');
     bussy_wait(wait);
   }

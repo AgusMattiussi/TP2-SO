@@ -5,7 +5,7 @@
 #include <syscall.h>
 
 enum State {RUNNING, BLOCKED, KILLED};
-#define MAX_PROCESSES 10
+#define MAX_PROCESSES 5
 
 typedef struct P_rq{
   int32_t pid;
@@ -23,8 +23,11 @@ int64_t test_processes(){
   // if ((max_processes = satoi(argv[0])) <= 0) return -1;
 
   p_rq p_rqs[max_processes];
-
+  int j = 0;
   while (1){
+    print("=== Vuelta ");
+    printInt(j++);
+    print(" ===\n");
 
     // Create max_processes processes
     for(rq = 0; rq < max_processes; rq++){
@@ -56,7 +59,6 @@ int64_t test_processes(){
               alive--;
             }
             break;
-          //TODO: revisar la syscall toggle -> por ahi necesitemos una para block y otra para unblock
           case 1:
             if (p_rqs[rq].state == RUNNING){
               if(sys_block(p_rqs[rq].pid) == -1){

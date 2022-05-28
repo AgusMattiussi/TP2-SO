@@ -12,14 +12,12 @@ void sleep(int argSize, char *args[]){
 
 void loop(){
     unsigned long long pid = sys_getPid();
-    char pidStr[3];
-    itoa(pid, pidStr);
     char *loopTime[1] = {"5"};
 
     while(1){
         sleep(1, loopTime);
         print("Hola!!! Soy el proceso con PID: ");
-        print(pidStr);
+        printInt(pid);
         putChar('\n');
     }
 }
