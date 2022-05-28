@@ -69,6 +69,10 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 			return block(rsi);
 		case 26:
 			return unblock(rsi);
+		case 27:
+			// printListofPipes();
+			ncPrint("Lista de pipes\n");
+			return 27;
 	}
     // Por default devuelve 0
 	return 0;

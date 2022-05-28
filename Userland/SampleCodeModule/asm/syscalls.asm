@@ -26,6 +26,7 @@ GLOBAL sys_sem_wait
 GLOBAL sys_sem_post
 GLOBAL sys_block
 GLOBAL sys_unblock
+GLOBAL sys_pipe
 
 SECTION .text
 
@@ -133,6 +134,8 @@ sys_block:
 	syscall 25
 sys_unblock:
 	syscall 26
+sys_pipe:
+	syscall 27
 
 
 ;Fuente: https://www.felixcloutier.com/x86/ud

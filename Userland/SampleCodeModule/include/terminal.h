@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <strings.h>
 #include <tests.h>
-#include <loop.h>
+#include <processes.h>
 
-#define COMMANDS_COUNT 19
+#define COMMANDS_COUNT 23
 #define BUFFER_SIZE 50
 
 #define MINUTES 2
@@ -104,7 +104,30 @@ void kill(int argSize, char *args[]);
 **/
 void nice(int argSize, char *args[]);
 
+/**
+ * Función del comando 'sem'. Imprime una lista con todos los semaforos.
+**/
 void sem();
+
+/**
+ * Función del comando 'cat'. Crea un proceso que imprime en pantalla el input tal como lo recibio.
+**/
+void runCat();
+
+/**
+ * Función del comando 'wc'. Crea un proceso que imprime en pantalla la cantidad de lineas del input.
+**/
+void runWc();
+
+/**
+ * Función del comando 'filter'. Crea un proceso que imprime en pantalla la cantidad de vocales del input.
+**/
+void runFilter();
+
+/**
+ * Función del comando 'pipe'. Imprime una lista con todos los semaforos.
+**/
+void pipe();
 
 extern unsigned long long sys_createProcess(void (*pFunction)(int, char **), int argc, char **argv, char priority);
 

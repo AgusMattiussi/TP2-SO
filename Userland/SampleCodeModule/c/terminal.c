@@ -41,6 +41,10 @@ void startCommands(){
     commandBuilder("testprocesses", "Test for the creation of processes.", &test_processes);
     commandBuilder("testpriority", "Test for the priority of the scheduler.", &test_prio);
     commandBuilder("testsynchro", "Test for the synchronization of processes.", &test_sync);
+    commandBuilder("cat", "Displays the input on the screen.", &runCat);
+    commandBuilder("wc", "Displays the quantity of lines of the input.", &runWc);
+    commandBuilder("filter", "Filters the vowels of the input.", &runFilter);
+    commandBuilder("pipe", "Displays a list with all the pipes.", &pipe);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)()){
@@ -191,4 +195,22 @@ void nice(int argSize, char *args[]){
 void sem(){
     sys_sem();
 }
-	
+
+void runCat(){
+    char *argv[] = {"cat"};
+	sys_createProcess(&cat, 1, argv, 10);
+}
+
+void runWc(){
+    char *argv[] = {"wc"};
+	sys_createProcess(&wc, 1, argv, 10);
+}
+
+void runFilter(){
+    char *argv[] = {"filter"};
+	sys_createProcess(&filter, 1, argv, 10);
+}
+
+void pipe(){
+    sys_pipe();
+}

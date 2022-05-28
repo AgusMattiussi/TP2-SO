@@ -1,4 +1,8 @@
-#include <loop.h>
+#include <processes.h>
+
+static int isVowel(char c) {
+    return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
+}
 
 void sleep(int argSize, char *args[]){
     if (argSize != 1) {
@@ -20,4 +24,28 @@ void loop(){
         printInt(pid);
         putChar('\n');
     }
+}
+
+void cat(){
+    char c;
+    while ((c = getChar()) != 0)
+        putChar(c);
+}
+
+void wc(){
+    int lines = 0;
+    char c;
+    while ((c = getChar()) != 0)
+        if (c == '\n')
+            lines++;
+    print("Lines: ");
+    printInt(lines);
+    putChar('\n');
+}
+
+void filter(){
+    char c;
+    while((c = getChar()) != 0)
+        if(isVowel(c))
+            putChar(c);
 }

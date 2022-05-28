@@ -130,12 +130,6 @@ extern int sys_getSeconds();
 extern void sys_sem();
 
 /**
- * Devuelve un caracter ingresado por el usuario siempre que este no
- * sea nulo (distinto de 0)
-**/
-unsigned char getChar();
-
-/**
  * Syscall: Cambia la prioridad de un proceso dado su ID y la nueva prioridad
 **/
 extern void sys_nice(unsigned long long pid, char newPriority);
@@ -144,6 +138,17 @@ extern void sys_nice(unsigned long long pid, char newPriority);
  * Syscall: El proceso que la llama renuncia a la CPU forzando una interrupcion del timer tick
 **/
 extern void sys_yield();
+
+/**
+ * Syscall: Imprime una lista con todos los pipes
+**/
+extern void sys_pipe();
+
+/**
+ * Devuelve un caracter ingresado por el usuario siempre que este no
+ * sea nulo (distinto de 0)
+**/
+unsigned char getChar();
 
 /**
  * Devuelve un caracter ingresado por el usuario o en su defecto 0. Se
