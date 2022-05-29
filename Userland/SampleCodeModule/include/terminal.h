@@ -15,6 +15,15 @@
 #define MONTH 8
 #define YEAR 9
 
+#define BACKGROUND 0
+#define FOREGROUND 1
+
+typedef struct context {
+    int ctx;
+    int stdIn;
+    int stdOut;
+} context;
+
 /**
  * Inicializa la terminal, cargando los comandos y entrando en un ciclo infinito
 **/
@@ -29,7 +38,7 @@ void startCommands();
 /**
  * Carga el nombre, la descrición y la función de un comando en su respectivo vector
 **/
-void commandBuilder(char *name, char *desc, void (*fn)());
+void commandBuilder(char *name, char *desc, void (*fn)(), int builtin);
 
 /**
  * Ejecuta el comando ingresado, primero lo tokeniza separando por espacios para validar
@@ -129,6 +138,6 @@ void runFilter();
 **/
 void pipe();
 
-extern unsigned long long sys_createProcess(void (*pFunction)(int, char **), int argc, char **argv, char priority);
+extern unsigned long long sys_createProcess(void (*pFunction)(int, char **), int argc, char **argv, char priority, context * context);
 
 #endif

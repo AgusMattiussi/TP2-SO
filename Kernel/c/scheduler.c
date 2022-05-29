@@ -1,7 +1,7 @@
 #include <scheduler.h>
 
 static int firstProcess(int argc, char **argv);
-static pid_t initProcess(process *pNode, char *name, uint8_t priority);
+static pid_t initProcess(process *pNode, char *name, uint8_t priority, context * context);
 static void setStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), pid_t pid);
 static pid_t generatePid();
 static process * getNext(processList * list);
@@ -164,7 +164,7 @@ static process * getNext(processList * list) {
 }
 
 /* Crea un nuevo proceso y lo agrega a la lista de procesos READY. Retorna el nuevo PID */
-pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint8_t priority){
+pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint8_t priority, context * context){
     
     /* Reservo espacio para el nuevo nodo de proceso. Notemos que new incluye
      * al proceso y al stack del mismo */ 
@@ -175,7 +175,7 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint
     /* El primer parametro de argv es el nombre del proceso. Lo guardo en
      * prName e inicializo el proceso new con dicho nombre */
     char * prName = argv[0];
-    if(initProcess(new, prName, priority) == 0)
+    if(initProcess(new, prName, priority, context) == 0)
         return 0;
 
     /* Reservamos espacio para 'argc' argumentos */
@@ -264,7 +264,11 @@ static processList * initializeProcessList() {
 /* Crea el primer proceso y le asigna su nombre */
 void createFirstProcess(){
     char *argv[] = {"firstProcess"};
-    createProcess((void *)&firstProcess, 1, argv, MIN_PRIORITY);
+    context * context = malloc(sizeof(context));
+    context->ctx = FOREGROUND;
+    context->stdIn = 0;
+    context->stdOut = 0;
+    createProcess((void *)&firstProcess, 1, argv, MIN_PRIORITY, context);
 }
 
 /* Primer proceso creado. Su unica funcion es esperar a que llegue un
@@ -278,7 +282,7 @@ static int firstProcess(int argc, char **argv) {
 
 /* Inicializa Process Context de un nuevo proceso con los valores
  * correspondientes */
-static pid_t initProcess(process *pNode, char *name, uint8_t priority) {
+static pid_t initProcess(process *pNode, char *name, uint8_t priority, context * context) {
     processContext *pc = &(pNode->pc);
     
     /* Genero un nuevo PID para el proceso */
@@ -300,6 +304,16 @@ static pid_t initProcess(process *pNode, char *name, uint8_t priority) {
      * setea en DEFAULT_PRIORITY */
     pc->priority = VALID_PRIORITY(priority) ? priority : DEFAULT_PRIORITY;
     pc->ticketsLeft = initialTickets(pc->priority);
+
+    if(context == NULL){
+        pc->context = FOREGROUND;
+        pc->stdIn = 0;
+        pc->stdOut = 0;
+    } else {
+        pc->context = context->ctx;
+        pc->stdIn = context->stdIn;
+        pc->stdOut = context->stdOut;
+    }
 
     return pc->pid;
 }
@@ -482,7 +496,7 @@ static void printPriority(uint8_t priority){
 }
 
 void nice(pid_t pid, uint8_t newPriority){
-    if(newPriority < MAX_PRIORITY || newPriority > MIN_PRIORITY){
+    if(VALID_PRIORITY(newPriority)){
         ncPrint("La prioridad debe ser un numero entre 0 y 19\n");
         return;
     }
