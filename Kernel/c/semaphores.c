@@ -36,7 +36,8 @@ static void enqSem(TSem * sem) {
         semaphoresList->last->next = sem;
     
     semaphoresList->last = sem;
-    sem->next = semaphoresList->first;
+    //sem->next = semaphoresList->first;
+    sem->next = NULL;
 
     semaphoresList->size++;
 }
@@ -53,7 +54,7 @@ static TSem * deqSem() {
         semaphoresList->last = NULL;
     } else {
         semaphoresList->first = deq->next;
-        semaphoresList->last->next = semaphoresList->first;
+        //semaphoresList->last->next = semaphoresList->first;
     }
 
     deq->next = NULL;
@@ -94,7 +95,7 @@ static pid_t deqPr(TSem * sem){
         sem->lastProcess = NULL;
     } else {
         sem->firstProcess = process->next;
-        sem->lastProcess->next = sem->firstProcess;
+        //sem->lastProcess->next = sem->firstProcess;
     }
 
     free(process);
