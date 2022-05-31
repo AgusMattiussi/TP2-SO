@@ -4,7 +4,7 @@
 
 void paredesufrir () {
     /* for (int i = 0; i < 5; i++)
-        print("HOLAXD "); */
+        print("HOLAXD\n "); */
 	while(1);
 }
     

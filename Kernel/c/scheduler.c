@@ -31,8 +31,13 @@ static process * executingP;
 //TODO: Cambiar a Round Robin con Prioridades
 uint64_t scheduler(uint64_t prevRsp){
 
-    if(readyList == NULL || readyList->size == 0)
+    if(readyList == NULL)
         return prevRsp;
+
+    if(readyList->size == 0){
+        createFirstProcess();
+        executingP = NULL;
+    }
 
     if(executingP == NULL){
         executingP = getNext(readyList);
@@ -86,7 +91,6 @@ static process * delProcess(processList * list, pid_t pid) {
 
     process * prev = NULL;
     process * toDel = getProcessAndPrevious(list, pid, &prev);
-    
     if(toDel == NULL)
         return NULL;
     
@@ -103,10 +107,12 @@ static process * delProcess(processList * list, pid_t pid) {
         if(toDel == list->iterator)
             list->iterator = list->iterator->next;
         /* Si justo estoy borrando el primer proceso de la lista, actualizo first */
-        if(toDel == list->first)
+        if(toDel == list->first){
             list->first = list->first->next;
+            list->last->next = list->first;
+        }
         /* Si justo estoy borrando el ultimo proceso de la lista, actualizo last*/
-        if(toDel == list->last);
+        if(toDel == list->last)
             list->last = prev;
         /* Salteo a toDel en la lista */
         prev->next = toDel->next;
@@ -158,8 +164,8 @@ static process * getNext(processList * list) {
         return NULL;
     
     process * next = list->iterator;
-    
     list->iterator = list->iterator->next;
+
     return next;
 }
 
@@ -363,10 +369,10 @@ pid_t getPid(){
  * exitoso o 0 en caso de error */
 uint64_t kill(pid_t pid){
     /* No se puede eliminar firstProcess */
-    if(pid <= 1)
+    if(pid < 1)
         return 0;
 
-    int isExecuting = pid == executingP->pc.pid;
+    //int isExecuting = pid == executingP->pc.pid;
 
     /* Buscamos el proceso a eliminar en ambas listas */
     process * toKill;
@@ -379,8 +385,10 @@ uint64_t kill(pid_t pid){
     freeProcess(toKill);
 
     // TODO: Hace falta?
-    if(isExecuting)
+    if(pid == executingP->pc.pid){
+        executingP = NULL;
         timerInterrupt();
+    }
 
     return 1;
 }
@@ -424,7 +432,7 @@ uint64_t unblock(pid_t pid){
 void printAllProcessesInfo(){
     // ncPrint("Lista de procesos\n");
     if(readyList->size == 0 && blockedList->size == 0){
-        ncPrint("No hay ningun proceso ejecutandose");
+        ncPrint("No hay ningun proceso ejecutandose\n");
         return;
     }
     
