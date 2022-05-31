@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <strings.h>
+#include <phylo.h>
 
 void sleep(int argSize, char *args[]);
 

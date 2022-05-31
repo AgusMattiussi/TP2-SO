@@ -23,7 +23,8 @@ void startTerminal(){
 void startCommands(){
     commandBuilder("help", "Displays information about every command available.", &help);
     commandBuilder("clear", "Clears the screen.", &clearScreen);
-    commandBuilder("inforeg", "Displays the information of all the registers, if saved before.", &getRegisters);
+    //commandBuilder("inforeg", "Displays the information of all the registers, if saved before.", &getRegisters);
+    commandBuilder("phylo", "Starts the eating phyilosofers program", &phylo);
     commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument", &printmem);
     commandBuilder("time", "Displays the current time and date.", &printTime);
     commandBuilder("divzero", "Displays exception of division by zero.", &divZero);
@@ -36,7 +37,6 @@ void startCommands(){
     commandBuilder("block", "Blocks a running process given its pid.", &block);
     commandBuilder("kill", "Kills a running process given its pid.", &kill);
     commandBuilder("sem", "Displays a list with all the semaphores.", &sem);
-    // commandBuilder("funca", "Con suerte crea un nuevo proceso", &help); //Cambiar a funca
     commandBuilder("testmm", "Test for the memory manager.", &test_mm);
     commandBuilder("testprocesses", "Test for the creation of processes.", &test_processes);
     commandBuilder("testpriority", "Test for the priority of the scheduler.", &test_prio);
