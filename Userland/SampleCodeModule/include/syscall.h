@@ -12,4 +12,5 @@ unsigned long sys_sem_close(char *sem_name);
 extern void sys_yield();
 extern void * sys_malloc(uint32_t size);
 extern void sys_free(void *pr);
+extern void sys_mem();
 

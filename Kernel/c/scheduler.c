@@ -1,4 +1,5 @@
 #include <scheduler.h>
+#include <interrupts.h>
 
 static int firstProcess(int argc, char **argv);
 static pid_t initProcess(process *pNode, char *name, uint8_t priority);
@@ -194,6 +195,9 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint
     /* Creamos un stack frame para el proceso, simulando que 'siempre existio' */
     setStackFrame(argc, prArgs, new, pFunction, new->pc.pid);
 
+    new->pc.argc = argc;
+    new->pc.argv = prArgs;
+
     /* Se agrega el nuevo proceso a la lista*/
     enqProcess(readyList, new);
     return getPidOf(new);
@@ -211,6 +215,14 @@ static void freeProcess(process * p){
         ncPrintWithColor(argv[i], CYAN_BLACK);
         free(argv[i]);}
     free(argv); */
+
+    int argc = p->pc.argc;
+    char ** argv = p->pc.argv;
+
+    for (int i = 0; i < argc; i++){
+        free(argv[i]);
+    }
+    free(argv);
     
     /* Libero el nodo del proceso */
     free(p);
@@ -291,6 +303,9 @@ static pid_t initProcess(process *pNode, char *name, uint8_t priority) {
     pc->pid = generatePid();
     /* Copio el nombre recibido por parametro al campo name de pc */
     memcpy(pc->name, name, strlen(name));
+
+    pc->argc = 0;
+    pc->argv = NULL;
     
     /* rbp apunta a la base del stack */
     //TODO: Es necesario restar sizeof(char *)?
@@ -368,7 +383,7 @@ pid_t getPid(){
 /* Se mata un proceso segun su PID, eliminando sus recursos. Devuelve 1 si fue
  * exitoso o 0 en caso de error */
 uint64_t kill(pid_t pid){
-    /* No se puede eliminar firstProcess */
+    _cli();
     if(pid < 1)
         return 0;
 
@@ -387,9 +402,11 @@ uint64_t kill(pid_t pid){
     // TODO: Hace falta?
     if(pid == executingP->pc.pid){
         executingP = NULL;
+        _sti();
         timerInterrupt();
     }
 
+    _sti();
     return 1;
 }
 
@@ -404,6 +421,7 @@ uint64_t toggleBlocked(pid_t pid) {
 /* Cambia el estado de un proceso a BLOCKED. Devuelve 1 si fue
  * exitoso o 0 en caso de error */
 uint64_t block(pid_t pid){
+    _cli();
     process * p = delProcess(readyList, pid);
     if(p == NULL)
         return 0;
@@ -412,19 +430,25 @@ uint64_t block(pid_t pid){
     enqProcess(blockedList, p);
 
     //TODO: Hace falta?
-    if(pid == executingP->pc.pid)
+    if(pid == executingP->pc.pid){
+        executingP = NULL;
+        _sti();
         timerInterrupt();
+    }
 
+    _sti();
     return 1;
 }
 
 /* Cambia el estado de un proceso BLOCKED a READY */
 uint64_t unblock(pid_t pid){
+    _cli();
     process * p = delProcess(blockedList, pid);
     if(p == NULL)
         return 0;
     p->pc.state = READY;
     enqProcess(readyList, p);
+    _sti();
     return 1;
 }
 
