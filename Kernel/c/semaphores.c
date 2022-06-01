@@ -10,12 +10,20 @@ static TSem * getSem(char * name);
 static uint64_t semLock = 0;
 static semList * semaphoresList;
 
+void initSemaphores(){
+    semaphoresList = malloc(sizeof(semList));
+    semaphoresList->first = NULL;
+    semaphoresList->last = NULL;
+    semaphoresList->size = 0;
+}
+
 static int createSemaphore(char *name, int initialValue){
     TSem * new = malloc(sizeof(TSem));
     if(new == NULL)
         return FAILED;
 
     memcpy(new->name, name, strlen(name));
+
     new->value = initialValue;
     new->lock = 0;
     new->firstProcess = NULL;
@@ -219,9 +227,9 @@ void printListofSemaphores(){
 
     for(int i = 0; i < semaphoresList->size; i++){
         ncPrint(toPrint->name);
-        ncPrint("    ");
+        ncPrint("        ");
         ncPrintDec(toPrint->value);
-        ncPrint("    ");
+        ncPrint("      ");
 
         pNode * process = toPrint->firstProcess;
         for(int j = 0; j < toPrint->waitingProcesses; j++){
@@ -230,7 +238,8 @@ void printListofSemaphores(){
             process = process->next;
         }
 
-        ncPrint("---------------------------------------------");
+        toPrint = toPrint->next;
+        ncPrint("\n");
     }
 
 }

@@ -8,10 +8,14 @@ void phylo() {
     for (int i = 0; i < MAX_PHYL; i++){
         char semName[3];
         itoa(i, semName);
-        forks[i] = semName;
 
-        printWithColor(forks[i], RED_BLACK);
-        print("\n");
+        forks[i] = semName;
+        if(sys_sem_open(forks[i], 1) != 0){
+            print("MALARDO\n");
+            return;
+        }
+
     }
+
 
 }

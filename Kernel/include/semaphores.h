@@ -48,4 +48,6 @@ uint64_t semPost(char * semName);
 
 void printListofSemaphores();
 
+void initSemaphores();
+
 #endif

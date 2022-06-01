@@ -43,8 +43,7 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 		case 15:
 			return createProcess((void (*)(int, char **))rsi, (int)rdx, (char **)rcx, (uint8_t) r8);
 		case 16:
-			// printListofSemaphores();
-			ncPrint("Lista de semaforos\n");
+			printListofSemaphores();
 			return 16;
 		case 17:
 			nice(rsi, (uint8_t)rdx);

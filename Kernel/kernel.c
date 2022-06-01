@@ -8,6 +8,7 @@
 #include <idtLoader.h>
 #include <scheduler.h>
 #include <interrupts.h>
+#include <semaphores.h>
 
 
 extern uint8_t text;
@@ -57,6 +58,10 @@ int main()
 {	
 	load_idt();
 	ncClear();
+
+	_cli();
+	initSemaphores();
+	_sti();
 
 	_cli();
 	initScheduler();
