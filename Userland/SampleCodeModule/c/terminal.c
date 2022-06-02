@@ -80,10 +80,10 @@ void executeCommand(char *buffer){
 
                 if(argumentsCount == 2 && arguments[1][0] == '-')
                     processMode = BACKGROUND;
-                    // print("Background run\n");
+                    print("Background run\n");
                 
                 if(argumentsCount == 3 && arguments[1][0] == '/'){ //chequear 2do argumento post pipe
-                    // print("IPC\n");
+                    print("IPC\n");
                     for(int j=0; j< COMMANDS_COUNT; j++){
                         if(strcmp(arguments[2], commandsNames[j]) == 0){
                             //TODO: pipes 
@@ -92,15 +92,13 @@ void executeCommand(char *buffer){
                             //     print("Pipe opening error\n");
                             //     return;
                             // }
-                            // context->stdIn = fd;
-                            // context->stdOut = 0;
-                            // int p1 = sys_createProcess(commandsFn[i], 1, commandsNames[i], 10, context);
-                            // context->stdIn = 0;
-                            // context->stdOut = fd;
-                            // int p2 = sys_createProcess(commandsFn[j], 1, commandsNames[j], 10, context);
+                            // int fds[2] = {fd, 0};
+                            // int p1 = sys_createProcess(commandsFn[i], 1, commandsNames[i], fds, BACKGROUND);
+                            // fds[2] = {0, fd};
+                            // int p2 = sys_createProcess(commandsFn[j], 1, commandsNames[j], fds, FOREGROUND);
                             // sys_kill(p1);
                             // sys_pipeClose(fd);
-                            print("Todo Ok\n");
+                            // print("Todo Ok\n");
                         }
                     }         
                 } else
