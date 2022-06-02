@@ -10,6 +10,8 @@
 #define NAME_MAX_SIZE 25
 #define PROCESS_STACK_SIZE 0x1000
 
+#define PROCESS_NAME_PRINT_SIZE 12
+
 /* Representa la cantidad de ticks que ejecuta un proceso de prioridad minima
  * (19) antes de ser cambiado por el scheduler. Recordemos que cada tick dura
  * 0.55 ms. La formula de ticks por proceso (o 'tickets') es la siguiente:

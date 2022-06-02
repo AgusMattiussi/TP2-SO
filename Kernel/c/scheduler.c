@@ -467,7 +467,7 @@ void printAllProcessesInfo(){
         return;
     }
     
-    ncPrintWithColor("PID    NAME            RSP    RBP       STATE    PRIORITY\n", ORANGE_BLACK);
+    ncPrintWithColor("PID    NAME            RSP      RBP      STATE    PRIORITY\n", ORANGE_BLACK);
     printProcessListInfo(readyList);
     printProcessListInfo(blockedList);
 }
@@ -488,6 +488,11 @@ static void printProcessInfo(process * p){
     ncPrint(TAB);
 
     ncPrint(p->pc.name);
+    int length = strlen(p->pc.name);
+    if(length < PROCESS_NAME_PRINT_SIZE){
+        for(int i=0; i < PROCESS_NAME_PRINT_SIZE - length; i++)
+            ncPrint(" ");
+    }
     ncPrint(TAB);
 
     ncPrintHex(p->pc.rsp);
@@ -506,6 +511,7 @@ static void printProcessInfo(process * p){
         default:
             ncPrint("?????");
     }
+    ncPrint(TAB);
     ncPrint(TAB);
     printPriority(getPriority(p));
 
