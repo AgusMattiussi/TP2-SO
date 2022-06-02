@@ -7,6 +7,9 @@
 #define SEM_ID "sem"
 #define TOTAL_PAIR_PROCESSES 2
 
+#define SYNCHRO "1"
+#define NO_SYNCHRO "0"
+
 int64_t global;  //shared memory
 
 void slowInc(int64_t *p, int64_t inc){
@@ -47,35 +50,32 @@ void my_process_inc(int argc, char *argv[]){
     sys_sem_close(SEM_ID);
 }
 
-uint64_t test_sync(uint64_t argc, char *argv[]){ //{n, use_sem, 0}
+uint64_t test_sync(int mode){ //{n, use_sem, 0}
   uint64_t pids[2 * TOTAL_PAIR_PROCESSES];
-  /* if (argc != 2) 
-    return -1; */
+
   //char * argvDec[] = {argv[0], "-1", argv[1], NULL};
   //char * argvInc[] = {argv[0], "1", argv[1], NULL};
 
-  char * argvDec[] = {"my_process_inc", "10", "-1", "0"};
-  char * argvInc[] = {"my_process_inc", "10","1", "0"};
+  char * argvDec[] = {"my_process_inc", "10", "-1", mode ? SYNCHRO : NO_SYNCHRO};
+  char * argvInc[] = {"my_process_inc", "10", "1", mode ? SYNCHRO : NO_SYNCHRO};
 
   global = 0;
 
   uint64_t i;
   for(i = 0; i < TOTAL_PAIR_PROCESSES; i++){
     //pids[i] = my_create_process("my_process_inc", 3, argvDec);
-     sys_createProcess(&my_process_inc, 4, argvDec, 10);
-    //pids[i + TOTAL_PAIR_PROCESSES] = my_create_process("my_process_inc", 3, argvInc);
-    pids[i + TOTAL_PAIR_PROCESSES] = sys_createProcess(&my_process_inc, 4, argvInc, 10);;
+    pids[i] = sys_createProcess(&my_process_inc, 4, argvDec, NULL, BACKGROUND);
+    // pids[i + TOTAL_PAIR_PROCESSES] = my_create_process("my_process_inc", 3, argvInc);
+    pids[i + TOTAL_PAIR_PROCESSES] = sys_createProcess(&my_process_inc, 4, argvInc, NULL, BACKGROUND);
 
   }
 
   for(i = 0; i < TOTAL_PAIR_PROCESSES; i++){
-    sys_wait(pids[i]);
-    sys_wait(pids[i + TOTAL_PAIR_PROCESSES]);
+    //sys_wait(pids[i]);
+    //sys_wait(pids[i + TOTAL_PAIR_PROCESSES]);
   }
 
-  print("Final value: ");
-  printInt(global);
-  print("\n");
+  print("Final value: %d\n");
 
   return 0;
 }

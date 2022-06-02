@@ -10,8 +10,8 @@
 #include <naiveConsole.h>
 
 #define NAME_MAX_SIZE 25
-#define FAILED -1
-#define SUCCESS 0
+#define FAILED 0
+#define SUCCESS 1
 
 typedef struct pNode{
     struct pNode * next;

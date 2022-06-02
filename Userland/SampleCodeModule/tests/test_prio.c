@@ -5,32 +5,52 @@
 #include <syscall.h>
 
 #define MINOR_WAIT 1000000 // TODO: Change this value to prevent a process from flooding the screen
-#define WAIT      10000000 // TODO: Change this value to make the wait long enough to see theese processes beeing run at least twice
+#define WAIT      100000000 // TODO: Change this value to make the wait long enough to see theese processes beeing run at least twice
+#define SUPERWAIT WAIT*2 // TODO: Change this value to make the wait long enough to see theese processes beeing run at least twice
+
 
 #define TOTAL_PROCESSES 3
 #define LOWEST 19 //TODO: Change as required
 #define MEDIUM 10 //TODO: Change as required
 #define HIGHEST 0 //TODO: Change as required
 
+int count1=0;
+int count2=0;
+int count3=0;
 
-int64_t prio[TOTAL_PROCESSES] = {LOWEST, MEDIUM, HIGHEST};
+char prio[TOTAL_PROCESSES] = {LOWEST, MEDIUM, HIGHEST};
+int64_t pids[TOTAL_PROCESSES];
+
+void endless_loop_print(){
+  int64_t pid = sys_getPid();
+  int wait = 100000;
+  while(1){
+    printInt(pid);
+    if(pid == pids[0])
+      count1++;
+    else if(pid == pids[1])
+      count2++;
+    else
+      count3++;
+    bussy_wait(wait);
+  }
+}
 
 void test_prio(){
-  int64_t pids[TOTAL_PROCESSES];
-  // char *argv[] = {0};
+
   char *argv[] = {"endless_loop_print"};
   uint64_t i;
 
   for(i = 0; i < TOTAL_PROCESSES; i++)
-    // pids[i] = my_create_process("endless_loop_print", 0, argv);
-      pids[i] = sys_createProcess(&endless_loop_print, 1, argv, 0);
+      pids[i] = sys_createProcess(&endless_loop_print, 1, argv, NULL, BACKGROUND);
   
 
   bussy_wait(WAIT);
   print("\nCHANGING PRIORITIES...\n");
 
-  for(i = 0; i < TOTAL_PROCESSES; i++)
-    sys_nice(pids[0], prio[i]);
+  for(i = 0; i < TOTAL_PROCESSES; i++){
+    sys_nice(pids[i], prio[i]);
+  }
 
   bussy_wait(WAIT);
   print("\nBLOCKING...\n");
@@ -40,17 +60,31 @@ void test_prio(){
 
   print("CHANGING PRIORITIES WHILE BLOCKED...\n");
 
-  for(i = 0; i < TOTAL_PROCESSES; i++)
+  for(i = 0; i < TOTAL_PROCESSES; i++){
     sys_nice(pids[i], MEDIUM);
+  }
 
   print("UNBLOCKING...\n");
 
   for(i = 0; i < TOTAL_PROCESSES; i++)
     sys_unblock(pids[i]);
 
-  bussy_wait(WAIT);
+  bussy_wait(SUPERWAIT);
   print("\nKILLING...\n");
 
   for(i = 0; i < TOTAL_PROCESSES; i++)
     sys_killPs(pids[i]);
+  
+  print("Count p1: ");
+  printInt(count1);
+
+  print("\nCount p2: ");
+  printInt(count2);
+  print("\n");
+
+  print("\nCount p3: ");
+  printInt(count3);
+
+  print("\nDONE\n");
+  
 }

@@ -39,6 +39,10 @@
 #define IS_ALPHA(c) (IS_UPPER(c) || IS_LOWER(c))
 #define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
 
+#define NULL ((void *)0)
+#define TRUE 1
+#define FALSE 0
+
 /**
  * Syscall: Devuelve un caracter ingresado por el usuario o 0 en
  * su defecto

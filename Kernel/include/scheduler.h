@@ -10,6 +10,8 @@
 #define NAME_MAX_SIZE 25
 #define PROCESS_STACK_SIZE 0x1000
 
+#define PROCESS_NAME_PRINT_SIZE 12
+
 /* Representa la cantidad de ticks que ejecuta un proceso de prioridad minima
  * (19) antes de ser cambiado por el scheduler. Recordemos que cada tick dura
  * 0.55 ms. La formula de ticks por proceso (o 'tickets') es la siguiente:
@@ -29,6 +31,8 @@
 #define VALID_PRIORITY(p) ((p) >= MAX_PRIORITY && (p) <= MIN_PRIORITY)
 
 typedef enum {READY, BLOCKED} states;
+
+typedef enum {BACKGROUND, FOREGROUND} mode;
 
 typedef struct stackFrame{
     uint64_t r15;
@@ -63,6 +67,9 @@ typedef struct processContext{
     uint8_t priority; // Guardamos priority como un byte porque toma valores entre 0 y 20
     int ticketsLeft;
     states state;
+    int mode; 
+    int stdIn;
+    int stdOut;
 } processContext;
 
 typedef struct process{
@@ -75,7 +82,6 @@ typedef struct processList{
     process * last;
     process * iterator;
     int size;
-    //int readyCount;
 } processList;
 
 extern void timerInterrupt();
@@ -92,7 +98,7 @@ void nice(pid_t pid, uint8_t newPriority);
 void initScheduler();
 uint64_t scheduler(uint64_t prevRsp);
 void createFirstProcess();
-pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint8_t priority);
+pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint32_t * fd, mode processMode);
 void yield();
 int exists(pid_t pid);
 void wait(pid_t pid);
