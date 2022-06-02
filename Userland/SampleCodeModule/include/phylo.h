@@ -6,8 +6,9 @@
 #include <syscall.h>
 
 #define INITIAL_PHYL 5
-#define MAX_PHYL 15
+#define MAX_PHYL 10
+#define ROOM_SEM_NAME "room"
 
-void phylo();
+void phylo_main();
 
 #endif

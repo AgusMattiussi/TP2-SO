@@ -24,7 +24,7 @@ void startCommands(){
     commandBuilder("help", "Displays information about every command available.", &help);
     commandBuilder("clear", "Clears the screen.", &clearScreen);
     //commandBuilder("inforeg", "Displays the information of all the registers, if saved before.", &getRegisters);
-    commandBuilder("phylo", "Starts the eating phyilosofers program", &phylo);
+    commandBuilder("phylo", "Starts the eating phyilosofers program", &phylo_main);
     commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument", &printmem);
     commandBuilder("time", "Displays the current time and date.", &printTime);
     commandBuilder("divzero", "Displays exception of division by zero.", &divZero);
