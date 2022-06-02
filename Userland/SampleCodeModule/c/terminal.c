@@ -10,7 +10,8 @@ static int commandIndex = 0;
 
 void startTerminal(){
     startCommands();
-
+    sys_nice(sys_getPid(), MAX_PRIORITY);
+    // sys_killPs(1);
     while(1){
         char buffer[BUFFER_SIZE] = {0};
         printWithColor("$> ", GREEN_BLACK);
@@ -74,11 +75,11 @@ void executeCommand(char *buffer){
 
             } else {
                 // print("Not built in command.\n");
-                context * context = sys_malloc(sizeof(context));
-                context->ctx = FOREGROUND;
+                // context * context = sys_malloc(sizeof(context));
+                mode processMode = FOREGROUND;
 
                 if(argumentsCount == 2 && arguments[1][0] == '-')
-                    context->ctx = BACKGROUND;
+                    processMode = BACKGROUND;
                     // print("Background run\n");
                 
                 if(argumentsCount == 3 && arguments[1][0] == '/'){ //chequear 2do argumento post pipe
@@ -103,7 +104,7 @@ void executeCommand(char *buffer){
                         }
                     }         
                 } else
-                    sys_createProcess(commandsFn[i], 1, arguments, 10, NULL);
+                    sys_createProcess(commandsFn[i], 1, arguments, NULL, processMode);
                 return;
             }
         }
@@ -187,7 +188,7 @@ void ps(){
 
 void runLoop(){
     char *argv[] = {"loop"};
-	sys_createProcess(&loop, 1, argv, 10, NULL);
+	sys_createProcess(&loop, 1, argv, NULL, FOREGROUND);
 }
 
 void block(int argSize, char *args[]) {
@@ -237,17 +238,17 @@ void sem(){
 
 void runCat(){
     char *argv[] = {"cat"};
-	sys_createProcess(&cat, 1, argv, 10, NULL);
+	sys_createProcess(&cat, 1, argv, NULL, FOREGROUND);
 }
 
 void runWc(){
     char *argv[] = {"wc"};
-	sys_createProcess(&wc, 1, argv, 10, NULL);
+	sys_createProcess(&wc, 1, argv, NULL, FOREGROUND);
 }
 
 void runFilter(){
     char *argv[] = {"filter"};
-	sys_createProcess(&filter, 1, argv, 10, NULL);
+	sys_createProcess(&filter, 1, argv, NULL, FOREGROUND);
 }
 
 void pipe(){

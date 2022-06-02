@@ -2,7 +2,7 @@
 #include <interrupts.h>
 
 static int firstProcess(int argc, char **argv);
-static pid_t initProcess(process *pNode, char *name, uint8_t priority, context * context);
+static pid_t initProcess(process *pNode, char *name, uint32_t * fd, mode processMode);
 static void setStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), pid_t pid);
 static pid_t generatePid();
 static process * getNext(processList * list);
@@ -171,7 +171,7 @@ static process * getNext(processList * list) {
 }
 
 /* Crea un nuevo proceso y lo agrega a la lista de procesos READY. Retorna el nuevo PID */
-pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint8_t priority, context * context){
+pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint32_t * fd, mode processMode){
     
     /* Reservo espacio para el nuevo nodo de proceso. Notemos que new incluye
      * al proceso y al stack del mismo */ 
@@ -182,7 +182,7 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint
     /* El primer parametro de argv es el nombre del proceso. Lo guardo en
      * prName e inicializo el proceso new con dicho nombre */
     char * prName = argv[0];
-    if(initProcess(new, prName, priority, context) == 0)
+    if(initProcess(new, prName, fd, processMode) == 0)
         return 0;
 
     /* Reservamos espacio para 'argc' argumentos */
@@ -282,11 +282,7 @@ static processList * initializeProcessList() {
 /* Crea el primer proceso y le asigna su nombre */
 void createFirstProcess(){
     char *argv[] = {"firstProcess"};
-    context * context = malloc(sizeof(context));
-    context->ctx = FOREGROUND;
-    context->stdIn = 0;
-    context->stdOut = 0;
-    createProcess((void *)&firstProcess, 1, argv, MIN_PRIORITY, context);
+    createProcess((void *)&firstProcess, 1, argv, NULL, FOREGROUND);
 }
 
 /* Primer proceso creado. Su unica funcion es esperar a que llegue un
@@ -300,7 +296,7 @@ static int firstProcess(int argc, char **argv) {
 
 /* Inicializa Process Context de un nuevo proceso con los valores
  * correspondientes */
-static pid_t initProcess(process *pNode, char *name, uint8_t priority, context * context) {
+static pid_t initProcess(process *pNode, char *name, uint32_t * fd, mode processMode) {
     processContext *pc = &(pNode->pc);
     
     /* Genero un nuevo PID para el proceso */
@@ -320,20 +316,17 @@ static pid_t initProcess(process *pNode, char *name, uint8_t priority, context *
 
     /* Todos los procesos comienzan en READY */
     pc->state = READY;
-    // TODO: Poder elegir la prioridad del proceso
-    /* Todos los procesos comienzan en con la prioridad elegida. Si es invalida se
-     * setea en DEFAULT_PRIORITY */
-    pc->priority = VALID_PRIORITY(priority) ? priority : DEFAULT_PRIORITY;
+    /* Todos los procesos comienzan con la DEFAULT_PRIORITY */
+    pc->priority = DEFAULT_PRIORITY;
     pc->ticketsLeft = initialTickets(pc->priority);
 
-    if(context == NULL){
-        pc->context = FOREGROUND;
+    pc->context = processMode;
+    if(fd == NULL){
         pc->stdIn = 0;
         pc->stdOut = 0;
     } else {
-        pc->context = context->ctx;
-        pc->stdIn = context->stdIn;
-        pc->stdOut = context->stdOut;
+        pc->stdIn = fd[0];
+        pc->stdOut = fd[1];
     }
 
     return pc->pid;
@@ -528,12 +521,12 @@ static void printPriority(uint8_t priority){
 }
 
 void nice(pid_t pid, uint8_t newPriority){
-    if(VALID_PRIORITY(newPriority)){
+    if(!VALID_PRIORITY(newPriority)){
         ncPrint("La prioridad debe ser un numero entre 0 y 19\n");
         return;
     }
     if(getPidOf(executingP) == pid){
-        executingP->pc.pid = newPriority;
+        executingP->pc.priority = newPriority;
         return;
     }
     

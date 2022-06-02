@@ -94,19 +94,19 @@ int scan(char *buffer, int size){
             sys_saveRegs();
         }     
     }
-    // while(buffer[lenght-1] == ' '){
-    //     while((c = getChar()) != '\n' && lenght < size){
-    //         if(c == BACKSPACE){
-    //             if(lenght > 0)
-    //                 buffer[lenght--] = 0;
-    //         } else if(IS_ALPHA(c) || IS_DIGIT(c) || c == ' ' || c == '/' || c == '-'){
-    //             putChar(c);
-    //             buffer[lenght++] = c;  
-    //         } else if(c == SHIFT){
-    //             sys_saveRegs();
-    //         }     
-    //     }
-    // }
+    while(buffer[lenght-1] == ' '){
+        while((c = getChar()) != '\n' && lenght < size){
+            if(c == BACKSPACE){
+                if(lenght > 0)
+                    buffer[lenght--] = 0;
+            } else if(IS_ALPHA(c) || IS_DIGIT(c) || c == ' ' || c == '/' || c == '-'){
+                putChar(c);
+                buffer[lenght++] = c;  
+            } else if(c == SHIFT){
+                sys_saveRegs();
+            }     
+        }
+    }
     buffer[lenght] = 0;
     return lenght;
 }

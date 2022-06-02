@@ -30,14 +30,7 @@
 
 typedef enum {READY, BLOCKED} states;
 
-#define BACKGROUND 0
-#define FOREGROUND 1
-
-typedef struct context {
-    int ctx;
-    int stdIn;
-    int stdOut;
-} context;
+typedef enum {BACKGROUND, FOREGROUND} mode;
 
 typedef struct stackFrame{
     uint64_t r15;
@@ -103,7 +96,7 @@ void nice(pid_t pid, uint8_t newPriority);
 void initScheduler();
 uint64_t scheduler(uint64_t prevRsp);
 void createFirstProcess();
-pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint8_t priority,  context * context);
+pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint32_t * fd, mode processMode);
 void yield();
 
 

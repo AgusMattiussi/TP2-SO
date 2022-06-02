@@ -15,14 +15,10 @@
 #define MONTH 8
 #define YEAR 9
 
-#define BACKGROUND 0
-#define FOREGROUND 1
+#define MAX_PRIORITY 0
 
-typedef struct context {
-    int ctx;
-    int stdIn;
-    int stdOut;
-} context;
+typedef enum {BACKGROUND, FOREGROUND} mode;
+
 
 /**
  * Inicializa la terminal, cargando los comandos y entrando en un ciclo infinito
@@ -138,6 +134,6 @@ void runFilter();
 **/
 void pipe();
 
-extern unsigned long long sys_createProcess(void (*pFunction)(int, char **), int argc, char **argv, char priority, context * context);
+extern unsigned long long sys_createProcess(void (*pFunction)(int, char **), int argc, char **argv, int * fd, mode processMode);
 
 #endif

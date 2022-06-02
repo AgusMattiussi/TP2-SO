@@ -10,7 +10,7 @@
 int main() {
 	char *argv[] = {"Terminal"};
 	// char *argv2[] = {"paredesufrir"};
-	sys_createProcess(&startTerminal, 1, argv, 1, NULL);
+	sys_createProcess(&startTerminal, 1, argv, NULL, FOREGROUND);
 	// sys_createProcess(&paredesufrir, 1, argv2, 19);
 	// sys_createProcess(&paredesufrir, 1, argv2, 19);
 	//sys_createProcess(&paredesufrir, 1, argv2);

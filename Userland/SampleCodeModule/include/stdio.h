@@ -150,8 +150,6 @@ extern void sys_yield();
 **/
 extern void sys_pipe();
 
-extern void * sys_malloc(uint32_t size);
-
 /**
  * Devuelve un caracter ingresado por el usuario siempre que este no
  * sea nulo (distinto de 0)
