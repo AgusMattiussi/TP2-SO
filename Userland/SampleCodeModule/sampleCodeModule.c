@@ -10,10 +10,10 @@ void paredesufrir () {
     
 int main() {
 	char *argv[] = {"Terminal"};
-	char *argv2[] = {"paredesufrir"};
-	sys_createProcess(&startTerminal, 1, argv, 1);
-	sys_createProcess(&paredesufrir, 1, argv2, 19);
-	sys_createProcess(&paredesufrir, 1, argv2, 19);
+	//char *argv2[] = {"paredesufrir"};
+	sys_createProcess(&startTerminal, 1, argv, 0);
+	//sys_createProcess(&paredesufrir, 1, argv2, 19);
+	//sys_createProcess(&paredesufrir, 1, argv2, 19);
 	//sys_createProcess(&paredesufrir, 1, argv2);
 	//sys_createProcess(&paredesufrir, 1, argv2);
 	// startTerminal();

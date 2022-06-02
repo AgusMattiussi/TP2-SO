@@ -564,7 +564,7 @@ void yield() {
 }
 
 int exists(pid_t pid){
-    if(pid > lastGivenPid)
+    if(pid > lastGivenPid || pid < 1)
         return FALSE;
     
     int aux = existsInList(readyList, pid);
@@ -587,5 +587,7 @@ static int existsInList(processList * list, pid_t pid){
 }
 
 void wait(pid_t pid){
-    while (exists(pid));  
+    while (exists(pid)){
+        yield();
+    }  
 }
