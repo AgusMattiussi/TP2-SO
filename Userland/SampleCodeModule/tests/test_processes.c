@@ -5,7 +5,7 @@
 #include <syscall.h>
 
 enum State {RUNNING, BLOCKED, KILLED};
-#define MAX_PROCESSES 5
+#define MAX_PROCESSES 10
 
 typedef struct P_rq{
   int32_t pid;
@@ -29,6 +29,8 @@ int64_t test_processes(){
     printInt(j++);
     print(" ===\n");
 
+    //sys_mem();
+
     // Create max_processes processes
     for(rq = 0; rq < max_processes; rq++){
       // p_rqs[rq].pid = my_create_process("endless_loop", 0, argvAux);
@@ -51,7 +53,7 @@ int64_t test_processes(){
         switch(action){
           case 0:
             if (p_rqs[rq].state == RUNNING || p_rqs[rq].state == BLOCKED){
-              if (sys_killPs(p_rqs[rq].pid) == -1){  
+              if (sys_killPs(p_rqs[rq].pid) == 0){  
                 print("test_processes: ERROR killing process\n");
                 return -1;
               }
@@ -61,7 +63,7 @@ int64_t test_processes(){
             break;
           case 1:
             if (p_rqs[rq].state == RUNNING){
-              if(sys_block(p_rqs[rq].pid) == -1){
+              if(sys_block(p_rqs[rq].pid) == 0){
                 print("test_processes: ERROR blocking process\n");
                 return -1;
               }
@@ -74,7 +76,7 @@ int64_t test_processes(){
       // Randomly unblocks processes
       for(rq = 0; rq < max_processes; rq++)
         if (p_rqs[rq].state == BLOCKED && GetUniform(100) % 2){
-          if(sys_unblock(p_rqs[rq].pid) == -1){
+          if(sys_unblock(p_rqs[rq].pid) == 0){
             print("test_processes: ERROR unblocking process\n");
             return -1;
           }

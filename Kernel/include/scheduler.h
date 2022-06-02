@@ -64,6 +64,8 @@ typedef struct stackFrame{
 
 typedef struct processContext{
     char name[NAME_MAX_SIZE];
+    int argc;
+    char ** argv;
     pid_t pid;
     uint64_t rsp;
     uint64_t rbp;
