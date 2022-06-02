@@ -94,6 +94,8 @@ uint64_t scheduler(uint64_t prevRsp);
 void createFirstProcess();
 pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint8_t priority);
 void yield();
+int exists(pid_t pid);
+void wait(pid_t pid);
 
 
 #endif

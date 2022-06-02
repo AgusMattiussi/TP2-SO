@@ -20,6 +20,7 @@ static pid_t getPidOf(process * p);
 static int getTicketsLeft(process * p);
 static uint8_t getPriority(process * p);
 static void printPriority(uint8_t priority);
+static int existsInList(processList * list, pid_t pid);
 
 static pid_t lastGivenPid = 1;
 static processList * readyList;
@@ -560,4 +561,31 @@ static uint8_t getPriority(process * p) {
 void yield() {
     executingP->pc.ticketsLeft = 0;
     timerInterrupt();
+}
+
+int exists(pid_t pid){
+    if(pid > lastGivenPid)
+        return FALSE;
+    
+    int aux = existsInList(readyList, pid);
+    if(aux == FALSE)
+        aux = existsInList(blockedList, pid);
+
+    return aux;
+}
+
+static int existsInList(processList * list, pid_t pid){
+    process * current = list->first;
+
+    for (int i = 0; i < list->size; i++){
+        if(current->pc.pid == pid)
+            return TRUE;
+        current = current->next;
+    }
+
+    return FALSE;    
+}
+
+void wait(pid_t pid){
+    while (exists(pid));  
 }

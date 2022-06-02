@@ -46,7 +46,7 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 			printListofSemaphores();
 			return 16;
 		case 17:
-			nice(rsi, (uint8_t)rdx);
+			nice((pid_t)rsi, (uint8_t)rdx);
 			return 17;
 		case 18:
 			yield();
@@ -65,13 +65,16 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 		case 24:
 			return semClose((char *)rsi);
 		case 25:
-			return block(rsi);
+			return block((pid_t)rsi);
 		case 26:
-			return unblock(rsi);
+			return unblock((pid_t)rsi);
 		case 27:
 			// printListofPipes();
 			ncPrint("Lista de pipes\n");
 			return 27;
+		case 28:
+			wait((pid_t)rsi);
+			return 28;
 	}
     // Por default devuelve 0
 	return 0;

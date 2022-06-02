@@ -13,4 +13,5 @@ extern void sys_yield();
 extern void * sys_malloc(uint32_t size);
 extern void sys_free(void *pr);
 extern void sys_mem();
+extern void sys_wait(unsigned long long pid);
 
