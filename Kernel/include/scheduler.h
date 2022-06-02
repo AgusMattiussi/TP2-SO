@@ -67,7 +67,7 @@ typedef struct processContext{
     uint8_t priority; // Guardamos priority como un byte porque toma valores entre 0 y 20
     int ticketsLeft;
     states state;
-    int context; 
+    int mode; 
     int stdIn;
     int stdOut;
 } processContext;

@@ -13,7 +13,7 @@
 #define HIGHEST 0 //TODO: Change as required
 
 
-int64_t prio[TOTAL_PROCESSES] = {LOWEST, MEDIUM, HIGHEST};
+char prio[TOTAL_PROCESSES] = {LOWEST, MEDIUM, HIGHEST};
 
 void test_prio(){
   int64_t pids[TOTAL_PROCESSES];
@@ -23,7 +23,7 @@ void test_prio(){
 
   for(i = 0; i < TOTAL_PROCESSES; i++)
     // pids[i] = my_create_process("endless_loop_print", 0, argv);
-      pids[i] = sys_createProcess(&endless_loop_print, 1, argv, 0);
+      pids[i] = sys_createProcess(&endless_loop_print, 1, argv, NULL, BACKGROUND);
   
 
   bussy_wait(WAIT);
@@ -53,4 +53,7 @@ void test_prio(){
 
   for(i = 0; i < TOTAL_PROCESSES; i++)
     sys_killPs(pids[i]);
+  
+  print("\nDONE\n");
+  
 }

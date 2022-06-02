@@ -74,16 +74,14 @@ void executeCommand(char *buffer){
                 return;
 
             } else {
-                // print("Not built in command.\n");
-                // context * context = sys_malloc(sizeof(context));
                 mode processMode = FOREGROUND;
 
                 if(argumentsCount == 2 && arguments[1][0] == '-')
                     processMode = BACKGROUND;
-                    print("Background run\n");
+                    // print("Background run\n");
                 
                 if(argumentsCount == 3 && arguments[1][0] == '/'){ //chequear 2do argumento post pipe
-                    print("IPC\n");
+                    // print("IPC\n");
                     for(int j=0; j< COMMANDS_COUNT; j++){
                         if(strcmp(arguments[2], commandsNames[j]) == 0){
                             //TODO: pipes 

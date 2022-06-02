@@ -42,49 +42,111 @@ Una vez ejecutado el run.sh, se abrirá una ventana con una terminal donde usted
 
 - ***nice***: Cambia la prioridad de un proceso dado su ID y la nueva prioridad.
 
+- ***block***: Cambia el estado de un proceso entre bloqueado y listo dado su ID.
+
+- ***kill***:  Mata un proceso dado su ID.
+
+- ***sem***: Imprime la lista de todos los semáforos con sus propiedades.
+
+- ***testmm***: Test para el memory manager.
+
+- ***testprocesses***: Test para la creación de procesos.
+
+- ***testpriority***: Test para la prioridad de los procesos.
+
+- ***testsynchro***: Test para la sincronización de los procesos.
+
+- ***cat***: Imprime el stdin tal como lo recibe.
+
+- ***wc***: Cuenta la cantidad de líneas del input.
+
+- ***filter***: Filtra las vocales del input.
+
+- ***pipe***: : Imprime la lista de todos los pipes con sus propiedades.
+
+
 ## Syscalls
 
 [0] char ***sys_getChar***();
-Devuelve un caracter ingresado por el usuario o 0 en su defecto
+Devuelve un caracter ingresado por el usuario o 0 en su defecto.
 
 [1] extern void ***sys_putCharWC***(char c, unsigned char colorCode);
-Ubica el caracter 'c' en la posicion actual de la pantalla con el color indicado en 'colorCode'
+Ubica el caracter 'c' en la posicion actual de la pantalla con el color indicado en 'colorCode'.
 
 [2] int ***sys_getTime***(int descriptor);
-Devuelve el campo de la fecha/hora actual indicado en 'descriptor'
+Devuelve el campo de la fecha/hora actual indicado en 'descriptor'.
 
 [3] void ***sys_clear***();
 Elimina todo el contenido de la pantalla y posiciona el prompt al comienzo de la misma.
 
 [4] void ***sys_saveRegs***();
-Crea un backup de los registros para luego imprimirlos cuando se llame `inforeg`
+Crea un backup de los registros para luego imprimirlos cuando se llame `inforeg`.
 
 [5] void ***sys_PrintMem***(char * address);
 Imprime en pantalla el contenido de 32 bytes de memoria a partir de la direccion 'address'.
 
 [6] void ***sys_printCharInPos***(char c, int row, int col, unsigned char colorCode);
-Imprime el caracter 'c' en la fila 'row' y columna 'col' de la pantalla, teniendo en cuenta que la misma tiene un tamaño de 25x80. Ademas, lo hace en el color indicado por 'colorCode'
+Imprime el caracter 'c' en la fila 'row' y columna 'col' de la pantalla, teniendo en cuenta que la misma tiene un tamaño de 25x80. Ademas, lo hace en el color indicado por 'colorCode'.
 
 [7] unsigned long ***sys_getDeciseconds***();
-Retorna los decisegundos desde que se inicio el sistema
+Retorna los decisegundos desde que se inicio el sistema.
 
 [8] void ***sys_getRegistersInfo***();
-Imprime en pantalla cada registro del procesador con su contenido
+Imprime en pantalla cada registro del procesador con su contenido.
 
 [9] void ***sys_ps***();
-Imprime una lista con todos los procesos en ejecución
+Imprime una lista con todos los procesos en ejecución.
 
 [10] unsigned long long ***sys_getPid***();
-Retorna el Process ID del proceso actual
+Retorna el Process ID del proceso actual.
 
 [11] void ***sys_togglePsState***(unsigned long long pid);
-Cambia el estado de un proceso entre bloqueado y listo dado su ID
+Cambia el estado de un proceso entre bloqueado y listo dado su ID.
 
 [12] void ***sys_killPs***(unsigned long long pid);
 Mata un proceso dado su ID.
 
 [13] int ***sys_getSeconds***();
-Retorna los segundos desde que se inicio el sistema
+Retorna los segundos desde que se inicio el sistema.
 
 [14] void ***sys_mem***();
-Imprime el estado actual de la memoria
+Imprime el estado actual de la memoria.
+
+[15] unsigned long long ***sys_createProcess***(void (*pFunction)(int, char **), int argc, char **argv, int * fd, mode processMode);
+Crea un nuevo proceso y devuelve su PID.
+
+[16] void ***sys_sem***();
+Imprime el estado actual de la memoria.
+
+[17] void ***sys_nice***(unsigned long long pid, char newPriority);
+Cambia la prioridad de un proceso dado su ID y la nueva prioridad.
+
+[18] void ***sys_yield***();
+El proceso que la llama renuncia a la CPU forzando una interrupcion del timer tick.
+.
+[19] void * ***sys_malloc***(uint32_t size);
+Reserva un tamaño de memoria pasado por parámetro.
+
+[20] void ***sys_free***(void *pr);
+Libera la direccion de memoria apuntada por el puntero pasado por parámetro.
+
+[21] unsigned long ***sys_sem_open***(char *sem_name, uint64_t initialValue);
+Crea un nuevo semáforo con su respectivo nombre y valor inicial pasados por parámetro.
+
+[22] unsigned long ***sys_sem_close***(char *sem_name);
+Cierra un semáforo dado su nombre.
+
+[23] unsigned long ***sys_sem_wait***(char *sem_name);
+Decrementa en 1 el valor del semáforo.
+
+[24] unsigned long ***sys_sem_post***(char *sem_name);
+Incrementa en 1 el valor del semáforo.
+
+[25] unsigned long ***sys_block***(uint64_t pid);
+Bloquea un proceso dado su PID.
+
+[26] unsigned long ***sys_unblock***(uint64_t pid);
+Desbloquea un proceso dado su PID.
+
+[27] void ***sys_pipe***();
+Imprime una lista con todos los pipes.

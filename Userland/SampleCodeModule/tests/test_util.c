@@ -71,6 +71,7 @@ void endless_loop(){
 // }
 
 void endless_loop_print(){
+  print("HOlaaa\n");
   int64_t pid = sys_getPid();
   int wait = 100000;
   while(1){

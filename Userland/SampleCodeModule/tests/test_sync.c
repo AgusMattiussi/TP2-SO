@@ -54,17 +54,17 @@ uint64_t test_sync(){ //{n, use_sem, 0}
 //   char * argvDec[] = {argv[0], "-1", argv[1], NULL};
 //   char * argvInc[] = {argv[0], "1", argv[1], NULL};
 
-  char * argvDec[] = {"my_process_inc", "-1", "1", NULL};
-  char * argvInc[] = {"my_process_inc", "1", "1", NULL};
+  // char * argvDec[] = {"my_process_inc", "-1", "1", NULL};
+  // char * argvInc[] = {"my_process_inc", "1", "1", NULL};
 
   global = 0;
 
   uint64_t i;
   for(i = 0; i < TOTAL_PAIR_PROCESSES; i++){
     // pids[i] = my_create_process("my_process_inc", 3, argvDec);
-    sys_createProcess(&my_process_inc, 4, argvDec, 10);
+    // sys_createProcess(&my_process_inc, 4, argvDec, NULL, BACKGROUND);
     // pids[i + TOTAL_PAIR_PROCESSES] = my_create_process("my_process_inc", 3, argvInc);
-    sys_createProcess(&my_process_inc, 4, argvInc, 10);;
+    // sys_createProcess(&my_process_inc, 4, argvInc, NULL, BACKGROUND);
 
   }
 

@@ -320,7 +320,7 @@ static pid_t initProcess(process *pNode, char *name, uint32_t * fd, mode process
     pc->priority = DEFAULT_PRIORITY;
     pc->ticketsLeft = initialTickets(pc->priority);
 
-    pc->context = processMode;
+    pc->mode = processMode;
     if(fd == NULL){
         pc->stdIn = 0;
         pc->stdOut = 0;
