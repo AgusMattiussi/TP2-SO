@@ -61,23 +61,3 @@ void endless_loop(){
   while(1);
 }
 
-// void endless_loop_print(uint64_t wait){
-//   int64_t pid = my_getpid();
-
-//   while(1){
-//     printf("%ld ",pid);
-//     bussy_wait(wait);
-//   }
-// }
-
-void endless_loop_print(){
-  print("HOlaaa\n");
-  int64_t pid = sys_getPid();
-  int wait = 100000;
-  while(1){
-    printInt(pid);
-    putChar('\n');
-    bussy_wait(wait);
-  }
-}
-
