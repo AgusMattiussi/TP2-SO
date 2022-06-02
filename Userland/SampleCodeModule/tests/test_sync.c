@@ -7,6 +7,9 @@
 #define SEM_ID "sem"
 #define TOTAL_PAIR_PROCESSES 2
 
+#define SYNCHRO "1"
+#define NO_SYNCHRO "0"
+
 int64_t global;  //shared memory
 
 void slowInc(int64_t *p, int64_t inc){
@@ -24,9 +27,9 @@ void my_process_inc(int argc, char *argv[]){
   if (argc != 3) 
     return;
 
-  if ((n = satoi(argv[0])) <= 0) return;
-  if ((inc = satoi(argv[1])) == 0) return;
-  if ((use_sem = satoi(argv[2])) < 0) return;
+  if ((n = satoi(argv[1])) <= 0) return;
+  if ((inc = satoi(argv[2])) == 0) return;
+  if ((use_sem = satoi(argv[3])) < 0) return;
 
   if (use_sem)
     if (!sys_sem_open(SEM_ID, 1)){
@@ -47,33 +50,32 @@ void my_process_inc(int argc, char *argv[]){
     sys_sem_close(SEM_ID);
 }
 
-uint64_t test_sync(){ //{n, use_sem, 0}
-//   uint64_t pids[2 * TOTAL_PAIR_PROCESSES];
-//   if (argc != 2) 
-//     return -1;
-//   char * argvDec[] = {argv[0], "-1", argv[1], NULL};
-//   char * argvInc[] = {argv[0], "1", argv[1], NULL};
+uint64_t test_sync(int mode){ //{n, use_sem, 0}
+  uint64_t pids[2 * TOTAL_PAIR_PROCESSES];
 
-  // char * argvDec[] = {"my_process_inc", "-1", "1", NULL};
-  // char * argvInc[] = {"my_process_inc", "1", "1", NULL};
+  //char * argvDec[] = {argv[0], "-1", argv[1], NULL};
+  //char * argvInc[] = {argv[0], "1", argv[1], NULL};
+
+  char * argvDec[] = {"my_process_inc", "10", "-1", mode ? SYNCHRO : NO_SYNCHRO};
+  char * argvInc[] = {"my_process_inc", "10", "1", mode ? SYNCHRO : NO_SYNCHRO};
 
   global = 0;
 
   uint64_t i;
   for(i = 0; i < TOTAL_PAIR_PROCESSES; i++){
-    // pids[i] = my_create_process("my_process_inc", 3, argvDec);
-    // sys_createProcess(&my_process_inc, 4, argvDec, NULL, BACKGROUND);
+    //pids[i] = my_create_process("my_process_inc", 3, argvDec);
+    pids[i] = sys_createProcess(&my_process_inc, 4, argvDec, NULL, BACKGROUND);
     // pids[i + TOTAL_PAIR_PROCESSES] = my_create_process("my_process_inc", 3, argvInc);
-    // sys_createProcess(&my_process_inc, 4, argvInc, NULL, BACKGROUND);
+    pids[i + TOTAL_PAIR_PROCESSES] = sys_createProcess(&my_process_inc, 4, argvInc, NULL, BACKGROUND);
 
   }
 
-//   for(i = 0; i < TOTAL_PAIR_PROCESSES; i++){
-//     sys_wait(pids[i]);
-//     sys_wait(pids[i + TOTAL_PAIR_PROCESSES]);
-//   }
+  for(i = 0; i < TOTAL_PAIR_PROCESSES; i++){
+    //sys_wait(pids[i]);
+    //sys_wait(pids[i + TOTAL_PAIR_PROCESSES]);
+  }
 
-  // print("Final value: %d\n");
+  print("Final value: %d\n");
 
   return 0;
 }

@@ -25,7 +25,7 @@ void startTerminal(){
 void startCommands(){
     commandBuilder("help", "Displays information about every command available.", &help, TRUE);
     commandBuilder("clear", "Clears the screen.", &clearScreen, TRUE);
-    commandBuilder("inforeg", "Displays the information of all the registers, if saved before.", &getRegisters, TRUE);
+    //commandBuilder("inforeg", "Displays the information of all the registers, if saved before.", &getRegisters, TRUE);
     commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument", &printmem, TRUE);
     commandBuilder("time", "Displays the current time and date.", &printTime, TRUE);
     commandBuilder("divzero", "Displays exception of division by zero.", &divZero, TRUE);
@@ -42,7 +42,8 @@ void startCommands(){
     commandBuilder("testmm", "Test for the memory manager.", &test_mm, FALSE);
     commandBuilder("testprocesses", "Test for the creation of processes.", &test_processes, FALSE);
     commandBuilder("testpriority", "Test for the priority of the scheduler.", &test_prio, FALSE);
-    commandBuilder("testsynchro", "Test for the synchronization of processes.", &test_sync, FALSE);
+    commandBuilder("testsynchro", "Test for the synchronization of processes (with SEM).", &testSyncWrapper, FALSE);
+    commandBuilder("testnosynchro", "Test for the synchronization of processes (no SEM).", &testNoSyncWrapper, FALSE);
     commandBuilder("cat", "Displays the input on the screen.", &cat, FALSE);
     commandBuilder("wc", "Displays the quantity of lines of the input.", &wc, FALSE);
     commandBuilder("filter", "Filters the vowels of the input.", &filter, FALSE);
@@ -99,7 +100,7 @@ void executeCommand(char *buffer){
                             // print("Todo Ok\n");
                         }
                     }         
-                } else
+                } else 
                     sys_createProcess(commandsFn[i], 1, arguments, NULL, processMode);
                 return;
             }
@@ -249,4 +250,12 @@ void runFilter(){
 
 void pipe(){
     sys_pipe();
+}
+
+void testSyncWrapper(){
+    test_sync(1);
+}
+
+void testNoSyncWrapper(){
+    test_sync(0);
 }

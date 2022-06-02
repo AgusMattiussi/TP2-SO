@@ -134,6 +134,12 @@ void runFilter();
 **/
 void pipe();
 
+
+void testSyncWrapper();
+
+void testNoSyncWrapper();
+
+
 extern unsigned long long sys_createProcess(void (*pFunction)(int, char **), int argc, char **argv, int * fd, mode processMode);
 
 #endif
