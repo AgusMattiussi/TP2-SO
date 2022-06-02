@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-typedef enum {BACKGROUND, FOREGROUND} mode;
+//typedef enum {BACKGROUND, FOREGROUND} mode;
 
 uint32_t GetUint();
 uint32_t GetUniform(uint32_t max);

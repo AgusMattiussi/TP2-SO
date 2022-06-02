@@ -5,6 +5,7 @@
 #include <strings.h>
 #include <tests.h>
 #include <processes.h>
+#include <syscall.h>
 
 #define COMMANDS_COUNT 23
 #define BUFFER_SIZE 50
@@ -16,9 +17,6 @@
 #define YEAR 9
 
 #define MAX_PRIORITY 0
-
-typedef enum {BACKGROUND, FOREGROUND} mode;
-
 
 /**
  * Inicializa la terminal, cargando los comandos y entrando en un ciclo infinito
@@ -138,8 +136,5 @@ void pipe();
 void testSyncWrapper();
 
 void testNoSyncWrapper();
-
-
-extern unsigned long long sys_createProcess(void (*pFunction)(int, char **), int argc, char **argv, int * fd, mode processMode);
 
 #endif

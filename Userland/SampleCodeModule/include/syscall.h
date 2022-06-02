@@ -1,3 +1,8 @@
+#ifndef _SYSCALL_H
+#define _SYSCALL_H
+
+typedef enum {BACKGROUND, FOREGROUND} mode;
+
 extern unsigned long long sys_getPid();
 extern unsigned long long sys_createProcess(void (*pFunction)(int, char **), int argc, char **argv, int * fd, mode processMode);
 extern void sys_nice(unsigned long long pid, char newPriority);
@@ -15,3 +20,4 @@ extern void sys_free(void *pr);
 extern void sys_mem();
 extern void sys_wait(unsigned long long pid);
 
+#endif

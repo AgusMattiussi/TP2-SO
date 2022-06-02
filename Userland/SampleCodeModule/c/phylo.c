@@ -40,7 +40,7 @@ void phylo_main() {
         char * philoArgv[] = {"philosopher", id};
 
         //TODO: Si falla, cerrar todo
-        philoPids[i] = sys_createProcess(&philosopher, 2, philoArgv, 0);
+        philoPids[i] = sys_createProcess(&philosopher, 2, philoArgv, NULL, FOREGROUND);
         if(philoPids[i] == 0){
             print("Error creando filosofos\n");
         }
