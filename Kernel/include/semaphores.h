@@ -27,6 +27,7 @@ typedef struct TSem {
     pNode * firstProcess;
     pNode * lastProcess;
     int waitingProcesses;
+    int openedBy;
 } TSem;
 
 typedef struct semList{

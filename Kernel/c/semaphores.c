@@ -30,6 +30,7 @@ static int createSemaphore(char *name, int initialValue){
     new->firstProcess = NULL;
     new->lastProcess = NULL;
     new->waitingProcesses = 0;
+    new->openedBy = 1;
 
     enqSem(new);
     return SUCCESS;
@@ -108,6 +109,7 @@ static pid_t deqPr(TSem * sem){
         //sem->lastProcess->next = sem->firstProcess;
     }
 
+    process->next = NULL;
     free(process);
     sem->waitingProcesses--;
     return pid;
@@ -143,16 +145,18 @@ static int semExists(char * name){
 }
 
 uint64_t semOpen(char *name, int initialValue){
-    // FIXME: Que pasa si ya existia?
-    /* if(semExists(name))
-        return SUCCESS; */
-
     _xchgLock(&semLock);
 
-    if(createSemaphore(name, initialValue) == FAILED){
-        _unlock(&semLock);
-        ncPrintWithColor("Error al crear semaforo\n", RED_BLACK);
-        return FAILED;
+    // FIXME: Que pasa si ya existia?
+    TSem * toOpen = getSem(name);
+    if(toOpen == NULL){
+        if(createSemaphore(name, initialValue) == FAILED){
+            _unlock(&semLock);
+            ncPrintWithColor("Error al crear semaforo\n", RED_BLACK);
+            return FAILED;
+        }
+    } else {
+        toOpen->openedBy++;
     }
 
     _unlock(&semLock);
@@ -163,10 +167,18 @@ uint64_t semClose(char * semName){
     _xchgLock(&semLock);
 
     TSem * toClose = getSem(semName);
+    if(toClose == NULL){
+        ncPrint("The Semaphore "); 
+        ncPrint(semName);
+        ncPrint("does not exist\n");
+        return FAILED;
+    }
 
-    deqSem(toClose);
-
-    free(toClose);
+    toClose->openedBy--;
+    if(toClose->openedBy == 0){
+        deqSem(toClose);
+        free(toClose);
+    }
 
     _unlock(&semLock);
     return SUCCESS;
@@ -181,10 +193,10 @@ uint64_t semWait(char * semName){
     TSem * toWait = getSem(semName);
 
     if(toWait == NULL){
-        _unlock(&semLock);
         ncPrint("WAIT: No existe el semaforo ");
         ncPrint(semName);
         ncNewline();
+        _unlock(&semLock);
         return FAILED;
     }
 
@@ -196,14 +208,14 @@ uint64_t semWait(char * semName){
     while(toWait->value == 0){ // tengo que bloquear el proceso  
         enqPr(toWait, pid);    // agrego el proceso en la cola del semaforo
         _unlock(&toWait->lock); // desbloqueo el lock del semaforo
-        if(block(pid) == -1)   // bloqueo el proceso
-            return FAILED;
+        if(block(pid) == -1) {  // bloqueo el proceso
+            return FAILED;}
         _xchgLock(&toWait->lock); // vuelvo a bloquear el lock semaforo
     }
 
     toWait->value--;     // el value era mayor a 0 -> solo lo decremento
     _unlock(&toWait->lock); 
-
+    
     return SUCCESS;
 }
 
@@ -216,10 +228,10 @@ uint64_t semPost(char * semName){
     TSem * toPost = getSem(semName);
 
     if(toPost == NULL){
-        _unlock(&semLock);
         ncPrint("POST: No existe el semaforo ");
         ncPrint(semName);
         ncNewline();
+        _unlock(&semLock);
         return FAILED;
     }
 
@@ -231,9 +243,8 @@ uint64_t semPost(char * semName){
     int pid = deqPr(toPost);
     if(pid == FAILED){
         _unlock(&toPost->lock);
-        _unlock(&semLock);
         //ncPrint("No hay procesos para desbloquear\n");
-        return FAILED;
+        return SUCCESS;
     }
 
     _unlock(&toPost->lock);

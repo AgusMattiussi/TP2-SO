@@ -10,12 +10,12 @@
 #define SYNCHRO "1"
 #define NO_SYNCHRO "0"
 
-static int64_t global;  //shared memory
+int64_t global;  //shared memory
 
 void slowInc(int64_t *p, int64_t inc){
   uint64_t aux = *p;
-  sys_yield(); //This makes the race condition highly probable
   aux += inc;
+  sys_yield(); //This makes the race condition highly probable
   *p = aux;
 }
 
@@ -52,11 +52,15 @@ void my_process_inc(int argc, char *argv[]){
   }
   uint64_t i;
   for (i = 0; i < n; i++){
-    if (use_sem) 
-        sys_sem_wait(SEM_ID);
+    if (use_sem) {
+      if(sys_sem_wait(SEM_ID) == 0)
+        printWithColor("ERROR EN WAIT\n", RED_BLACK);
+    }
     slowInc(&global, inc);
-    if (use_sem) 
-        sys_sem_post(SEM_ID);
+    if (use_sem) {
+      if(sys_sem_post(SEM_ID) == 0)
+        printWithColor("ERROR EN POST\n", RED_BLACK);   
+    }
   }
 
   if (use_sem) 
@@ -88,10 +92,11 @@ uint64_t test_sync(int mode){ //{n, use_sem, 0}
     sys_wait(pids[i + TOTAL_PAIR_PROCESSES]);
   }
 
-
   print("Final value: ");
   printInt(global);
   print("\n");
+
+  global = 0;
 
   return 0;
 }
