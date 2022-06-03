@@ -75,6 +75,8 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 		case 28:
 			wait((pid_t)rsi);
 			return 28;
+		case 29:
+			return exists((pid_t)rsi);
 	}
     // Por default devuelve 0
 	return 0;

@@ -7,7 +7,14 @@
 
 #define INITIAL_PHYL 5
 #define MAX_PHYL 10
+
 #define ROOM_SEM_NAME "room"
+#define EATING_CHAR 'E'
+#define EXITED_CHAR 'X'
+#define WAITING_CHAR '.'
+#define ADD_PHILO_KEY 'a'
+#define REMOVE_PHILO_KEY 'd'
+
 
 void phylo_main();
 

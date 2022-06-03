@@ -28,6 +28,7 @@ GLOBAL sys_block
 GLOBAL sys_unblock
 GLOBAL sys_pipe
 GLOBAL sys_wait
+GLOBAL sys_exists
 
 SECTION .text
 
@@ -139,6 +140,8 @@ sys_pipe:
 	syscall 27
 sys_wait:
 	syscall 28
+sys_exists:
+	syscall 29
 
 
 ;Fuente: https://www.felixcloutier.com/x86/ud
