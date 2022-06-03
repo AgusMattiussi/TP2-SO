@@ -6,6 +6,7 @@ static TSem * deqSem();
 static void enqPr(TSem * sem, pid_t pid);
 static pid_t deqPr(TSem * sem);
 static TSem * getSem(char * name);
+static int semExists(char * name);
 
 static uint64_t semLock = 0;
 static semList * semaphoresList;
@@ -33,6 +34,7 @@ static int createSemaphore(char *name, int initialValue){
     enqSem(new);
     return SUCCESS;
 }
+
 
 static void enqSem(TSem * sem) {
     if(sem == NULL || semaphoresList == NULL)
@@ -129,7 +131,22 @@ static TSem * getSem(char * name){
     return NULL;
 }
 
+static int semExists(char * name){
+    TSem * current = semaphoresList->first;
+
+    for (int i = 0; i < semaphoresList->size; i++){
+        if(strcmp(name, current->name) == 0)
+            return 1;
+        current = current->next;
+    }
+    return 0;
+}
+
 uint64_t semOpen(char *name, int initialValue){
+    // FIXME: Que pasa si ya existia?
+    /* if(semExists(name))
+        return SUCCESS; */
+
     _xchgLock(&semLock);
 
     if(createSemaphore(name, initialValue) == FAILED){

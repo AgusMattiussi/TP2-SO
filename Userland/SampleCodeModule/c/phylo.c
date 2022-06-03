@@ -41,7 +41,7 @@ void phylo_main() {
         print("\n");
     } */
     
-
+    print("\n");
     for (int i = 0; i < MAX_PHYL; i++){
         status[i] = '.';
     }
@@ -62,7 +62,7 @@ void phylo_main() {
         sys_wait(philoPids[i]);
         /* printWithColor("Termino ", GREEN_BLACK);
         printInt(philoPids[i]); */
-        print("\n");
+        //print("\n");
     }
     //while(1);
     

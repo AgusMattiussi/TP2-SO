@@ -10,7 +10,7 @@
 #define SYNCHRO "1"
 #define NO_SYNCHRO "0"
 
-int64_t global;  //shared memory
+static int64_t global;  //shared memory
 
 void slowInc(int64_t *p, int64_t inc){
   uint64_t aux = *p;
@@ -69,8 +69,8 @@ uint64_t test_sync(int mode){ //{n, use_sem, 0}
   //char * argvDec[] = {argv[0], "-1", argv[1], NULL};
   //char * argvInc[] = {argv[0], "1", argv[1], NULL};
 
-  char * argvDec[] = {"my_process_inc", "100", "-1", mode ? SYNCHRO : NO_SYNCHRO};
-  char * argvInc[] = {"my_process_inc", "100", "1", mode ? SYNCHRO : NO_SYNCHRO};
+  char * argvDec[] = {"my_process_inc", "10", "-1", mode ? SYNCHRO : NO_SYNCHRO};
+  char * argvInc[] = {"my_process_inc", "10", "1", mode ? SYNCHRO : NO_SYNCHRO};
 
   global = 0;
 
