@@ -156,7 +156,9 @@ uint64_t semClose(char * semName){
 }
 
 uint64_t semWait(char * semName){
-
+    /* ncPrintWithColor("WAIT ", CYAN_BLACK);
+    ncPrint(semName);
+    ncNewline(); */
     _xchgLock(&semLock);
 
     TSem * toWait = getSem(semName);
@@ -189,7 +191,9 @@ uint64_t semWait(char * semName){
 }
 
 uint64_t semPost(char * semName){
-
+    /* ncPrintWithColor("POST ", CYAN_BLACK);
+    ncPrint(semName);
+    ncNewline(); */
     _xchgLock(&semLock);
 
     TSem * toPost = getSem(semName);
@@ -211,14 +215,15 @@ uint64_t semPost(char * semName){
     if(pid == FAILED){
         _unlock(&toPost->lock);
         _unlock(&semLock);
-        ncPrint("No hay procesos para desbloquear\n");
+        //ncPrint("No hay procesos para desbloquear\n");
         return FAILED;
     }
 
     _unlock(&toPost->lock);
 
-    if(unblock(pid) == -1)
-            return FAILED;
+    if(unblock(pid) == 0){
+        ncPrintWithColor("MALARDO\n", RED_BLACK);
+            return FAILED;}
 
     return SUCCESS;
 }

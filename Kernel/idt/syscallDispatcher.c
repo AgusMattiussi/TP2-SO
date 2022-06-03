@@ -63,7 +63,7 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 		case 23:
 			return semWait((char *)rsi);
 		case 24:
-			return semClose((char *)rsi);
+			return semPost((char *)rsi);
 		case 25:
 			return block((pid_t)rsi);
 		case 26:

@@ -6,7 +6,6 @@ static void eat(int id);
 static void leave(int id);
 static void printStatus();
 
-//TODO: Cambiar a static?
 static int philoCount = INITIAL_PHYL;
 static char forks[MAX_PHYL][3];
 static char status[MAX_PHYL];
@@ -59,8 +58,11 @@ void phylo_main() {
         }
     }
     
-    for (int i = 0; i < MAX_PHYL; i++){
+    for (int i = 0; i < philoCount; i++){
         sys_wait(philoPids[i]);
+        /* printWithColor("Termino ", GREEN_BLACK);
+        printInt(philoPids[i]); */
+        print("\n");
     }
     //while(1);
     
@@ -98,9 +100,23 @@ void philosopher(int argc, char ** argv){
     leave(id);
 
     sys_sem_post(forks[lFork]);
+    /* print("(");
+    print(argv[1]);
+    print(") : ");
+    print("Libere EL SEM ");
+    print(forks[lFork]);
+    print("\n"); */
     sys_sem_post(forks[rFork]);
-
+    /* print("(");
+    print(argv[1]);
+    print(") : ");
+    print("Libere EL SEM ");
+    print(forks[rFork]);
+    print("\n"); */
     sys_sem_post(ROOM_SEM_NAME);
+    /* print("SALI ");
+    print(argv[1]);
+    print("\n"); */
 }
 
 static void eat(int id){
@@ -110,7 +126,7 @@ static void eat(int id){
 }
 
 static void leave(int id){
-    status[id] = '.';
+    status[id] = 'X';
     printStatus();
 }
 
