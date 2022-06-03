@@ -13,9 +13,9 @@
 int64_t global;  //shared memory
 
 void slowInc(int64_t *p, int64_t inc){
-  uint64_t aux = *p;
-  aux += inc;
+  int64_t aux = *p;
   sys_yield(); //This makes the race condition highly probable
+  aux += inc;
   *p = aux;
 }
 
@@ -29,13 +29,19 @@ void my_process_inc(int argc, char *argv[]){
 
   if ((n = satoi(argv[1])) <= 0){ 
     print("MALARDO 1\n");
-    return;}
+    return;
+  }
   if ((inc = satoi(argv[2])) == 0) {
     print("MALARDO 2\n");
-    return;}
+    return;
+  }
   if ((use_sem = satoi(argv[3])) < 0){
     print("MALARDO 3\n");
-     return;}
+    return;
+  }
+
+  //printInt(sys_getPid());
+  //printWithColor(": A\n", RED_BLACK);
 
   /* printInt(n);
   print(" ");

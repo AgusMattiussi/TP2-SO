@@ -29,8 +29,6 @@ static process * executingP;
 
 #define TAB "    "
 
-/* Scheduler FIFO */
-//TODO: Cambiar a Round Robin con Prioridades
 uint64_t scheduler(uint64_t prevRsp){
 
     if(readyList == NULL)
@@ -242,7 +240,7 @@ static void setArgs(char ** to, char ** from, int argc){
             return;
 
         /* Copio el argumento i al nuevo arreglo */
-        memcpy(to[i], from[i], argLen);
+        memcpy(to[i], from[i], argLen+1);
     }  
 }
 
@@ -303,7 +301,7 @@ static pid_t initProcess(process *pNode, char *name, uint32_t * fd, mode process
     /* Genero un nuevo PID para el proceso */
     pc->pid = generatePid();
     /* Copio el nombre recibido por parametro al campo name de pc */
-    memcpy(pc->name, name, strlen(name));
+    memcpy(pc->name, name, strlen(name)+1);
 
     pc->argc = 0;
     pc->argv = NULL;
@@ -391,7 +389,7 @@ pid_t getPid(){
 /* Se mata un proceso segun su PID, eliminando sus recursos. Devuelve 1 si fue
  * exitoso o 0 en caso de error */
 uint64_t kill(pid_t pid){
-    _cli();
+   // _cli();
     if(pid < 1)
         return 0;
 
@@ -410,11 +408,11 @@ uint64_t kill(pid_t pid){
     // TODO: Hace falta?
     if(pid == executingP->pc.pid){
         executingP = NULL;
-        _sti();
+        //_sti();
         timerInterrupt();
     }
 
-    _sti();
+    //_sti();
     return 1;
 }
 
@@ -429,7 +427,7 @@ uint64_t toggleBlocked(pid_t pid) {
 /* Cambia el estado de un proceso a BLOCKED. Devuelve 1 si fue
  * exitoso o 0 en caso de error */
 uint64_t block(pid_t pid){
-    _cli();
+    //_cli();
     process * p = delProcess(readyList, pid);
     if(p == NULL)
         return 0;
@@ -439,24 +437,24 @@ uint64_t block(pid_t pid){
 
     //TODO: Hace falta?
     if(pid == executingP->pc.pid){
-        executingP = NULL;
-        _sti();
+        executingP->pc.ticketsLeft = 0;
+        //_sti();
         timerInterrupt();
     }
 
-    _sti();
+   // _sti();
     return 1;
 }
 
 /* Cambia el estado de un proceso BLOCKED a READY */
 uint64_t unblock(pid_t pid){
-    _cli();
+    //_cli();
     process * p = delProcess(blockedList, pid);
     if(p == NULL)
         return 0;
     p->pc.state = READY;
     enqProcess(readyList, p);
-    _sti();
+    //_sti();
     return 1;
 }
 
@@ -602,5 +600,5 @@ static int existsInList(processList * list, pid_t pid){
 void wait(pid_t pid){
     while (exists(pid)){
         yield();
-    }  
+    }
 }

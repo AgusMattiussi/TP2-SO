@@ -7,6 +7,7 @@ static void enqPr(TSem * sem, pid_t pid);
 static pid_t deqPr(TSem * sem);
 static TSem * getSem(char * name);
 static int semExists(char * name);
+static void freeSem(TSem * sem);
 
 static uint64_t semLock = 0;
 static semList * semaphoresList;
@@ -23,7 +24,8 @@ static int createSemaphore(char *name, int initialValue){
     if(new == NULL)
         return FAILED;
 
-    memcpy(new->name, name, strlen(name));
+    //memset(new->name, 0, NAME_MAX_SIZE);
+    memcpy(new->name, name, strlen(name)+1);
 
     new->value = initialValue;
     new->lock = 0;
@@ -137,11 +139,11 @@ static int semExists(char * name){
     TSem * current = semaphoresList->first;
 
     for (int i = 0; i < semaphoresList->size; i++){
-        if(strcmp(name, current->name) == 0)
-            return 1;
+        if(strcmp(name, current->name) == FAILED)
+            return SUCCESS;
         current = current->next;
     }
-    return 0;
+    return FAILED;
 }
 
 uint64_t semOpen(char *name, int initialValue){
@@ -177,11 +179,25 @@ uint64_t semClose(char * semName){
     toClose->openedBy--;
     if(toClose->openedBy == 0){
         deqSem(toClose);
-        free(toClose);
+        freeSem(toClose);
     }
 
     _unlock(&semLock);
     return SUCCESS;
+}
+
+static void freeSem(TSem * sem){
+    if(sem == NULL)
+        return;
+
+    pNode * toFree = sem->firstProcess;
+    for (int i = 0; i < sem->waitingProcesses; i++){
+        if(toFree == NULL)
+            break;
+        free(toFree);
+        toFree = toFree->next;        
+    }
+    free(sem);
 }
 
 uint64_t semWait(char * semName){
@@ -274,7 +290,10 @@ void printListofSemaphores(){
 
         pNode * process = toPrint->firstProcess;
         for(int j = 0; j < toPrint->waitingProcesses; j++){
-            ncPrintDec(process->pid);
+            if(process == NULL)
+                ncPrintWithColor("WTF", RED_BLACK);
+            else
+                ncPrintDec(process->pid);
             ncPrint("   ");
             process = process->next;
         }
