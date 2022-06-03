@@ -115,9 +115,13 @@ static TSem * getSem(char * name){
     TSem * aux = semaphoresList->first;
 
     for(int i = 0; i < semaphoresList->size; i++){
-
-        if(strcmp(name, aux->name) == 0)
-            return aux;
+        /* ncPrintWithColor(name, MAGENTA_BLACK);
+        ncPrint("   ");
+        ncPrintWithColor(aux->name, CYAN_BLACK);
+        ncNewline(); */
+        if(strcmp(name, aux->name) == 0){
+            //ncPrintWithColor("TODO OK\n", GREEN_BLACK);
+            return aux;}
 
         aux = aux->next;
     }
@@ -159,7 +163,9 @@ uint64_t semWait(char * semName){
 
     if(toWait == NULL){
         _unlock(&semLock);
-        ncPrint("No existe el semaforo\n");
+        ncPrint("WAIT: No existe el semaforo ");
+        ncPrint(semName);
+        ncNewline();
         return FAILED;
     }
 
@@ -190,7 +196,9 @@ uint64_t semPost(char * semName){
 
     if(toPost == NULL){
         _unlock(&semLock);
-        ncPrint("No existe el semaforo\n");
+        ncPrint("POST: No existe el semaforo ");
+        ncPrint(semName);
+        ncNewline();
         return FAILED;
     }
 

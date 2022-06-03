@@ -28,8 +28,9 @@ void startCommands(){
     //commandBuilder("inforeg", "Displays the information of all the registers, if saved before.", &getRegisters, TRUE);
     commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument", &printmem, TRUE);
     commandBuilder("time", "Displays the current time and date.", &printTime, TRUE);
-    commandBuilder("divzero", "Displays exception of division by zero.", &divZero, TRUE);
+    //commandBuilder("divzero", "Displays exception of division by zero.", &divZero, TRUE);
     commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode, TRUE);
+    commandBuilder("phylo", "Philosophers problem", &phylo_main, FALSE);
     commandBuilder("mem", "Displays the current memory state.", &mem, TRUE);
     commandBuilder("ps", "Displays a list with all running processes.", &ps, TRUE);
     commandBuilder("sleep", "Delay for a specified amount of time.", &sleep, TRUE);
