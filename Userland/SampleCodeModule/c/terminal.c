@@ -80,13 +80,20 @@ void executeCommand(char *buffer){
                 mode processMode = FOREGROUND;
 
                 if(argumentsCount == 1){
-                    if(strcmp(arguments[0], "cat") == 0)
+                    if(strcmp(arguments[0], "cat") == 0){
                         (*catBuitIn)(argumentsCount - 1, arguments + 1);
-                    if(strcmp(arguments[0], "wc") == 0)
+                        return;
+                    }
+                        
+                    if(strcmp(arguments[0], "wc") == 0){
                         (*wcBuitIn)(argumentsCount - 1, arguments + 1);
-                    if(strcmp(arguments[0], "filter") == 0)
+                        return;
+                    }
+                        
+                    if(strcmp(arguments[0], "filter") == 0){
                         (*filterBuitIn)(argumentsCount - 1, arguments + 1);
-                    return;
+                        return;
+                    }           
                 }
 
                 if(argumentsCount == 2 && arguments[1][0] == '-')
