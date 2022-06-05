@@ -21,12 +21,12 @@ uint64_t test_mm(){
 
   // if (argc != 1) return -1;
   // if ((max_memory = satoi(argv[0])) <= 0) return -1;
-  int j=0;
+  // int j=0;
 
   while (1){
-    print("=== Vuelta ");
-    printInt(j++);
-    print(" ===\n");
+    // print("=== Vuelta ");
+    // printInt(j++);
+    // print(" ===\n");
     rq = 0;
     total = 0;
 

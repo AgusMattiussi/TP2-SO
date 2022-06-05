@@ -61,8 +61,8 @@ void commandBuilder(char *name, char *desc, void (*fn)(), int builtin){
 }
 
 void executeCommand(char *buffer){
-    char *arguments[3];
-    int argumentsCount = strtok(buffer, ' ', arguments, 3);
+    char *arguments[5];
+    int argumentsCount = strtok(buffer, ' ', arguments, 5);
 
     if(argumentsCount <= 0 || argumentsCount > 5){
         print("Invalid amount of arguments.\n");
@@ -80,13 +80,18 @@ void executeCommand(char *buffer){
                 mode processMode = FOREGROUND;
 
                 if(argumentsCount == 1){
-                    if(strcmp(arguments[0], "cat") == 0)
+                    if(strcmp(arguments[0], "cat") == 0){
                         (*catBuitIn)(argumentsCount - 1, arguments + 1);
-                    if(strcmp(arguments[0], "wc") == 0)
+                        return;
+                    }
+                    if(strcmp(arguments[0], "wc") == 0){
                         (*wcBuitIn)(argumentsCount - 1, arguments + 1);
-                    if(strcmp(arguments[0], "filter") == 0)
+                        return;
+                    }
+                    if(strcmp(arguments[0], "filter") == 0){
                         (*filterBuitIn)(argumentsCount - 1, arguments + 1);
-                    return;
+                        return;
+                    }
                 }
 
                 if(argumentsCount == 2 && arguments[1][0] == '-')
@@ -98,17 +103,22 @@ void executeCommand(char *buffer){
                     for(int j=0; j< COMMANDS_COUNT; j++){
                         if(strcmp(arguments[2], commandsNames[j]) == 0){
                             //TODO: pipes 
-                            // int fd = sys_pipeOpen("|");
-                            // if(fd == -1){
-                            //     print("Pipe opening error\n");
-                            //     return;
-                            // }
-                            // int fds[2] = {fd, 0};
-                            // int p1 = sys_createProcess(commandsFn[i], 1, commandsNames[i], fds, BACKGROUND);
-                            // fds[2] = {0, fd};
-                            // int p2 = sys_createProcess(commandsFn[j], 1, commandsNames[j], fds, FOREGROUND);
-                            // sys_kill(p1);
-                            // sys_pipeClose(fd);
+                            // print("Todo Ok1\n");
+                            int fd = sys_pipeOpen("pipe");
+                            // print("Todo Ok2\n");
+                            if(fd == 0){
+                                print("Pipe opening error\n");
+                                return;
+                            }
+                            int fds[2] = {fd, 0};
+                            char *argv[] = {commandsNames[i]};
+                            int p1 = sys_createProcess(commandsFn[i], 1, argv, fds, BACKGROUND);
+                            fds[0] = 0;
+                            fds[1] = fd;
+                            argv[0] = commandsNames[j];
+                            sys_createProcess(commandsFn[j], 1, argv, fds, FOREGROUND);
+                            sys_killPs(p1);
+                            sys_pipeClose("pipe");
                             // print("Todo Ok\n");
                         }
                     }         

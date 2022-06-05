@@ -356,7 +356,6 @@ static void setStackFrame(int argc, char **argv, process *pNode, void (*processF
     stack->rdx = (uint64_t)processFn;
     stack->rcx = pid;
     stack->rip = (uint64_t)forceExitAfterExec;
-    // stack->rip = (uint64_t)processFn;
     stack->cs = 0x8;
     stack->rflags = 0x202;
     stack->rsp = (uint64_t)(pNode->pc.rsp);
@@ -389,7 +388,6 @@ pid_t getPid(){
 /* Se mata un proceso segun su PID, eliminando sus recursos. Devuelve 1 si fue
  * exitoso o 0 en caso de error */
 uint64_t kill(pid_t pid){
-   // _cli();
     if(pid < 1)
         return 0;
 
@@ -408,11 +406,9 @@ uint64_t kill(pid_t pid){
     // TODO: Hace falta?
     if(pid == executingP->pc.pid){
         executingP = NULL;
-        //_sti();
         timerInterrupt();
     }
 
-    //_sti();
     return 1;
 }
 
@@ -427,7 +423,6 @@ uint64_t toggleBlocked(pid_t pid) {
 /* Cambia el estado de un proceso a BLOCKED. Devuelve 1 si fue
  * exitoso o 0 en caso de error */
 uint64_t block(pid_t pid){
-    //_cli();
     process * p = delProcess(readyList, pid);
     if(p == NULL)
         return 0;
@@ -438,23 +433,19 @@ uint64_t block(pid_t pid){
     //TODO: Hace falta?
     if(pid == executingP->pc.pid){
         executingP->pc.ticketsLeft = 0;
-        //_sti();
         timerInterrupt();
     }
 
-   // _sti();
     return 1;
 }
 
 /* Cambia el estado de un proceso BLOCKED a READY */
 uint64_t unblock(pid_t pid){
-    //_cli();
     process * p = delProcess(blockedList, pid);
     if(p == NULL)
         return 0;
     p->pc.state = READY;
     enqProcess(readyList, p);
-    //_sti();
     return 1;
 }
 
@@ -601,4 +592,12 @@ void wait(pid_t pid){
     while (exists(pid)){
         yield();
     }
+}
+
+int getStdIn(){
+    return executingP->pc.stdIn;
+}
+
+int getStdOut(){
+    return executingP->pc.stdOut;
 }

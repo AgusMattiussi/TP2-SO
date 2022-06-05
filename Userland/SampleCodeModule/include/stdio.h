@@ -151,6 +151,16 @@ extern void sys_yield();
 extern void sys_pipe();
 
 /**
+ * Syscall: Abre un nuevo pipe
+**/
+extern unsigned long sys_pipeOpen(char * pipeName);
+
+/**
+ * Syscall: Cierra un pipe
+**/
+extern unsigned long sys_pipeClose(char * pipeName);
+
+/**
  * Devuelve un caracter ingresado por el usuario siempre que este no
  * sea nulo (distinto de 0)
 **/

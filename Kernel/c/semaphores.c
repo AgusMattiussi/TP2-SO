@@ -6,7 +6,7 @@ static TSem * deqSem();
 static void enqPr(TSem * sem, pid_t pid);
 static pid_t deqPr(TSem * sem);
 static TSem * getSem(char * name);
-static int semExists(char * name);
+// static int semExists(char * name);
 static void freeSem(TSem * sem);
 
 static uint64_t semLock = 0;
@@ -135,16 +135,16 @@ static TSem * getSem(char * name){
     return NULL;
 }
 
-static int semExists(char * name){
-    TSem * current = semaphoresList->first;
+// static int semExists(char * name){
+//     TSem * current = semaphoresList->first;
 
-    for (int i = 0; i < semaphoresList->size; i++){
-        if(strcmp(name, current->name) == FAILED)
-            return SUCCESS;
-        current = current->next;
-    }
-    return FAILED;
-}
+//     for (int i = 0; i < semaphoresList->size; i++){
+//         if(strcmp(name, current->name) == FAILED)
+//             return SUCCESS;
+//         current = current->next;
+//     }
+//     return FAILED;
+// }
 
 uint64_t semOpen(char *name, int initialValue){
     _xchgLock(&semLock);
@@ -175,6 +175,10 @@ uint64_t semClose(char * semName){
         ncPrint("does not exist\n");
         return FAILED;
     }
+
+    // ncPrint("Cerrando sem "); 
+    // ncPrint(semName);
+    // ncPrint("\n");
 
     toClose->openedBy--;
     if(toClose->openedBy == 0){
@@ -280,7 +284,7 @@ void printListofSemaphores(){
         return;
     }
 
-    ncPrintWithColor("NAME    VALUE     BLOCKED PROCESSES\n", ORANGE_BLACK);
+    ncPrintWithColor("NAME              VALUE     BLOCKED PROCESSES\n", ORANGE_BLACK);
 
     for(int i = 0; i < semaphoresList->size; i++){
         ncPrint(toPrint->name);

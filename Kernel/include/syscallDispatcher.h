@@ -8,6 +8,7 @@
 #include <naiveConsole.h>
 #include <scheduler.h>
 #include <semaphores.h>
+#include <pipes.h>
 
 extern void saveRegisterInfo();
 

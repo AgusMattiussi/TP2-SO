@@ -9,6 +9,7 @@
 #include <scheduler.h>
 #include <interrupts.h>
 #include <semaphores.h>
+#include <pipes.h>
 
 
 extern uint8_t text;
@@ -61,6 +62,10 @@ int main()
 
 	_cli();
 	initSemaphores();
+	_sti();
+
+	_cli();
+	initPipes();
 	_sti();
 
 	_cli();

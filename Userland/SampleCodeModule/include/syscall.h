@@ -13,7 +13,6 @@ extern unsigned long sys_sem_open(char *sem_name, uint64_t initialValue);
 extern unsigned long sys_sem_wait(char *sem_name);
 extern unsigned long sys_sem_post(char *sem_name);
 extern unsigned long sys_sem_close(char *sem_name);
-// unsigned long sys_wait(int64_t pid);
 extern void sys_yield();
 extern void * sys_malloc(uint32_t size);
 extern void sys_free(void *pr);

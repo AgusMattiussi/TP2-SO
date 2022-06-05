@@ -23,11 +23,11 @@ int64_t test_processes(){
   // if ((max_processes = satoi(argv[0])) <= 0) return -1;
 
   p_rq p_rqs[max_processes];
-  int j = 0;
+  // int j = 0;
   while (1){
-    print("=== Vuelta ");
-    printInt(j++);
-    print(" ===\n");
+    // print("=== Vuelta ");
+    // printInt(j++);
+    // print(" ===\n");
 
     //sys_mem();
 
