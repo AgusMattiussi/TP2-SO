@@ -46,6 +46,7 @@ void startCommands(){
     commandBuilder("testsynchro", "Test for the synchronization of processes (with SEM).", &testSyncWrapper, FALSE);
     commandBuilder("testnosynchro", "Test for the synchronization of processes (no SEM).", &testNoSyncWrapper, FALSE);
     commandBuilder("cat", "Displays the input on the screen.", &cat, FALSE);
+    // commandBuilder("cat", "Displays the input on the screen.", &cat2, TRUE);
     commandBuilder("wc", "Displays the quantity of lines of the input.", &wc, FALSE);
     commandBuilder("filter", "Filters the vowels of the input.", &filter, FALSE);
     commandBuilder("pipe", "Displays a list with all the pipes.", &pipe, TRUE);
@@ -77,6 +78,16 @@ void executeCommand(char *buffer){
 
             } else {
                 mode processMode = FOREGROUND;
+
+                if(argumentsCount == 1){
+                    if(strcmp(arguments[0], "cat") == 0)
+                        (*catBuitIn)(argumentsCount - 1, arguments + 1);
+                    if(strcmp(arguments[0], "wc") == 0)
+                        (*wcBuitIn)(argumentsCount - 1, arguments + 1);
+                    if(strcmp(arguments[0], "filter") == 0)
+                        (*filterBuitIn)(argumentsCount - 1, arguments + 1);
+                    return;
+                }
 
                 if(argumentsCount == 2 && arguments[1][0] == '-')
                     processMode = BACKGROUND;
@@ -259,4 +270,30 @@ void testSyncWrapper(){
 
 void testNoSyncWrapper(){
     test_sync(0);
+}
+
+void catBuitIn(int argSize, char *args[]){
+    char c;
+    while ((c = getChar()) != '\n')
+        putChar(c);
+    putChar('\n');
+}
+
+void wcBuitIn(int argSize, char *args[]){
+    int lines = 0;
+    char c;
+    while ((c = getChar()) != '\n')
+        if (c == '\n')
+            lines++;
+    print("Lines: ");
+    printInt(lines);
+    putChar('\n');
+}
+
+void filterBuitIn(int argSize, char *args[]){
+    char c;
+    while((c = getChar()) != '\n')
+        if(isVowel(c))
+            putChar(c);
+    putChar('\n');
 }

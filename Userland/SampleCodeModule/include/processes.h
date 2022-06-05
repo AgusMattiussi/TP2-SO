@@ -15,4 +15,6 @@ void wc();
 
 void filter();
 
+int isVowel(char c);
+
 #endif

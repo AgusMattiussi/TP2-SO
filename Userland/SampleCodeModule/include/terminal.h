@@ -137,4 +137,10 @@ void testSyncWrapper();
 
 void testNoSyncWrapper();
 
+void catBuitIn(int argSize, char *args[]);
+
+void wcBuitIn(int argSize, char *args[]);
+
+void filterBuitIn(int argSize, char *args[]);
+
 #endif
