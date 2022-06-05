@@ -1,6 +1,6 @@
 #include <processes.h>
 
-static int isVowel(char c) {
+int isVowel(char c){
     return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
 }
 
@@ -30,6 +30,7 @@ void cat(){
     char c;
     while ((c = getChar()) != 0)
         putChar(c);
+    putChar('\n');
 }
 
 void wc(){
@@ -48,4 +49,5 @@ void filter(){
     while((c = getChar()) != 0)
         if(isVowel(c))
             putChar(c);
+    putChar('\n');
 }
