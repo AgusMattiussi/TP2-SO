@@ -2,6 +2,7 @@
 #define _STDIO_H
 
 #include <stdint.h>
+#include <syscall.h>
 
 #define BACKSPACE '\b'
 #define SHIFT 201
@@ -43,112 +44,6 @@
 #define TRUE 1
 #define FALSE 0
 
-/**
- * Syscall: Devuelve un caracter ingresado por el usuario o 0 en
- * su defecto
-**/
-extern char sys_getChar();
-
-/**
- * Syscall: Ubica el caracter 'c' en la posicion actual de la pantalla
- * con el color indicado en 'colorCode'
-**/
-extern void sys_putCharWC(char c, unsigned char colorCode);
-
-/**
- * Syscall: Devuelve el campo de la fecha/hora actual indicado en 'descriptor'
-**/
-extern int sys_getTime(int descriptor);
-
-/**
- * Syscall: Imprime en pantalla cada registro del procesador con su contenido
-**/
-extern void sys_getRegistersInfo();
-
-/**
- * Syscall: Elimina todo el contenido de la pantalla y posiciona el prompt al comienzo
- * de la misma
-**/
-extern void sys_clear();
-
-/**
- * Syscall: Imprime en pantalla el contenido de 32 bytes de memoria a partir de la
- * direccion 'address'
-**/
-extern void sys_PrintMem(char * address);
-
-/**
- * Syscall: Imprime el caracter 'c' en la fila 'row' y columna 'col' de la pantalla,
- * teniendo en cuenta que la misma tiene un tamaño de 25x80. Ademas, lo hace en el
- * color indicado por 'colorCode'
-**/
-extern void sys_printCharInPos(char c, int row, int col, unsigned char colorCode);
-
-/**
- * Syscall: Retorna los decisegundos desde que se inicio el sistema
-**/
-extern unsigned long sys_getDeciseconds();
-
-/**
- * Syscall: Dispara la excepcion de Operando Invalido
-**/
-extern void sys_raiseInvOpCodeExc();
-
-/**
- * Syscall: Crea un backup de los registros para luego imprimirlos cuando se llame
- * a 'inforeg'
-**/
-extern void sys_saveRegs();
-
-/**
- * Syscall: Imprime el estado actual de la memoria
-**/
-extern void sys_mem();
-
-/**
- * Syscall: Imprime una lista con todos los procesos en ejecución
-**/
-extern void sys_ps();
-
-/**
- * Syscall: Retorna el Process ID del proceso actual
-**/
-extern unsigned long long sys_getPid();
-
-/**
- * Syscall: Cambia el estado de un proceso entre bloqueado y listo dado su ID
-**/
-extern int sys_togglePsState(unsigned long long pid);
-
-/**
- * Syscall: Mata un proceso dado su ID
-**/
-extern int sys_killPs(unsigned long long pid);
-
-/**
- * Syscall: Retorna los segundos desde que se inicio el sistema
-**/
-extern int sys_getSeconds();
-
-/**
- * Syscall: Imprime una lista con todos los semaforos
-**/
-extern void sys_sem();
-
-/**
- * Syscall: Cambia la prioridad de un proceso dado su ID y la nueva prioridad
-**/
-extern void sys_nice(unsigned long long pid, char newPriority);
-
-/**
- * Syscall: El proceso que la llama renuncia a la CPU forzando una interrupcion del timer tick
-**/
-extern void sys_yield();
-
-/**
- * Syscall: Imprime una lista con todos los pipes
-**/
-extern void sys_pipe();
 
 /**
  * Devuelve un caracter ingresado por el usuario siempre que este no
