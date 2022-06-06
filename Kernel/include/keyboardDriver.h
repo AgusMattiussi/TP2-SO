@@ -25,14 +25,9 @@ int keyboardHandler();
 unsigned char scancodeToAscii(int scancode);
 
 /**
- *  Devuelve el primer caracter del buffer y lo elimina. Desplaza en una
- *  posicion todo el buffer
+ *  Devuelve el primer caracter del buffer
 **/
 unsigned char kb_getChar();
 
-/**
- *  Elimina el primer caracter del buffer y lo desplaza en una posicion
-**/
-void removeFirstChar();
 
 #endif

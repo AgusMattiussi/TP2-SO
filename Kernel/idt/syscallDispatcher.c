@@ -3,30 +3,30 @@
 #include <syscallDispatcher.h>
 
 uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9) {
-	switch (rdi) {																	// ======== Origen de las llamadas ========
+	switch (rdi) {																	
 		case 0:
-			return readHandler(STDIN); 													// <-- unsigned char getChar() || stdio.c
+			return readHandler(STDIN); 													
 		case 1:
-			putCharWithColor((char) rsi, (unsigned char)rdx); 					//< -- void putCharWithColor(char c, unsigned char colorCode) || stdio.c
+			putCharWithColor((char) rsi, (unsigned char)rdx); 					
 			return 1;																
 		case 2:
-			return getTime(rsi);													// <-- int getTime(int descriptor) || stdio.c
+			return getTime(rsi);													
 		case 3:
-			ncClear();																// <-- void clear() || stdio.c
+			ncClear();																
 			return 3;	
 		case 4:
 			saveRegisterInfo(); 														
 			return 4;
 		case 5:
-			printMemory(rsi);														// <-- void printmem(int argSize, char *args[]) || terminal.c
+			printMemory(rsi);														
 			return 5;
 		case 6:
-			ncPrintCharInPos((char)rsi, (int)rdx, (int)rcx, (unsigned char)r8);		// <-- void printCharInPos(char c, int row, int col, unsigned char colorCode) || stdio.c
+			ncPrintCharInPos((char)rsi, (int)rdx, (int)rcx, (unsigned char)r8);		
 			return 6;
 		case 7:
-			return getDecis();														// <-- unsigned long getDeciseconds() || stdio.c
+			return getDecis();													
 		case 8:
-			getRegistersInfo(); 													// <-- void getRegisters() || terminal.c
+			getRegistersInfo(); 												
 			return 8;
 		case 9:
 			printAllProcessesInfo();
@@ -34,9 +34,9 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 		case 10:
 			return getPid();
 		case 11:
-			return toggleBlocked(rsi);												// <-- void block(int argSize, char *args[]) || terminal.c
+			return toggleBlocked(rsi);												
 		case 12:
-			return kill(rsi);												        // <-- void kill(int argSize, char *args[]) || terminal.c
+			return kill(rsi);												        
 		case 13:
 			return getSeconds();
 		case 14:

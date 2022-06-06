@@ -265,10 +265,8 @@ uint64_t semPost(char * semName){
 
     _unlock(&toPost->lock);
 
-    if(unblock(pid) == 0){
-        printWithColor("MALARDO\n", RED_BLACK);
-            return FAILED;}
-
+    if(unblock(pid) == 0)
+            return FAILED;
     return SUCCESS;
 }
 
@@ -291,7 +289,7 @@ void printListofSemaphores(){
         pNode * process = toPrint->firstProcess;
         for(int j = 0; j < toPrint->waitingProcesses; j++){
             if(process == NULL)
-                printWithColor("WTF", RED_BLACK);
+                printWithColor("Error: Proceso no encontrado", RED_BLACK);
             else
                 printDec(process->pid);
             print("   ");
