@@ -134,8 +134,12 @@ void executeCommand(char *buffer){
                             sys_pipeClose("pipe");
                         }
                     }         
-                } else 
-                    sys_createProcess(commandsFn[i], 1, arguments, NULL, processMode);
+                } else {
+                    int pid = sys_createProcess(commandsFn[i], 1, arguments, NULL, processMode);
+                    if(processMode == FOREGROUND){
+                        sys_wait(pid);
+                    }
+                }
                 return;
             }
         }
@@ -337,7 +341,7 @@ void filterBuitIn(int argSize, char *args[]){
 
 void pipeTester(){
     int * fds = sys_pipeOpen("abc");
-    sys_write(fds[0], "Hola Mundo");
+    sys_write(fds[0], "Hola Mundo\n");
     char c = sys_read(fds[1]);
     while (c != 0){
         char toWrite[] = {c, 0};

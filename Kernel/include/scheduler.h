@@ -106,6 +106,7 @@ int exists(pid_t pid);
 void wait(pid_t pid);
 int getFdIn();
 int getFdOut();
+int getProcessMode();
 
 
 #endif

@@ -145,7 +145,10 @@ static void removePhil(){
 static void createPhilProcess(){
     char id[] = {philoCount+'0', 0};
     char * philoArgv[] = {"philosopher", id};
-    philoPids[philoCount] = sys_createProcess(&philosopher, 2, philoArgv, NULL, FOREGROUND);
+
+    int processMode = sys_getProcessMode();
+
+    philoPids[philoCount] = sys_createProcess(&philosopher, 2, philoArgv, NULL, processMode);
 
     if(philoPids[philoCount] == 0){
         printWithColor("Error creando filosofos\n", RED_BLACK);

@@ -101,6 +101,8 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 			return 38;
 		case 39:
 			return writeCharHandler((int) rsi, (char) rdx, DEFAULT_COLOR);
+		case 40:
+			return getProcessMode();
 	}
     // Por default devuelve 0
 	return 0;

@@ -81,4 +81,6 @@ extern void sys_printWithColor(char * str, char colorCode);
 
 extern int sys_writeChar(int fd, char c);
 
+extern int sys_getProcessMode();
+
 #endif

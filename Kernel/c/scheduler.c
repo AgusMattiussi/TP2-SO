@@ -586,3 +586,7 @@ int getFdIn(){
 int getFdOut(){
     return executingP->pc.fdOut;
 }
+
+int getProcessMode(){
+    return executingP->pc.mode;
+}
