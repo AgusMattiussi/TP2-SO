@@ -2,6 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <terminal.h>
 
+#define LOOP_CMD_INDEX 12
+
 void pipeTester();
 
 static char * commandsNames[COMMANDS_COUNT];
@@ -94,6 +96,12 @@ void executeCommand(char *buffer){
                         (*filterBuitIn)(argumentsCount - 1, arguments + 1);
                         return;
                     }
+                    if(strcmp(arguments[0], "loop") == 0){
+                        char *argv[] = {commandsNames[LOOP_CMD_INDEX]};
+                        int pid = sys_createProcess(commandsFn[LOOP_CMD_INDEX], 1, argv, NULL, FOREGROUND);
+                        sys_wait(pid);
+                        return;
+                    }
                 }
 
                 if(argumentsCount == 2 && arguments[1][0] == '-')
@@ -123,18 +131,17 @@ void executeCommand(char *buffer){
                             print(" -> ");
                             print(commandsNames[i]);
                             print("\n");
-                            int fdsP1[2] = {pipeFds[1], 1};
-                            int fdsP2[2] = {0, pipeFds[0]};
-                            char *argv[] = {commandsNames[j]};
-                            int pidP2 = sys_createProcess(commandsFn[j], 1, argv, fdsP2, FOREGROUND);
-                            argv[0] = commandsNames[i];
+                            int fdsP1[2] = {0, pipeFds[0]};
+                            int fdsP2[2] = {pipeFds[1], 1};
+                            char *argv[] = {commandsNames[i]};
                             int pidP1 = sys_createProcess(commandsFn[i], 1, argv, fdsP1, FOREGROUND);
-                            //ps();
-                            pipe();
-                            sys_wait(pidP2);
-                            print("Termino P2\n");
+                            argv[0] = commandsNames[j];
+                            int pidP2 = sys_createProcess(commandsFn[j], 1, argv, fdsP2, FOREGROUND);
+
                             sys_wait(pidP1);
-                            print("Termino P1\n");
+
+                            sys_wait(pidP2);
+
                             sys_pipeClose("pipe");
                             // print("Todo Ok\n");
                         }
