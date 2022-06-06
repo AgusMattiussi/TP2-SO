@@ -281,7 +281,8 @@ static processList * initializeProcessList() {
 /* Crea el primer proceso y le asigna su nombre */
 void createFirstProcess(){
     char *argv[] = {"firstProcess"};
-    createProcess((void *)&firstProcess, 1, argv, NULL, FOREGROUND);
+    pid_t fpPid = createProcess((void *)&firstProcess, 1, argv, NULL, FOREGROUND);
+    kill(fpPid);
 }
 
 /* Primer proceso creado. Su unica funcion es esperar a que llegue un

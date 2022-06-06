@@ -75,6 +75,7 @@ int main()
 	saveInitialState((uint64_t)sampleCodeModuleAddress, getSP());
 	
 	((EntryPoint)sampleCodeModuleAddress)();
+	/* No vuelve a este punto despues de que se borra firstProcess */
 	while(1);
 	ncPrintWithColor("Game over\n", RED_BLACK);
 	

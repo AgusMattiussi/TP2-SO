@@ -217,6 +217,7 @@ uint32_t writeInPipeWithFd(int fd, char *str){
             return FAILED;
         written++;
     }
+    toWrite->buffer[toWrite->writeIndex % BUFFER_SIZE] = 0;
     /* toWrite->buffer[written] = 0;
     ncPrintWithColor(toWrite->buffer, CYAN_BLACK); */
 
