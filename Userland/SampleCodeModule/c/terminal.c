@@ -185,9 +185,9 @@ void printTime(){
 }
 
 void divZero(){
-    int x = 1/0;
-    if(x){
-    }
+    // int x = 1/0;
+    // if(x){
+    // }
 }
 
 void invalidOpCode(){

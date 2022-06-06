@@ -1,5 +1,5 @@
-#ifndef _MEMORY_MANAGER_H_
-#define _MEMORY_MANAGER_H_
+#ifndef _CUSTOM_MM_H_
+#define _CUSTOM_MM_H_
 
 #include <types.h>
 #include <stdint.h>

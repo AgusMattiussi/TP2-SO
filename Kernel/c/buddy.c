@@ -1,6 +1,8 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include "buddy.h"    
+#ifndef CUSTOM
+#include <memoryManager.h>
+// #include <buddy.h>
 
 #define HEAP_START 0x800000
 
@@ -28,16 +30,8 @@ static size_t bucket_limit;
 static uint8_t node_is_split[(1 << (BUCKET_COUNT - 1)) / 8]; // = 1 * 2^17 / 2^3 = 2^14
 
 static uint8_t *base_ptr;
-// static uint8_t *max_ptr;
 
-// Ojo con esto
-// static int update_max_ptr(uint8_t *new_value) {
-//   if(new_value > base_ptr + MAX_ALLOC)
-//     return 0;
-
-//   max_ptr = new_value;
-//   return 1;
-// }
+static size_t freeBytesRemaining = MAX_ALLOC;
 
 /* ===== MANEJO DE LISTAS ===== */
 
@@ -129,15 +123,13 @@ static int lower_bucket_limit(size_t bucket) {
 }
 
 static void initializeHeap() {
-    // base_ptr = (uint8_t *) malloc(MAX_ALLOC);
     base_ptr = (uint8_t *) HEAP_START;
     bucket_limit = BUCKET_COUNT - 1;
-    // update_max_ptr(base_ptr + sizeof(list_t));
     list_init(&buckets[BUCKET_COUNT - 1]);
     list_push(&buckets[BUCKET_COUNT - 1], (list_t *)base_ptr);
 }
 
-void * b_malloc(size_t request) {
+void * malloc(size_t request) {
   size_t original_bucket, bucket;
 
   if (request + HEADER_SIZE > MAX_ALLOC)
@@ -148,11 +140,9 @@ void * b_malloc(size_t request) {
 
   bucket = bucket_for_request(request + HEADER_SIZE);
   original_bucket = bucket;
-  // printf("Reservo bucket de %ld para un request de %ld\n", bucket, request);
 
   while (bucket + 1 != 0) {
     size_t i;
-    // size_t size, bytes_needed;
     uint8_t *ptr;
 
     if (!lower_bucket_limit(bucket)) 
@@ -174,14 +164,6 @@ void * b_malloc(size_t request) {
       ptr = (uint8_t *)list_pop(&buckets[bucket]);
     }
 
-    // size = (size_t)1 << (MAX_ALLOC_LOG2 - bucket); // 2^(21 - 16) = 2^5 = 32
-    // bytes_needed = bucket < original_bucket ? size / 2 + sizeof(list_t) : size;
-
-    // if (!update_max_ptr(ptr + bytes_needed)) {
-    //   list_push(&buckets[bucket], (list_t *)ptr);
-    //   return NULL;
-    // }
-
     i = node_for_ptr(ptr, bucket);
     if (i != 0) {
       flip_parent_is_split(i);
@@ -194,6 +176,8 @@ void * b_malloc(size_t request) {
       list_push(&buckets[bucket], (list_t *)ptr_for_node(i + 1, bucket)); // ES EL HIJO DERECHO
     }
 
+    freeBytesRemaining -= bucket;
+
     *(size_t *)ptr = request;
     return ptr + HEADER_SIZE;
   }
@@ -201,21 +185,15 @@ void * b_malloc(size_t request) {
   return NULL;
 }
 
-void b_free(void *ptr) {
+void free(void *ptr) {
   size_t bucket, i;
 
   if (ptr == NULL)
     return;
   
-  // bucket = bucket_for_request(*(size_t *)ptr);
-  // ptr = (uint8_t *)ptr - HEADER_SIZE;
-  // i = node_for_ptr((uint8_t *)ptr, bucket);
   ptr = (uint8_t *)ptr - HEADER_SIZE;
   bucket = bucket_for_request(*(size_t *)ptr + HEADER_SIZE);
   i = node_for_ptr((uint8_t *)ptr, bucket);
-
-  // printf("Libero bucket de %ld\n", bucket);
-  // printf("i = %ld\n", i);
 
   while (i != 0) {
 
@@ -228,21 +206,22 @@ void b_free(void *ptr) {
     i = PARENT(i);
     bucket--;
   }
-
+  freeBytesRemaining += bucket;
   list_push(&buckets[bucket], (list_t *)ptr_for_node(i, bucket));
 }
 
-void b_mem(){
+void mem(){
     // TODO: terminar
     ncPrint("Memoria total: ");
     ncPrintDec(MAX_ALLOC);
     ncPrint(" bytes\n");
 
     ncPrint("Memoria en uso: ");
-    // ncPrintDec(MAX_ALLOC - freeBytesRemaining);
+    ncPrintDec(MAX_ALLOC - freeBytesRemaining);
     ncPrint(" bytes\n");
 
     ncPrint("Memoria libre: ");
-    // ncPrintDec(freeBytesRemaining);
+    ncPrintDec(freeBytesRemaining);
     ncPrint(" bytes\n");
 }
+#endif

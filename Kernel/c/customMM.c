@@ -1,6 +1,9 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include <customMM.h>
+#ifndef BUDDY
+#include <memoryManager.h>
+// #include <customMM.h>
+
 
 #define HEAP_START 0x800000
 #define HEAP_MAX_SIZE 0x200000
@@ -123,9 +126,6 @@ void * malloc(size_t wantedSize){
     void * retPointer = NULL;
     size_t aditionalRequiredSize;
 
-    // printf("\tmalloc:");
-    // printf("\tWanted Size: %ld\n", wantedSize);
-
     /* En la primera llamada a malloc, se inicializa el heap */
     if(wasHeapInitialized == FALSE){
         initializeHeap();
@@ -145,9 +145,6 @@ void * malloc(size_t wantedSize){
         wantedSize += aditionalRequiredSize;
     else
         wantedSize = 0;
-    
-    // printf("\tEffective Wanted Size: %ld\n", wantedSize);
-    // printf("\tBlock Size Valid? %s\n", BLOCK_SIZE_IS_VALID(wantedSize)? "True" : "False");
 
     /* Chequea si el wantedSize final es valido y busca un bloque apropiado */
     if(BLOCK_SIZE_IS_VALID(wantedSize) && (wantedSize > 0) && (wantedSize <= freeBytesRemaining)) {
@@ -161,8 +158,6 @@ void * malloc(size_t wantedSize){
             currentBlock = currentBlock->nextBlock;
         }
             
-        // printf("\tLlegue al final? %s\n", currentBlock == &lastBlock? "SI! FRAGMENTACION!!!" : "NO");
-
         /* Si al iterar llegue al ultimo bloque, entonces no existe un bloque de tamaño adecuado */
         if(currentBlock != &lastBlock){
             /* Al comienzo de esta direccion a retornar, guardaremos un memoryBlock_t que la represente.
@@ -175,7 +170,6 @@ void * malloc(size_t wantedSize){
             /* Si el bloque es mas grande de lo requerido, puede partirse en dos y el
              * fragmento sobrante reinsertarse como un bloque libre */
             if((currentBlock->blockSize - wantedSize) > MINIMUM_BLOCK_SIZE) {   
-                // printf("\t ////// PARTIENDO BLOQUE //////\n");
 
                 /* Creo un nuevo bloque inmediatamente despues de currentBlock */
                 newBlock = (void *) (((uint8_t *) currentBlock) + wantedSize);
@@ -207,19 +201,6 @@ void * malloc(size_t wantedSize){
     return retPointer;
 }
 
-// void * my_calloc(size_t typeSize, size_t typeCount){
-//     void * retPointer = NULL;
-
-//     if(!MULTIPLY_WILL_OVERFLOW(typeSize, typeCount)){
-//         retPointer = my_malloc(typeSize * typeCount);
-
-//         if(retPointer != NULL)
-//             (void) memset(retPointer, 0, typeSize * typeCount);
-//     }
-
-//     return retPointer;
-// }
-
 void free(void * p) {
     uint8_t * blockPointer = (uint8_t *) p;
     memoryBlock_t * toFree;
@@ -231,13 +212,8 @@ void free(void * p) {
         blockPointer -= MemoryBlockStructSize;
 
         toFree = (void *) blockPointer;
-        
-        // printf("\t Free:\n");
-        // printf("\t Allocated? %s\n", BLOCK_IS_ALLOCATED(toFree) ? "True" : "False");
-        // printf("\t Next Null? %s\n",  toFree->nextBlock == NULL ? "True" : "False");
 
         if(BLOCK_IS_ALLOCATED(toFree) && toFree->nextBlock == NULL) {
-            // printf("\t Liberando %p\n", blockPointer + MemoryBlockStructSize);
 
             /* Marco el bloque como libre */
             FREE_BLOCK(toFree);
@@ -247,7 +223,6 @@ void free(void * p) {
             freeBytesRemaining += toFree->blockSize;
         }
     }
-    // printf("\t+++ FBR: %ld (Se deben %ld)\n", freeBytesRemaining, ADJUSTED_HEAP_SIZE - freeBytesRemaining);
 }
 
 /* Funcion que puede usarse externamente para saber cuantos bytes libres le quedan al heap */
@@ -262,13 +237,12 @@ void mem(){
     ncPrint(" bytes\n");
 
     ncPrint("Memoria en uso: ");
-    // TODO: revisar esta conversion
     ncPrintDec(HEAP_MAX_SIZE - freeBytesRemaining);
     ncPrint(" bytes\n");
 
     ncPrint("Memoria libre: ");
     ncPrintDec(freeBytesRemaining);
     ncPrint(" bytes\n");
-
 }
+#endif
 

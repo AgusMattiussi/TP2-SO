@@ -5,9 +5,13 @@ Este kernel debe correrse a través del emulador qemu y se debe compilar desde d
 
 1. La primera vez que uno accede debe ejecutar `cd Toolchain` y luego `make all`.
 
-2. Luego resta compilar todo el proyecto desde el directorio principal, para ello si todavia se encuentra en `Toolchain` ejecute `cd ..` y luego `make all` para compilar y linkeditar todo el proyecto. 
+2. Luego resta compilar todo el proyecto desde el directorio principal, para ello si todavia se encuentra en `Toolchain` ejecute `cd ..`.
 
-3. Último, debe ejecutar el archivo `run.sh`, que contiene el script con el comando correspondiente para correr al sistema a través de qemu.
+3. *(OPCIONAL)* Por defecto este sistema utiliza un memory manager personalizado, si usted desea seguir con este pase al paso 4. Si usted quiere compilar y utlizar el buddy memory manager, deberá ejecutar `cd Kernel` y allí dentro `make MM=BUDDY all` para luego volver al directorio principal con `cd ..`.
+
+4. Por último, deberá ejecutar `make all` desde el directorio principal para compilar y linkeditar todo el proyecto. 
+
+5. Solo resta ejecutar el archivo `run.sh`, que contiene el script con el comando correspondiente para correr al sistema a través de qemu.
 
 
 ## Terminal
@@ -27,6 +31,8 @@ Una vez ejecutado el run.sh, se abrirá una ventana con una terminal donde usted
 - ***divzero***: Verifica el correcto funcionamiento de la excepción de división por cero.
 
 - ***invalidopcode***: Verifica el correcto funcionamiento de la excepción de código de operación invalido.
+
+- ***phylo***: Resuelve el problema de los filósofos.
 
 - ***mem***: Imprime el estado de la memoria.
 
@@ -54,7 +60,9 @@ Una vez ejecutado el run.sh, se abrirá una ventana con una terminal donde usted
 
 - ***testpriority***: Test para la prioridad de los procesos.
 
-- ***testsynchro***: Test para la sincronización de los procesos.
+- ***testsynchro***: Test para la sincronización de los procesos con semáforos.
+
+- ***testnosynchro***: Test para la sincronización de los procesos sin semáforos.
 
 - ***cat***: Imprime el stdin tal como lo recibe.
 
