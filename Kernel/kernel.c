@@ -12,6 +12,7 @@
 #include <interrupts.h>
 #include <semaphores.h>
 #include <pipes.h>
+#include <ioManager.h>
 
 
 extern uint8_t text;
@@ -79,7 +80,7 @@ int main()
 	((EntryPoint)sampleCodeModuleAddress)();
 	/* No vuelve a este punto despues de que se borra firstProcess */
 	while(1);
-	ncPrintWithColor("Game over\n", RED_BLACK);
+	printWithColor("Game over\n", RED_BLACK);
 	
 	return 0;
 }
