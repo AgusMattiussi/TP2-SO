@@ -136,10 +136,9 @@ static void addPhil(){
 static void removePhil(){
     if(philoCount == INITIAL_PHYL)
         return;
-    //TODO: Hace falta hacer wait de room?
+
     sys_killPs(philoPids[philoCount]);
     philoPids[philoCount] = 0;
-    //TODO: getWaitingPs
     philoCount--;
 }
 
