@@ -4,7 +4,7 @@
 
 
 static int firstProcess(int argc, char **argv);
-static pid_t initProcess(process *pNode, char *name, uint32_t * fd, mode processMode);
+static pid_t initProcess(process *pNode, char *name, int * fd, mode processMode);
 static void setStackFrame(int argc, char **argv, process *pNode, void (*fn)(int, char **), pid_t pid);
 static pid_t generatePid();
 static process * getNext(processList * list);
@@ -172,7 +172,7 @@ static process * getNext(processList * list) {
 }
 
 /* Crea un nuevo proceso y lo agrega a la lista de procesos READY. Retorna el nuevo PID */
-pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint32_t * fd, mode processMode){
+pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, int * fd, mode processMode){
     
     /* Reservo espacio para el nuevo nodo de proceso. Notemos que new incluye
      * al proceso y al stack del mismo */ 
@@ -206,17 +206,7 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint
 
 /* Libera el proceso p y todos sus recursos */
 static void freeProcess(process * p){
-    //TODO: Chequear si esto esta bien
-    /* Obtengo argc y argv desde el stack del proceso */
-    //int argc = *((uint64_t *)(p->pc.rbp) - 11 * sizeof(uint64_t)); // rdi
-    //char ** argv = *((char ***)((uint64_t *)(p->pc.rbp) - 12 * sizeof(uint64_t))); // rsi
-
     /* Libero los argumentos */
-    /* for (int i = 0; i < argc; i++){
-        ncPrintWithColor(argv[i], CYAN_BLACK);
-        free(argv[i]);}
-    free(argv); */
-
     int argc = p->pc.argc;
     char ** argv = p->pc.argv;
 
@@ -298,7 +288,7 @@ static int firstProcess(int argc, char **argv) {
 
 /* Inicializa Process Context de un nuevo proceso con los valores
  * correspondientes */
-static pid_t initProcess(process *pNode, char *name, uint32_t * fd, mode processMode) {
+static pid_t initProcess(process *pNode, char *name, int * fd, mode processMode) {
     processContext *pc = &(pNode->pc);
     
     /* Genero un nuevo PID para el proceso */
@@ -321,8 +311,8 @@ static pid_t initProcess(process *pNode, char *name, uint32_t * fd, mode process
     /* Todos los procesos comienzan con la DEFAULT_PRIORITY */
     pc->priority = DEFAULT_PRIORITY;
     pc->ticketsLeft = initialTickets(pc->priority);
-
     pc->mode = processMode;
+
     if(fd == NULL){
         pc->fdIn = STDIN;
         pc->fdOut = STDOUT;
@@ -331,6 +321,9 @@ static pid_t initProcess(process *pNode, char *name, uint32_t * fd, mode process
         pc->fdOut = fd[1];
     }
 
+    if(processMode == BACKGROUND){
+        pc->fdOut = -1;
+    }
     return pc->pid;
 }
 
