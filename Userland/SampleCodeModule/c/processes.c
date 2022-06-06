@@ -29,33 +29,36 @@ void loop(){
 }
 
 void cat(){
-    /* char c;
-    while ((c = getChar()) != 0)
-        putChar(c);
-    putChar('\n'); */
     char c = read(sys_get_fdin());
     while(c != 0){
         char toWrite[] = {c, 0};
         write(sys_get_fdout(), toWrite);
-        c = read(sys_get_fdin());
+        
     }
 }
 
 void wc(){
     int lines = 0;
-    char c;
-    while ((c = getChar()) != 0)
+    char c = read(sys_get_fdin());
+    while (c != 0){
         if (c == '\n')
             lines++;
+         c = read(sys_get_fdin());
+    }
+    putChar('\n');
     print("Lines: ");
     printInt(lines);
     putChar('\n');
 }
 
 void filter(){
-    char c;
-    while((c = getChar()) != 0)
-        if(isVowel(c))
-            putChar(c);
+    char c = read(sys_get_fdin());
+    while(c != 0){
+        if(!isVowel(c)){
+            char toWrite[] = {c, 0};
+            write(sys_get_fdout(), toWrite);
+        }
+        c = read(sys_get_fdin());
+    }
     putChar('\n');
 }

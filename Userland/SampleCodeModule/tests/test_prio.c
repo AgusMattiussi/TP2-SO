@@ -12,9 +12,9 @@
 
 
 #define TOTAL_PROCESSES 3
-#define LOWEST 19 //TODO: Change as required
-#define MEDIUM 10 //TODO: Change as required
-#define HIGHEST 0 //TODO: Change as required
+#define LOWEST 19
+#define MEDIUM 10
+#define HIGHEST 0
 
 int count1=0;
 int count2=0;

@@ -14,7 +14,6 @@ static int commandIndex = 0;
 void startTerminal(){
     startCommands();
     sys_nice(sys_getPid(), MAX_PRIORITY);
-    // sys_killPs(1);
     while(1){
         char buffer[BUFFER_SIZE] = {0};
         printWithColor("$> ", GREEN_BLACK);
@@ -286,17 +285,34 @@ void testNoSyncWrapper(){
 
 void catBuitIn(int argSize, char *args[]){
     char c;
-    while ((c = getChar()) != '\n')
-        putChar(c);
+    char buffer[BUFFER_SIZE];
+    int lenght = 0;
+    while((c = getChar()) != '\n' && lenght < BUFFER_SIZE){
+        if(c == BACKSPACE){
+            if(lenght > 0)
+                buffer[lenght--] = 0;
+        } else if(IS_ALPHA(c) || IS_DIGIT(c) || c == ' ' || c == '/' || c == '-'){
+            putChar(c);
+            buffer[lenght++] = c;  
+        }    
+    }
+    buffer[lenght] = 0;
+    putChar('\n');
+    print(buffer);
     putChar('\n');
 }
 
 void wcBuitIn(int argSize, char *args[]){
     int lines = 0;
     char c;
-    while ((c = getChar()) != '\n')
+    while((c = getChar()) != '\n'){
         if (c == '\n')
             lines++;
+        
+        if(IS_ALPHA(c) || IS_DIGIT(c) || c == ' ' || c == '/' || c == '-')
+            putChar(c);     
+    }
+    putChar('\n');
     print("Lines: ");
     printInt(lines);
     putChar('\n');
@@ -304,9 +320,22 @@ void wcBuitIn(int argSize, char *args[]){
 
 void filterBuitIn(int argSize, char *args[]){
     char c;
-    while((c = getChar()) != 'p')
-        if(!isVowel(c))
+    char buffer[BUFFER_SIZE];
+    int lenght = 0;
+    while((c = getChar()) != '\n' && lenght < BUFFER_SIZE){
+        if(c == BACKSPACE){
+            if(lenght > 0)
+                buffer[lenght--] = 0;
+        } else if(IS_ALPHA(c) || IS_DIGIT(c) || c == ' ' || c == '/' || c == '-'){
             putChar(c);
+
+            if(!isVowel(c))
+                buffer[lenght++] = c; 
+        }
+    }
+    buffer[lenght] = 0;
+    putChar('\n');
+    print(buffer);
     putChar('\n');
 }
 
