@@ -161,8 +161,9 @@ extern int * sys_pipeOpen(char * pipeName);
 **/
 extern unsigned long sys_pipeClose(char * pipeName);
 
-unsigned long read(int fd);
+int read(int fd);
 unsigned long write(int fd, char * str);
+int writeChar(int fd, char c);
 
 /**
  * Devuelve un caracter ingresado por el usuario siempre que este no

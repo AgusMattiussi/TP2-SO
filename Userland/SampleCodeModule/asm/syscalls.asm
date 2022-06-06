@@ -35,6 +35,10 @@ GLOBAL sys_read
 GLOBAL sys_write
 GLOBAL sys_get_fdin
 GLOBAL sys_get_fdout
+GLOBAL sys_putChar
+GLOBAL sys_print
+GLOBAL sys_printWithColor
+GLOBAL sys_writeChar
 
 SECTION .text
 
@@ -160,6 +164,14 @@ sys_read:
 	syscall 34
 sys_write:
 	syscall 35
+sys_putChar:
+	syscall 36
+sys_print:
+	syscall 37
+sys_printWithColor:
+	syscall 38
+sys_writeChar:
+	syscall 39
 
 
 ;Fuente: https://www.felixcloutier.com/x86/ud

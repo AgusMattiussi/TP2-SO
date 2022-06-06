@@ -96,8 +96,9 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 			return 37;
 		case 38:
 			printWithColor((char *)rsi, (uint8_t)rdx);
+			return 38;
 		case 39:
-			return writeCharHandler((int) rsi, (char) rdx, (uint8_t) rcx);
+			return writeCharHandler((int) rsi, (char) rdx, DEFAULT_COLOR);
 	}
     // Por default devuelve 0
 	return 0;

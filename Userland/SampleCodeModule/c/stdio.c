@@ -1,11 +1,15 @@
 #include <stdio.h>
 
-unsigned long read(int fd){
+int read(int fd){
     return sys_read(fd);
 }
 
 unsigned long write(int fd, char * str){
     return sys_write(fd, str);
+}
+
+int writeChar(int fd, char c){
+    return sys_writeChar(fd, c);
 }
 
 unsigned char getChar(){
@@ -25,23 +29,18 @@ void putCharWithColor(char c, unsigned char colorCode){
 
 void putChar(char c){
     if(c != 0)
-        sys_putCharWC(c, WHITE_BLACK);
+        sys_putChar(c);
 }
 
 void print(char * string){
-    /* while (*string != 0){
-        putChar(*string);
-        string++;
-    }   */
-    write(sys_get_fdout(), string); 
+    sys_print(string);
 }
 
 void printWithColor(char * string, unsigned char colorCode){
-    while (*string != 0){
-        putCharWithColor(*string, colorCode);
-        string++;
-    }    
+    sys_printWithColor(string, colorCode);
 }
+
+
 
 void printCharInPos(char c, int row, int col, unsigned char colorCode){
     sys_printCharInPos(c, row, col, colorCode);
