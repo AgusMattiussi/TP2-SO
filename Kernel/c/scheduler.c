@@ -91,6 +91,7 @@ static process * delProcess(processList * list, pid_t pid) {
 
     process * prev = NULL;
     process * toDel = getProcessAndPrevious(list, pid, &prev);
+
     if(toDel == NULL)
         return NULL;
     
