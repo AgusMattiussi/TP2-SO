@@ -14,6 +14,8 @@
 
 #define READ_SEM_NAME "readSem"
 #define WRITE_SEM_NAME "writeSem"
+#define FDIN 0
+#define FDOUT 1
 
 typedef struct TPipe{
     struct TPipe * next;
@@ -36,10 +38,11 @@ typedef struct pipeList{
 void initPipes();
 int * pipeOpen(char *name);
 uint64_t pipeClose(char * pipeName);
-uint64_t writePipe(char * pipeName, char *str);
+uint32_t writePipe(char * pipeName, char *str);
 char readPipe(char * pipeName);
+char readPipeWithFd(int fd);
 void printListOfPipes();
-
 uint64_t writeCharInPipe(TPipe * pipe, char c);
+uint32_t writeInPipeWithFd(int fd, char *str);
 
 #endif

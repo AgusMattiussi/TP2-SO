@@ -5,6 +5,7 @@ static TPipe * deqPipe();
 static TPipe * getPipe(char * name);
 static int * createPipe(char *name, int id);
 static int generateNewFd();
+static TPipe * getPipeWithFd(int fd, int fdType);
 
 static char * handlerSemName = "pipesHandler";
 static pipeList * pipesList;
@@ -165,8 +166,9 @@ uint64_t pipeClose(char * pipeName){
     return SUCCESS;
 }
 
-uint64_t writePipe(char * pipeName, char *str){
+uint32_t writePipe(char * pipeName, char *str){
     TPipe * toWrite = getPipe(pipeName);
+    int written = 0;
     if(toWrite == NULL){
         ncPrint("The pipe "); 
         ncPrint(pipeName);
@@ -177,9 +179,10 @@ uint64_t writePipe(char * pipeName, char *str){
     while(*str != 0){
         if(writeCharInPipe(toWrite, *str++) == FAILED)
             return FAILED;
+        written++;
     }
 
-    return SUCCESS;
+    return written;
 }
 
 uint64_t writeCharInPipe(TPipe * pipe, char c){
@@ -197,6 +200,25 @@ uint64_t writeCharInPipe(TPipe * pipe, char c){
     }
 
     return SUCCESS;
+}
+
+uint32_t writeInPipeWithFd(int fd, char *str){
+    TPipe * toWrite = getPipeWithFd(fd, FDIN);
+    int written = 0;
+    if(toWrite == NULL){
+        /* ncPrint("The pipe "); 
+        ncPrint(pipeName);
+        ncPrint("does not exist\n"); */
+        return FAILED;
+    }
+
+    while(*str != 0){
+        if(writeCharInPipe(toWrite, *str++) == FAILED)
+            return FAILED;
+        written++;
+    }
+
+    return written;
 }
 
 char readPipe(char * pipeName){
@@ -223,6 +245,45 @@ char readPipe(char * pipeName){
 
     return toRet;
 }
+
+char readPipeWithFd(int fd){
+    TPipe * toRead = getPipeWithFd(fd, FDOUT);
+    if(toRead == NULL)
+        return FAILED;
+
+    if(semWait(toRead->readSemName) == FAILED){
+        ncPrint("Error semWait en readPipe\n");
+        return FAILED;
+    }
+
+    char toRet = toRead->buffer[toRead->readIndex % BUFFER_SIZE];
+    toRead->readIndex++;
+
+    if(semPost(toRead->readSemName) == FAILED){
+        ncPrint("Error semPost en readPipe\n");
+        return FAILED;
+    }
+
+    return toRet;
+}
+
+
+
+static TPipe * getPipeWithFd(int fd, int fdType){
+    if(fd < 2 || fd > lastFdGenerated)
+        return NULL;
+    if(fdType != FDIN && fdType != FDOUT)
+        return NULL;
+    
+    TPipe * toRet = pipesList->first;
+    for (int i = 0; i < pipesList->size; i++){
+        if(toRet->fds[fdType] == fd)
+            return toRet;
+    }
+    return NULL;
+}
+
+
 
 void printListOfPipes(){
     TPipe * toPrint = pipesList->first;
