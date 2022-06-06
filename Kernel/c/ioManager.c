@@ -30,7 +30,7 @@ void printBase(uint64_t value, uint32_t base){
     print(buffer);
 }
 
-uint32_t readHandler(int fd){
+unsigned char readHandler(int fd){
     if(fd < 0)
         return 0;
     if(fd == STDIN)

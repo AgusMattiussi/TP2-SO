@@ -157,4 +157,40 @@ Bloquea un proceso dado su PID.
 Desbloquea un proceso dado su PID.
 
 [27] void ***sys_pipe***();
-Imprime una lista con todos los pipes.
+Imprime en pantalla la información de todos los pipes.
+
+[28] void ***sys_wait***(uint64_t pid);
+Espera a la finalizacióm del proceso con el ID 'pid'.
+
+[29] int ***sys_exists***(uint64_t pid);
+Devuelve 1 si existe el proceso con el ID 'pid' y 0 si no.
+
+[30] int *__*sys_pipeOpen*__(char *name);
+Dado un nombre, si no existe ese valor para un nombre de pipe, crea un pipe con el nombre proveído. Siempre abre el pipe luego, sea nuevo o ya existente.
+
+[31] uint64_t ***sys_pipeClose***(char *name);
+Cierra un pipe permanentemente dado su ID.
+
+[32] int ***sys_get_fdin***();
+Devuelve el file descriptor para el input del proceso actualmente en ejecución.
+
+[33] int ***sys_get_fdout***();
+Devuelve el file descriptor para el output del proceso actualmente en ejecución.
+
+[34] unsigned char ***sys_read***(int fd);
+Si fd es 0, devuelve un caracter ingresado por el usuario o 0 en su defecto, sino lee un caracter del pipe del file descriptor dado.
+
+[35] uint32_t ***sys_write***(int fd, char *str, uint8_t colorCode);
+Si fd es 1, escribe 'str' en la posicion actual de la pantalla con el color indicado en 'colorCode',  sino escribe 'str' en el pipe del file descriptor dado.
+
+[36] void ***sys_putChar***(char c);
+Escribe un caracter en la terminal o en un pipe según corresponda.
+
+[37] void ***sys_print***(char *rsi);
+Escribe una cadena de caracteres en la terminal o en un pipe según corresponda.
+
+[38] void ***sys_printWithColor***(char *str, uint8_t colorCode);
+Escribe una cadena de caracteres en la terminal con color definido por 'colorCode' o en un pipe según corresponda.
+
+[39] uint32_t ***sys_writeChar***(int fd, char c, uint8_t colorCode);
+Si fd es 1, ubica el caracter 'c' en la posicion actual de la pantalla con el color indicado en 'colorCode', sino escribe un caracter en el pipe del file descriptor dado.
