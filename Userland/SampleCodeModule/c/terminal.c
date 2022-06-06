@@ -2,8 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <terminal.h>
 
-void pipeTester();
-
 static char * commandsNames[COMMANDS_COUNT];
 static char * commandsDesc[COMMANDS_COUNT];
 static void (*commandsFn[COMMANDS_COUNT])(int argSize, char *args[]);
@@ -27,12 +25,11 @@ void startTerminal(){
 void startCommands(){
     commandBuilder("help", "Displays information about every command available.", &help, TRUE);
     commandBuilder("clear", "Clears the screen.", &clearScreen, TRUE);
-    //commandBuilder("inforeg", "Displays the information of all the registers, if saved before.", &getRegisters, TRUE);
     commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument", &printmem, TRUE);
     commandBuilder("time", "Displays the current time and date.", &printTime, TRUE);
+    // commandBuilder("inforeg", "Displays the information of all the registers, if saved before.", &getRegisters, TRUE);
     //commandBuilder("divzero", "Displays exception of division by zero.", &divZero, TRUE);
-    //commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode, TRUE);
-    commandBuilder("pipetester", "Basta de sufrimiento por favor", &pipeTester, FALSE);
+    commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode, TRUE);
     commandBuilder("phylo", "Philosophers problem", &phylo_main, FALSE);
     commandBuilder("mem", "Displays the current memory state.", &mem, TRUE);
     commandBuilder("ps", "Displays a list with all running processes.", &ps, TRUE);
@@ -102,28 +99,14 @@ void executeCommand(char *buffer){
                     for(int j=0; j< COMMANDS_COUNT; j++){
                         if(strcmp(arguments[2], commandsNames[j]) == 0){
                             int * pipeFds = sys_pipeOpen("pipe");
-                            // print("FDs: ");
-                            // printInt(pipeFds[0]);
-                            // print(" ");
-                            // printInt(pipeFds[1]);
-                            // print("\n");
 
                             if(pipeFds == NULL){
                                 print("Pipe opening error\n");
                                 return;
                             }
 
-                            // print("quiero ");
-                            // print(commandsNames[j]);
-                            // print(" -> ");
-                            // print(commandsNames[i]);
-                            // print("\n");
-
                             int fdsP1[2] = {0, pipeFds[0]};
                             int fdsP2[2] = {pipeFds[1], 1};
-
-                            // int fdsP1[2] = {pipeFds[1], 1};
-                            // int fdsP2[2] = {0, pipeFds[0]};
 
                             char *argv[] = {commandsNames[i]};
                             int pidP1 = sys_createProcess(commandsFn[i], 1, argv, fdsP1, FOREGROUND);
@@ -337,15 +320,4 @@ void filterBuitIn(int argSize, char *args[]){
     putChar('\n');
     print(buffer);
     putChar('\n');
-}
-
-void pipeTester(){
-    int * fds = sys_pipeOpen("abc");
-    sys_write(fds[0], "Hola Mundo\n");
-    char c = sys_read(fds[1]);
-    while (c != 0){
-        char toWrite[] = {c, 0};
-        sys_write(1, toWrite);
-        c = sys_read(fds[1]);
-    }
 }

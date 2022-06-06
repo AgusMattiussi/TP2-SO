@@ -10,7 +10,6 @@
 #define WAIT      100000000 
 #define SUPERWAIT WAIT*2 
 
-
 #define TOTAL_PROCESSES 3
 #define LOWEST 19 
 #define MEDIUM 10 
@@ -79,11 +78,8 @@ void test_prio(){
   
   print("Count p1: ");
   printInt(count1);
-
   print("\nCount p2: ");
   printInt(count2);
-  print("\n");
-
   print("\nCount p3: ");
   printInt(count3);
 

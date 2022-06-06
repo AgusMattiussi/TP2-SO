@@ -60,7 +60,6 @@ void phylo_main() {
     /* Mientras algun filosofo siga comiendo, se podran agregar o quitar filosofos
      * en tiempo de ejecucion */
     for (int i = 0; i < MAX_PHYL; i++){
-        //sys_wait(philoPids[i]);
         char c;
         while (sys_exists(philoPids[i])){
             c = getCharOrNull();
