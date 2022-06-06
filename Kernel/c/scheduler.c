@@ -98,7 +98,6 @@ static process * delProcess(processList * list, pid_t pid) {
      * NULL, pues ahora la lista quedara vacia */
     if(list->size == 1){
         list->first = NULL;
-        /* FIXME: Creo que es redundante, porque first == last == iterator */
         list->last = NULL;
         list->iterator = NULL;
     } else {
@@ -174,7 +173,6 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, int 
     
     /* Reservo espacio para el nuevo nodo de proceso. Notemos que new incluye
      * al proceso y al stack del mismo */ 
-    //TODO: Chequear si esto esta bien
     process * new = malloc(sizeof(process) + PROCESS_STACK_SIZE);
     if(new == NULL)
         return 0;
@@ -249,8 +247,6 @@ void initScheduler() {
         return;
     /* Se agrega el primer proceso manualmente */
     createFirstProcess();
-
-    //TODO: Chequear si no hay que sacarlo
     executingP = readyList->first;
 }
 
@@ -298,8 +294,7 @@ static pid_t initProcess(process *pNode, char *name, int * fd, mode processMode)
     pc->argv = NULL;
     
     /* rbp apunta a la base del stack */
-    //TODO: Es necesario restar sizeof(char *)?
-    pc->rbp = (uint64_t)pNode + PROCESS_STACK_SIZE + sizeof(process) - sizeof(char *);
+    pc->rbp = (uint64_t)pNode + PROCESS_STACK_SIZE + sizeof(process);
     /* Stack pointer apunta a la primera direccion libre del stack: despues del
      * stackFrame */
     pc->rsp = (uint64_t)(pc->rbp - sizeof(stackFrame));
@@ -374,8 +369,9 @@ static void exitPs(){
 }
 
 /* Devuelve el PID del proceso en ejecucion */
-//TODO: que pasa si executingP es NULL?
 pid_t getPid(){
+    if(executingP == NULL)
+        return 0;
     return executingP->pc.pid;
 }
 
@@ -384,8 +380,6 @@ pid_t getPid(){
 uint64_t kill(pid_t pid){
     if(pid < 1)
         return 0;
-
-    //int isExecuting = pid == executingP->pc.pid;
 
     /* Buscamos el proceso a eliminar en ambas listas */
     process * toKill;
@@ -397,7 +391,6 @@ uint64_t kill(pid_t pid){
 
     freeProcess(toKill);
 
-    // TODO: Hace falta?
     if(pid == executingP->pc.pid){
         executingP = NULL;
         timerInterrupt();
@@ -424,7 +417,6 @@ uint64_t block(pid_t pid){
     p->pc.state = BLOCKED;
     enqProcess(blockedList, p);
 
-    //TODO: Hace falta?
     if(pid == executingP->pc.pid){
         executingP->pc.ticketsLeft = 0;
         timerInterrupt();

@@ -211,7 +211,6 @@ void free(void *ptr) {
 }
 
 void mem(){
-    // TODO: terminar
     print("Memoria total: ");
     printDec(MAX_ALLOC);
     print(" bytes\n");
