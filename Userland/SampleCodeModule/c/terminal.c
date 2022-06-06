@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <terminal.h>
 
 
@@ -39,14 +41,12 @@ void startCommands(){
     commandBuilder("block", "Blocks a running process given its pid.", &block, TRUE);
     commandBuilder("kill", "Kills a running process given its pid.", &kill, TRUE);
     commandBuilder("sem", "Displays a list with all the semaphores.", &sem, TRUE);
-    // commandBuilder("funca", "Con suerte crea un nuevo proceso", &help); //Cambiar a funca
     commandBuilder("testmm", "Test for the memory manager.", &test_mm, FALSE);
     commandBuilder("testprocesses", "Test for the creation of processes.", &test_processes, FALSE);
     commandBuilder("testpriority", "Test for the priority of the scheduler.", &test_prio, FALSE);
     commandBuilder("testsynchro", "Test for the synchronization of processes (with SEM).", &testSyncWrapper, FALSE);
     commandBuilder("testnosynchro", "Test for the synchronization of processes (no SEM).", &testNoSyncWrapper, FALSE);
     commandBuilder("cat", "Displays the input on the screen.", &cat, FALSE);
-    // commandBuilder("cat", "Displays the input on the screen.", &cat2, TRUE);
     commandBuilder("wc", "Displays the quantity of lines of the input.", &wc, FALSE);
     commandBuilder("filter", "Filters the vowels of the input.", &filter, FALSE);
     commandBuilder("pipe", "Displays a list with all the pipes.", &pipe, TRUE);
@@ -250,21 +250,6 @@ void nice(int argSize, char *args[]){
 }
 void sem(){
     sys_sem();
-}
-
-void runCat(){
-    char *argv[] = {"cat"};
-	sys_createProcess(&cat, 1, argv, NULL, FOREGROUND);
-}
-
-void runWc(){
-    char *argv[] = {"wc"};
-	sys_createProcess(&wc, 1, argv, NULL, FOREGROUND);
-}
-
-void runFilter(){
-    char *argv[] = {"filter"};
-	sys_createProcess(&filter, 1, argv, NULL, FOREGROUND);
 }
 
 void pipe(){

@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,14 +21,8 @@ uint64_t test_mm(){
   uint32_t total;
   uint64_t max_memory = HEAP_MAX_SIZE;
 
-  // if (argc != 1) return -1;
-  // if ((max_memory = satoi(argv[0])) <= 0) return -1;
-  int j=0;
 
   while (1){
-    print("=== Vuelta ");
-    printInt(j++);
-    print(" ===\n");
     rq = 0;
     total = 0;
 

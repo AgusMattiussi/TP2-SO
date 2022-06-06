@@ -113,34 +113,33 @@ void nice(int argSize, char *args[]);
 void sem();
 
 /**
- * Función del comando 'cat'. Crea un proceso que imprime en pantalla el input tal como lo recibio.
-**/
-void runCat();
-
-/**
- * Función del comando 'wc'. Crea un proceso que imprime en pantalla la cantidad de lineas del input.
-**/
-void runWc();
-
-/**
- * Función del comando 'filter'. Crea un proceso que imprime en pantalla la cantidad de vocales del input.
-**/
-void runFilter();
-
-/**
  * Función del comando 'pipe'. Imprime una lista con todos los semaforos.
 **/
 void pipe();
 
-
+/**
+ * Función del comando 'testsynchro'
+**/
 void testSyncWrapper();
 
+/**
+ * Función del comando 'testnosynchro'
+**/
 void testNoSyncWrapper();
 
+/**
+ * Función del comando 'cat'. Crea un proceso que imprime en pantalla el input tal como lo recibio.
+**/
 void catBuitIn(int argSize, char *args[]);
 
+/**
+ * Función del comando 'wc'. Crea un proceso que imprime en pantalla la cantidad de lineas del input.
+**/
 void wcBuitIn(int argSize, char *args[]);
 
+/**
+ * Función del comando 'filter'. Crea un proceso que imprime en pantalla la cantidad de vocales del input.
+**/
 void filterBuitIn(int argSize, char *args[]);
 
 #endif

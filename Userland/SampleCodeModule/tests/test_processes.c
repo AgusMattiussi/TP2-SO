@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,21 +21,14 @@ int64_t test_processes(){
   uint64_t max_processes = MAX_PROCESSES;
   char * argvAux[] = {"endless_loop"};
 
-  // if (argc != 1) return -1;
-  // if ((max_processes = satoi(argv[0])) <= 0) return -1;
 
   p_rq p_rqs[max_processes];
-  int j = 0;
-  while (1){
-    print("=== Vuelta ");
-    printInt(j++);
-    print(" ===\n");
 
-    //sys_mem();
+  while (1){
+
 
     // Create max_processes processes
     for(rq = 0; rq < max_processes; rq++){
-      // p_rqs[rq].pid = my_create_process("endless_loop", 0, argvAux);
       p_rqs[rq].pid = sys_createProcess(&endless_loop, 1, argvAux, NULL, FOREGROUND);
       if (p_rqs[rq].pid == -1){
         print("test_processes: ERROR creating process\n");

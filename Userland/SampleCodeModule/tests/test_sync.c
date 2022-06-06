@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,8 +26,6 @@ void my_process_inc(int argc, char *argv[]){
   int8_t inc;
   int8_t use_sem;
 
-  /* if (argc != 3) 
-    return; */
 
   if ((n = satoi(argv[1])) <= 0){ 
     print("MALARDO 1\n");
@@ -39,16 +39,6 @@ void my_process_inc(int argc, char *argv[]){
     print("MALARDO 3\n");
     return;
   }
-
-  //printInt(sys_getPid());
-  //printWithColor(": A\n", RED_BLACK);
-
-  /* printInt(n);
-  print(" ");
-  printInt(inc + 1);
-  print(" ");
-  printInt(use_sem);
-  print("\n"); */
 
   if (use_sem){
     if (sys_sem_open(SEM_ID, 1) == 0){
@@ -76,9 +66,6 @@ void my_process_inc(int argc, char *argv[]){
 uint64_t test_sync(int mode){ //{n, use_sem, 0}
   uint64_t pids[2 * TOTAL_PAIR_PROCESSES];
 
-  //char * argvDec[] = {argv[0], "-1", argv[1], NULL};
-  //char * argvInc[] = {argv[0], "1", argv[1], NULL};
-
   char * argvDec[] = {"my_process_inc", "10", "-1", mode ? SYNCHRO : NO_SYNCHRO};
   char * argvInc[] = {"my_process_inc", "10", "1", mode ? SYNCHRO : NO_SYNCHRO};
 
@@ -86,9 +73,7 @@ uint64_t test_sync(int mode){ //{n, use_sem, 0}
 
   uint64_t i;
   for(i = 0; i < TOTAL_PAIR_PROCESSES; i++){
-    //pids[i] = my_create_process("my_process_inc", 3, argvDec);
     pids[i] = sys_createProcess(&my_process_inc, 4, argvDec, NULL, FOREGROUND);
-    // pids[i + TOTAL_PAIR_PROCESSES] = my_create_process("my_process_inc", 3, argvInc);
     pids[i + TOTAL_PAIR_PROCESSES] = sys_createProcess(&my_process_inc, 4, argvInc, NULL, FOREGROUND);
 
   }
