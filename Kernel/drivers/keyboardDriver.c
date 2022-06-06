@@ -69,12 +69,6 @@ unsigned char scancodeToAscii(int scancode){
 }
 
 unsigned char kb_getChar(){
-    /* if (bufferSize <= 0)
-        return 0;
-    
-    unsigned char key = buffer[0];
-    removeFirstChar();
-    return key; */
     if(readIdx == writeIdx)
         return 0;
     unsigned char key = buffer[readIdx];
@@ -82,12 +76,4 @@ unsigned char kb_getChar(){
     return key;
 }
 
-void removeFirstChar(){
-    /* if (bufferSize > 0){
-        // removemos el primero.
-        for (int i = 1; i < bufferSize; i++)
-            buffer[i - 1] = buffer[i];
-    }
-    bufferSize--; */
-}
 
