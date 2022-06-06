@@ -28,15 +28,15 @@ void my_process_inc(int argc, char *argv[]){
 
 
   if ((n = satoi(argv[1])) <= 0){ 
-    print("MALARDO 1\n");
+    print("Error argv[1]\n");
     return;
   }
   if ((inc = satoi(argv[2])) == 0) {
-    print("MALARDO 2\n");
+    print("Error argv[2]\n");
     return;
   }
   if ((use_sem = satoi(argv[3])) < 0){
-    print("MALARDO 3\n");
+    print("Error argv[3]\n");
     return;
   }
 
