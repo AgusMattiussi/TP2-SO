@@ -39,6 +39,7 @@ GLOBAL sys_putChar
 GLOBAL sys_print
 GLOBAL sys_printWithColor
 GLOBAL sys_writeChar
+GLOBAL sys_getProcessMode
 
 SECTION .text
 
@@ -172,7 +173,8 @@ sys_printWithColor:
 	syscall 38
 sys_writeChar:
 	syscall 39
-
+sys_getProcessMode:
+	syscall 40
 
 ;Fuente: https://www.felixcloutier.com/x86/ud
 sys_raiseInvOpCodeExc:

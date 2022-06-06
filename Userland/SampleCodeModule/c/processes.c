@@ -3,7 +3,7 @@
 #include <processes.h>
 
 int isVowel(char c){
-    return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
+    return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' || c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U';
 }
 
 void sleep(int argSize, char *args[]){
@@ -33,7 +33,7 @@ void cat(){
     while(c != 0){
         char toWrite[] = {c, 0};
         write(sys_get_fdout(), toWrite);
-        
+        c = read(sys_get_fdin());
     }
 }
 
@@ -45,7 +45,6 @@ void wc(){
             lines++;
          c = read(sys_get_fdin());
     }
-    putChar('\n');
     print("Lines: ");
     printInt(lines);
     putChar('\n');

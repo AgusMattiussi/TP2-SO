@@ -176,7 +176,7 @@ void * malloc(size_t request) {
       list_push(&buckets[bucket], (list_t *)ptr_for_node(i + 1, bucket)); // ES EL HIJO DERECHO
     }
 
-    freeBytesRemaining -= bucket;
+    freeBytesRemaining -= (1 << (BUCKET_COUNT + 1 - bucket));
 
     *(size_t *)ptr = request;
     return ptr + HEADER_SIZE;
@@ -206,12 +206,11 @@ void free(void *ptr) {
     i = PARENT(i);
     bucket--;
   }
-  freeBytesRemaining += bucket;
+  freeBytesRemaining += (1 << (BUCKET_COUNT + 1 - bucket));
   list_push(&buckets[bucket], (list_t *)ptr_for_node(i, bucket));
 }
 
 void mem(){
-    // TODO: terminar
     print("Memoria total: ");
     printDec(MAX_ALLOC);
     print(" bytes\n");

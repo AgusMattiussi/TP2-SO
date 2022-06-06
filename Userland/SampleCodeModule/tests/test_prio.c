@@ -6,15 +6,14 @@
 #include <test_util.h>
 #include <syscall.h>
 
-#define MINOR_WAIT 1000000 // TODO: Change this value to prevent a process from flooding the screen
-#define WAIT      100000000 // TODO: Change this value to make the wait long enough to see theese processes beeing run at least twice
-#define SUPERWAIT WAIT*2 // TODO: Change this value to make the wait long enough to see theese processes beeing run at least twice
-
+#define MINOR_WAIT 1000000 
+#define WAIT      100000000 
+#define SUPERWAIT WAIT*2 
 
 #define TOTAL_PROCESSES 3
-#define LOWEST 19
-#define MEDIUM 10
-#define HIGHEST 0
+#define LOWEST 19 
+#define MEDIUM 10 
+#define HIGHEST 0 
 
 int count1=0;
 int count2=0;
@@ -79,11 +78,8 @@ void test_prio(){
   
   print("Count p1: ");
   printInt(count1);
-
   print("\nCount p2: ");
   printInt(count2);
-  print("\n");
-
   print("\nCount p3: ");
   printInt(count3);
 

@@ -60,7 +60,6 @@ void phylo_main() {
     /* Mientras algun filosofo siga comiendo, se podran agregar o quitar filosofos
      * en tiempo de ejecucion */
     for (int i = 0; i < MAX_PHYL; i++){
-        //sys_wait(philoPids[i]);
         char c;
         while (sys_exists(philoPids[i])){
             c = getCharOrNull();
@@ -136,17 +135,19 @@ static void addPhil(){
 static void removePhil(){
     if(philoCount == INITIAL_PHYL)
         return;
-    //TODO: Hace falta hacer wait de room?
+
     sys_killPs(philoPids[philoCount]);
     philoPids[philoCount] = 0;
-    //TODO: getWaitingPs
     philoCount--;
 }
 
 static void createPhilProcess(){
     char id[] = {philoCount+'0', 0};
     char * philoArgv[] = {"philosopher", id};
-    philoPids[philoCount] = sys_createProcess(&philosopher, 2, philoArgv, NULL, FOREGROUND);
+
+    int processMode = sys_getProcessMode();
+
+    philoPids[philoCount] = sys_createProcess(&philosopher, 2, philoArgv, NULL, processMode);
 
     if(philoPids[philoCount] == 0){
         printWithColor("Error creando filosofos\n", RED_BLACK);
