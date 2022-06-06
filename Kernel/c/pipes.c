@@ -13,7 +13,7 @@ static int lastFdGenerated = 2;
 
 void initPipes(){
     if(semOpen(handlerSemName, 1) == FAILED){
-        ncPrint("ERROR: failed to open semaphore in 'initPipes()'\n");
+        print("ERROR: failed to open semaphore in 'initPipes()'\n");
         return;
     }
     pipesList = malloc(sizeof(pipeList));
@@ -87,7 +87,7 @@ static int * createPipe(char *name, int id){
     int sw = semOpen(wSem, 1);
 
     if(sr == FAILED || sw == FAILED){
-        ncPrint("Error abriendo semaforos en createPipe\n");
+        print("Error abriendo semaforos en createPipe\n");
         return NULL;
     }
 
@@ -114,7 +114,7 @@ static TPipe * getPipe(char * name){
 
 int * pipeOpen(char *name){
     if (semWait(handlerSemName) == FAILED){
-        ncPrint("Error semWait en pipeOpen\n");
+        print("Error semWait en pipeOpen\n");
         return FAILED;
     }
 
@@ -123,7 +123,7 @@ int * pipeOpen(char *name){
     if (toOpen == NULL){
         fds = createPipe(name, pipesList->size+1);
         if(fds == NULL){
-            ncPrint("Error creando pipe en pipeOpen\n");
+            print("Error creando pipe en pipeOpen\n");
         }
     } else{
         toOpen->numOfProcessesAttached++;
@@ -136,15 +136,15 @@ int * pipeOpen(char *name){
 
 uint64_t pipeClose(char * pipeName){
     if (semWait(handlerSemName) == FAILED){
-        ncPrint("Error semWait en pipeClose\n");
+        print("Error semWait en pipeClose\n");
         return FAILED;
     }
 
     TPipe * toClose = getPipe(pipeName);
     if(toClose == NULL){
-        ncPrint("The pipe "); 
-        ncPrint(pipeName);
-        ncPrint("does not exist\n");
+        print("The pipe "); 
+        print(pipeName);
+        print("does not exist\n");
         return FAILED;
     }
 
@@ -152,15 +152,14 @@ uint64_t pipeClose(char * pipeName){
     uint64_t rw = semClose(toClose->writeSemName);
 
     if(rs == FAILED || rw == FAILED){
-        ncPrint("Error semClose en pipeClose\n");
+        print("Error semClose en pipeClose\n");
         return FAILED;
     }
 
     deqPipe(toClose);
     free(toClose);
-    // semPost(handlerSemName);
     if (semPost(handlerSemName) == FAILED){
-        ncPrint("Error semPost en pipeClose\n");
+        print("Error semPost en pipeClose\n");
         return FAILED;
     }
     return SUCCESS;
@@ -170,9 +169,9 @@ uint32_t writePipe(char * pipeName, char *str){
     TPipe * toWrite = getPipe(pipeName);
     int written = 0;
     if(toWrite == NULL){
-        ncPrint("The pipe "); 
-        ncPrint(pipeName);
-        ncPrint("does not exist\n");
+        print("The pipe "); 
+        print(pipeName);
+        print("does not exist\n");
         return FAILED;
     }
 
@@ -187,7 +186,7 @@ uint32_t writePipe(char * pipeName, char *str){
 
 uint64_t writeCharInPipe(TPipe * pipe, char c){
     if(semWait(pipe->writeSemName) == FAILED){
-        ncPrint("Error semWait en writeCharInPipe\n");
+        print("Error semWait en writeCharInPipe\n");
         return FAILED;
     }
 
@@ -195,7 +194,7 @@ uint64_t writeCharInPipe(TPipe * pipe, char c){
     pipe->writeIndex++;
 
     if(semPost(pipe->writeSemName) == FAILED){
-        ncPrint("Error semPost en writeCharInPipe\n");
+        print("Error semPost en writeCharInPipe\n");
         return FAILED;
     }
     semPost(pipe->readSemName);
@@ -209,7 +208,7 @@ uint64_t writeCharInPipeWithFd(int fd, char c){
         return FAILED;
 
     if(semWait(toWrite->writeSemName) == FAILED){
-        ncPrint("Error semWait en writeCharInPipe\n");
+        print("Error semWait en writeCharInPipe\n");
         return FAILED;
     }
 
@@ -217,7 +216,7 @@ uint64_t writeCharInPipeWithFd(int fd, char c){
     toWrite->writeIndex++;
 
     if(semPost(toWrite->writeSemName) == FAILED){
-        ncPrint("Error semPost en writeCharInPipe\n");
+        print("Error semPost en writeCharInPipe\n");
         return FAILED;
     }
     semPost(toWrite->readSemName);
@@ -231,9 +230,9 @@ uint32_t writeInPipeWithFd(int fd, char *str){
     TPipe * toWrite = getPipeWithFd(fd, FDIN);
     int written = 0;
     if(toWrite == NULL){
-        /* ncPrint("The pipe "); 
-        ncPrint(pipeName);
-        ncPrint("does not exist\n"); */
+        print("The pipe "); 
+        print(toWrite->name);
+        print("does not exist\n");
         return FAILED;
     }
 
@@ -243,8 +242,6 @@ uint32_t writeInPipeWithFd(int fd, char *str){
         written++;
     }
     toWrite->buffer[toWrite->writeIndex % BUFFER_SIZE] = 0;
-    /* toWrite->buffer[written] = 0;
-    ncPrintWithColor(toWrite->buffer, CYAN_BLACK); */
 
     return written;
 }
@@ -252,15 +249,13 @@ uint32_t writeInPipeWithFd(int fd, char *str){
 char readPipe(char * pipeName){
     TPipe * toRead = getPipe(pipeName);
     if(toRead == NULL){
-        ncPrint("The pipe "); 
-        ncPrint(pipeName);
-        ncPrint("does not exist\n");
+        print("The pipe "); 
+        print(pipeName);
+        print("does not exist\n");
         return FAILED;
     }
-    //ncPrintWithColor("LLEGUE ACA\n", RED_BLACK);
     if(semWait(toRead->readSemName) == FAILED){
-        ncPrint("Error semWait en readPipe\n");
-        //ncPrintWithColor("LLEGUE ACA2\n", RED_BLACK);
+        print("Error semWait en readPipe\n");
         return FAILED;
     }
 
@@ -268,7 +263,7 @@ char readPipe(char * pipeName){
     toRead->readIndex++;
 
     if(semPost(toRead->readSemName) == FAILED){
-        ncPrint("Error semPost en readPipe\n");
+        print("Error semPost en readPipe\n");
         return FAILED;
     }
 
@@ -281,7 +276,7 @@ char readPipeWithFd(int fd){
         return FAILED;
 
     if(semWait(toRead->readSemName) == FAILED){
-        ncPrint("Error semWait en readPipe\n");
+        print("Error semWait en readPipe\n");
         return FAILED;
     }
 
@@ -289,7 +284,7 @@ char readPipeWithFd(int fd){
     toRead->readIndex++;
 
     if(semPost(toRead->readSemName) == FAILED){
-        ncPrint("Error semPost en readPipe\n");
+        print("Error semPost en readPipe\n");
         return FAILED;
     }
 
@@ -318,15 +313,19 @@ void printListOfPipes(){
     TPipe * toPrint = pipesList->first;
 
     if(toPrint == NULL){
-        ncPrint("No pipes to show\n");
+        print("No pipes to show\n");
         return;
     }
-    ncPrintWithColor("NAME\n", ORANGE_BLACK);
+    printWithColor("NAME        FDIN      FDOUT\n", ORANGE_BLACK);
     for(int i = 0; i < pipesList->size; i++){
-        ncPrint(toPrint->name);
-
+        print(toPrint->name);
+        print("        ");
+        printDec(toPrint->fds[0]);
+        print("          ");
+        printDec(toPrint->fds[1]);
+        print("          ");
         toPrint = toPrint->next;
-        ncPrint("\n");
+        putChar('\n');
     }
 }
 

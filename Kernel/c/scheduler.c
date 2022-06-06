@@ -53,11 +53,9 @@ uint64_t scheduler(uint64_t prevRsp){
         return executingP->pc.rsp;
     }
 
-    //ncPrint("Scheduler\n");
     executingP->pc.ticketsLeft = initialTickets(getPriority(executingP));
     executingP = getNext(readyList);
 
-    //ncPrintWithColor(executingP->pc.name, executingP->pc.name[0] == 'T' ? RED_BLACK : GREEN_BLACK);
     return executingP->pc.rsp;
 }
 
@@ -454,13 +452,12 @@ uint64_t unblock(pid_t pid){
 
 /* Imprime cada proceso junto con su informacion */
 void printAllProcessesInfo(){
-    // ncPrint("Lista de procesos\n");
     if(readyList->size == 0 && blockedList->size == 0){
-        ncPrint("No hay ningun proceso ejecutandose\n");
+        print("No processes to show\n");
         return;
     }
     
-    print("PID    NAME            RSP      RBP      STATE    PRIORITY\n");
+    printWithColor("PID    NAME            RSP      RBP      STATE    PRIORITY\n", ORANGE_BLACK);
     printProcessListInfo(readyList);
     printProcessListInfo(blockedList);
 }
@@ -476,51 +473,24 @@ static void printProcessListInfo(processList * list) {
     }
 }
 
-/* static void printProcessInfo(process * p){
-    ncPrintDec(getPidOf(p));
-    ncPrint(TAB);
+static void printProcessInfo(process * p){
+    printDec(getPidOf(p));
+    print(TAB);
 
-    ncPrint(p->pc.name);
+    print(p->pc.name);
     int length = strlen(p->pc.name);
     if(length < PROCESS_NAME_PRINT_SIZE){
         for(int i=0; i < PROCESS_NAME_PRINT_SIZE - length; i++)
-            ncPrint(" ");
+            putChar(' ');
     }
-    ncPrint(TAB);
-
-    ncPrintHex(p->pc.rsp);
-    ncPrint(TAB);
-
-    ncPrintHex(p->pc.rbp);
-    ncPrint(TAB);
-
-    switch(p->pc.state) {
-        case READY: 
-            ncPrint("READY");
-            break;
-        case BLOCKED:
-            ncPrint("BLOCKED");
-            break;
-        default:
-            ncPrint("?????");
-    }
-    ncPrint(TAB);
-    ncPrint(TAB);
-    printPriority(getPriority(p));
-
-    ncPrint("\n");
-} */
-
-static void printProcessInfo(process * p){
-
-    print(p->pc.name);
-    /* int length = strlen(p->pc.name);
-    if(length < PROCESS_NAME_PRINT_SIZE){
-        for(int i=0; i < PROCESS_NAME_PRINT_SIZE - length; i++)
-            ncPrint(" ");
-    } */
     print(TAB);
-    
+
+    printHex(p->pc.rsp);
+    print(TAB);
+
+    printHex(p->pc.rbp);
+    print(TAB);
+
     switch(p->pc.state) {
         case READY: 
             print("READY");
@@ -531,21 +501,24 @@ static void printProcessInfo(process * p){
         default:
             print("?????");
     }
+    print(TAB);
+    print(TAB);
+    printPriority(getPriority(p));
 
-    print("\n");
+    putChar('\n');
 }
 
 static void printPriority(uint8_t priority){
     char c1 = (priority/10) + '0';
     char c2 = (priority%10) + '0';
 
-    ncPrintChar(c1);
-    ncPrintChar(c2);
+    putChar(c1);
+    putChar(c2);
 }
 
 void nice(pid_t pid, uint8_t newPriority){
     if(!VALID_PRIORITY(newPriority)){
-        ncPrint("La prioridad debe ser un numero entre 0 y 19\n");
+        print("La prioridad debe ser un numero entre 0 y 19\n");
         return;
     }
     if(getPidOf(executingP) == pid){
@@ -563,9 +536,9 @@ void nice(pid_t pid, uint8_t newPriority){
         process->pc.priority = newPriority;
         return;
     } else{
-        ncPrint("No existe un proceso con PID ");
-        ncPrintDec(pid);
-        ncPrintChar('\n');
+        print("No existe un proceso con PID ");
+        printDec(pid);
+        putChar('\n');
     }
 }
 

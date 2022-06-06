@@ -10,7 +10,6 @@ static pid_t deqPr(TSem * sem);
 static TSem * getSemAndPrevious(char * semName, TSem ** prev);
 static TSem * getSem(char * name);
 static TSem * getSemAndPrevious(char * semName, TSem ** prev);
-// static int semExists(char * name);
 static void freeSem(TSem * sem);
 
 static uint64_t semLock = 0;
@@ -55,37 +54,6 @@ static void enqSem(TSem * sem) {
 
     semaphoresList->size++;
 }
-
-/* static TSem * delSem(char * semName) {
-
-    if(semaphoresList == NULL || semaphoresList->size == 0)
-        return NULL;
-
-    TSem * toDel = semaphoresList->first;
-    for (int i = 0; i < semaphoresList->size; i++){
-        if(strcmp(toDel->name, semName) == 0)
-            break;
-        toDel = toDel->next;
-    }
-    
-    if(toDel == NULL)
-        return NULL
-
-
-    if(semaphoresList->size == 1){
-        semaphoresList->first = NULL;
-        semaphoresList->last = NULL;
-    } else {
-        if(semaphoresList->first == toDel)
-            semaphoresList->first = toDel->next;
-        else if(semaphoresList->last == toDel)
-            semaphoresList->last = 
-    }
-
-    toDel->next = NULL;
-    semaphoresList->size--;
-    return deq;
-} */
 
 static TSem * delSem(char * semName) {
 
@@ -191,7 +159,7 @@ uint64_t semOpen(char *name, int initialValue){
     if(toOpen == NULL){
         if(createSemaphore(name, initialValue) == FAILED){
             _unlock(&semLock);
-            ncPrintWithColor("Error al crear semaforo\n", RED_BLACK);
+            printWithColor("Error al crear semaforo\n", RED_BLACK);
             return FAILED;
         }
     } else {
@@ -205,21 +173,15 @@ uint64_t semOpen(char *name, int initialValue){
 uint64_t semClose(char * semName){
     _xchgLock(&semLock);
 
-    /* ncPrintWithColor("Cerrando el sem: ", ORANGE_BLACK);
-    ncPrint(semName);
-    ncNewline(); */
 
     TSem * toClose = getSem(semName);
     if(toClose == NULL){
-        ncPrint("The Semaphore "); 
-        ncPrint(semName);
-        ncPrint("does not exist\n");
+        print("The Semaphore "); 
+        print(semName);
+        print("does not exist\n");
         return FAILED;
     }
 
-    // ncPrint("Cerrando sem "); 
-    // ncPrint(semName);
-    // ncPrint("\n");
 
     toClose->openedBy--;
     if(toClose->openedBy == 0){
@@ -251,9 +213,9 @@ uint64_t semWait(char * semName){
     TSem * toWait = getSem(semName);
 
     if(toWait == NULL){
-        ncPrint("WAIT: No existe el semaforo ");
-        ncPrint(semName);
-        ncNewline();
+        print("WAIT: No existe el semaforo ");
+        print(semName);
+        putChar('\n');
         _unlock(&semLock);
         return FAILED;
     }
@@ -283,9 +245,9 @@ uint64_t semPost(char * semName){
     TSem * toPost = getSem(semName);
 
     if(toPost == NULL){
-        ncPrint("POST: No existe el semaforo ");
-        ncPrint(semName);
-        ncNewline();
+        print("POST: No existe el semaforo ");
+        print(semName);
+        putChar('\n');
         _unlock(&semLock);
         return FAILED;
     }
@@ -298,14 +260,13 @@ uint64_t semPost(char * semName){
     int pid = deqPr(toPost);
     if(pid == FAILED){
         _unlock(&toPost->lock);
-        //ncPrint("No hay procesos para desbloquear\n");
         return SUCCESS;
     }
 
     _unlock(&toPost->lock);
 
     if(unblock(pid) == 0){
-        ncPrintWithColor("MALARDO\n", RED_BLACK);
+        printWithColor("MALARDO\n", RED_BLACK);
             return FAILED;}
 
     return SUCCESS;
@@ -315,30 +276,29 @@ void printListofSemaphores(){
     TSem * toPrint = semaphoresList->first;
 
     if(toPrint == NULL){
-        ncPrint("No semaphores to show\n");
+        print("No semaphores to show\n");
         return;
     }
 
-    ncPrintWithColor("NAME              VALUE     BLOCKED PROCESSES\n", ORANGE_BLACK);
+    printWithColor("NAME              VALUE     BLOCKED PROCESSES\n", ORANGE_BLACK);
 
     for(int i = 0; i < semaphoresList->size; i++){
-        ncPrint(toPrint->name);
-        ncPrint("        ");
-        ncPrintDec(toPrint->value);
-        ncPrint("      ");
+        print(toPrint->name);
+        print("        ");
+        printDec(toPrint->value);
+        print("            ");
 
         pNode * process = toPrint->firstProcess;
         for(int j = 0; j < toPrint->waitingProcesses; j++){
             if(process == NULL)
-                ncPrintWithColor("WTF", RED_BLACK);
+                printWithColor("WTF", RED_BLACK);
             else
-                ncPrintDec(process->pid);
-            ncPrint("   ");
+                printDec(process->pid);
+            print("   ");
             process = process->next;
         }
 
         toPrint = toPrint->next;
-        ncPrint("\n");
+        putChar('\n');
     }
-
 }

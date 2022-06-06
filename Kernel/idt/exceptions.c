@@ -22,11 +22,11 @@ void exceptionDispatcher(int exception, uint64_t *registers) {
 }
 
 void zeroDivision() {
-	ncPrint("ERROR DIVIDE BY 0 EXCEPTION\n");
+	print("ERROR DIVIDE BY 0 EXCEPTION\n");
 }
 
 void invalidOpcode() {
-	ncPrint("ERROR INVALID OPCODE EXCEPTION\n");
+	print("ERROR INVALID OPCODE EXCEPTION\n");
 }
 
 void saveInitialState(uint64_t IP, uint64_t SP){

@@ -16,6 +16,20 @@ void putCharWithColor(char c, uint8_t colorCode){
     writeCharHandler(getFdOut(), c, colorCode);
 }
 
+void printDec(uint64_t value){
+	printBase(value, 10);
+}
+
+void printHex(uint64_t value){
+	printBase(value, 16);
+}
+
+void printBase(uint64_t value, uint32_t base){
+    char buffer[64] = {'0'};
+    uintToBase(value, buffer, base);
+    print(buffer);
+}
+
 uint32_t readHandler(int fd){
     if(fd == STDIN)
         return kb_getChar();

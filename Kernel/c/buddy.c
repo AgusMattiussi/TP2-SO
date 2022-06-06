@@ -212,16 +212,16 @@ void free(void *ptr) {
 
 void mem(){
     // TODO: terminar
-    ncPrint("Memoria total: ");
-    ncPrintDec(MAX_ALLOC);
-    ncPrint(" bytes\n");
+    print("Memoria total: ");
+    printDec(MAX_ALLOC);
+    print(" bytes\n");
 
-    ncPrint("Memoria en uso: ");
-    ncPrintDec(MAX_ALLOC - freeBytesRemaining);
-    ncPrint(" bytes\n");
+    print("Memoria en uso: ");
+    printDec(MAX_ALLOC - freeBytesRemaining);
+    print(" bytes\n");
 
-    ncPrint("Memoria libre: ");
-    ncPrintDec(freeBytesRemaining);
-    ncPrint(" bytes\n");
+    print("Memoria libre: ");
+    printDec(freeBytesRemaining);
+    print(" bytes\n");
 }
 #endif

@@ -232,17 +232,17 @@ size_t getFreeHeapSize() {
 
 void mem(){
 
-    ncPrint("Memoria total: ");
-    ncPrintDec(HEAP_MAX_SIZE);
-    ncPrint(" bytes\n");
+    print("Memoria total: ");
+    printDec(HEAP_MAX_SIZE);
+    print(" bytes\n");
 
-    ncPrint("Memoria en uso: ");
-    ncPrintDec(HEAP_MAX_SIZE - freeBytesRemaining);
-    ncPrint(" bytes\n");
+    print("Memoria en uso: ");
+    printDec(HEAP_MAX_SIZE - freeBytesRemaining);
+    print(" bytes\n");
 
-    ncPrint("Memoria libre: ");
-    ncPrintDec(freeBytesRemaining);
-    ncPrint(" bytes\n");
+    print("Memoria libre: ");
+    printDec(freeBytesRemaining);
+    print(" bytes\n");
 }
 #endif
 
