@@ -104,27 +104,33 @@ void executeCommand(char *buffer){
                         if(strcmp(arguments[2], commandsNames[j]) == 0){
                             //TODO: pipes 
                             // print("Todo Ok1\n");
-                            int * fd = sys_pipeOpen("pipe");
+                            int * pipeFds = sys_pipeOpen("pipe");
                             print("FDs: ");
-                            printInt(fd[0]);
+                            printInt(pipeFds[0]);
                             print(" ");
-                            printInt(fd[1]);
+                            printInt(pipeFds[1]);
                             print("\n");
 
                             // print("Todo Ok2\n");
-                            /* if(fd == 0){
+                            if(pipeFds == NULL){
                                 print("Pipe opening error\n");
                                 return;
                             }
-                            int fds[2] = {fd, 0};
-                            char *argv[] = {commandsNames[i]};
-                            int p1 = sys_createProcess(commandsFn[i], 1, argv, fds, BACKGROUND);
-                            fds[0] = 0;
-                            fds[1] = fd;
-                            argv[0] = commandsNames[j];
-                            sys_createProcess(commandsFn[j], 1, argv, fds, FOREGROUND);
-                            sys_killPs(p1);
-                            sys_pipeClose("pipe"); */
+                            print("quiero ");
+                            print(commandsNames[j]);
+                            print(" -> ");
+                            print(commandsNames[i]);
+                            int fdsP1[2] = {pipeFds[0], 0};
+                            int fdsP2[2] = {1, pipeFds[1]};
+                            char *argv[] = {commandsNames[j]};
+                            int pidP2 = sys_createProcess(commandsFn[j], 1, argv, fdsP2, FOREGROUND);
+                            argv[0] = commandsNames[i];
+                            int pidP1 = sys_createProcess(commandsFn[i], 1, argv, fdsP1, FOREGROUND);
+                            //ps();
+                            pipe();
+                            sys_wait(pidP1);
+                            sys_wait(pidP2);
+                            sys_pipeClose("pipe");
                             // print("Todo Ok\n");
                         }
                     }         

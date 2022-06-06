@@ -27,10 +27,15 @@ void loop(){
 }
 
 void cat(){
-    char c;
+    /* char c;
     while ((c = getChar()) != 0)
         putChar(c);
-    putChar('\n');
+    putChar('\n'); */
+    char c = read(sys_get_fdin());
+    while(c != '\n'){
+        char toWrite[] = {c, 'x', 0};
+        write(sys_get_fdout(), toWrite);
+    }
 }
 
 void wc(){

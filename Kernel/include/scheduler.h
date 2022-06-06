@@ -6,6 +6,8 @@
 #include <memoryManager.h>
 #include <strings.h>
 #include <naiveConsole.h>
+#include <interrupts.h>
+#include <ioManager.h>
 
 #define NAME_MAX_SIZE 25
 #define PROCESS_STACK_SIZE 0x1000

@@ -29,11 +29,11 @@ void putChar(char c){
 }
 
 void print(char * string){
-    while (*string != 0){
+    /* while (*string != 0){
         putChar(*string);
         string++;
-    }  
-    //write(sys_get_fdout(), string); 
+    }   */
+    write(sys_get_fdout(), string); 
 }
 
 void printWithColor(char * string, unsigned char colorCode){

@@ -8,4 +8,7 @@
 #define STDIN 0
 #define STDOUT 1
 
+uint32_t readHandler(int fd);
+uint32_t writeHandler(int fd, char * str);
+
 #endif

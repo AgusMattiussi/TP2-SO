@@ -84,6 +84,10 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 			return getFdIn();
 		case 33:
 			return getFdOut();
+		case 34:
+			return readHandler((int)rsi);
+		case 35:
+			return writeHandler((int)rsi, (char *)rdx);
 		
 	}
     // Por default devuelve 0

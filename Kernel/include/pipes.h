@@ -24,8 +24,8 @@ typedef struct TPipe{
     char buffer[BUFFER_SIZE];
     uint64_t readIndex;
     uint64_t writeIndex;
-    char readSemName[NAME_MAX_SIZE]; 
-    char writeSemName[NAME_MAX_SIZE]; 
+    char readSemName[PIPE_NAME_SIZE]; 
+    char writeSemName[PIPE_NAME_SIZE]; 
     int numOfProcessesAttached; // cantidad de procesos que estan usando el pipe
 } TPipe;
 

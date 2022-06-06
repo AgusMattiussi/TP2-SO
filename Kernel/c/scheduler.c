@@ -1,5 +1,5 @@
 #include <scheduler.h>
-#include <interrupts.h>
+
 
 static int firstProcess(int argc, char **argv);
 static pid_t initProcess(process *pNode, char *name, uint32_t * fd, mode processMode);
@@ -321,8 +321,8 @@ static pid_t initProcess(process *pNode, char *name, uint32_t * fd, mode process
 
     pc->mode = processMode;
     if(fd == NULL){
-        pc->fdIn = 0;
-        pc->fdOut = 0;
+        pc->fdIn = STDIN;
+        pc->fdOut = STDOUT;
     } else {
         pc->fdIn = fd[0];
         pc->fdOut = fd[1];
@@ -457,7 +457,7 @@ void printAllProcessesInfo(){
         return;
     }
     
-    ncPrintWithColor("PID    NAME            RSP      RBP      STATE    PRIORITY\n", ORANGE_BLACK);
+    writeHandler(executingP->pc.fdOut,"PID    NAME            RSP      RBP      STATE    PRIORITY\n");
     printProcessListInfo(readyList);
     printProcessListInfo(blockedList);
 }
@@ -473,7 +473,7 @@ static void printProcessListInfo(processList * list) {
     }
 }
 
-static void printProcessInfo(process * p){
+/* static void printProcessInfo(process * p){
     ncPrintDec(getPidOf(p));
     ncPrint(TAB);
 
@@ -506,6 +506,30 @@ static void printProcessInfo(process * p){
     printPriority(getPriority(p));
 
     ncPrint("\n");
+} */
+
+static void printProcessInfo(process * p){
+
+    writeHandler(executingP->pc.fdOut, p->pc.name);
+    /* int length = strlen(p->pc.name);
+    if(length < PROCESS_NAME_PRINT_SIZE){
+        for(int i=0; i < PROCESS_NAME_PRINT_SIZE - length; i++)
+            ncPrint(" ");
+    } */
+    writeHandler(executingP->pc.fdOut, TAB);
+    
+    switch(p->pc.state) {
+        case READY: 
+            writeHandler(executingP->pc.fdOut,"READY");
+            break;
+        case BLOCKED:
+            writeHandler(executingP->pc.fdOut,"BLOCKED");
+            break;
+        default:
+            writeHandler(executingP->pc.fdOut,"?????");
+    }
+
+    writeHandler(executingP->pc.fdOut,"\n");
 }
 
 static void printPriority(uint8_t priority){
