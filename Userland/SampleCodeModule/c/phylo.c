@@ -2,8 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <phylo.h>
 
-//TODO: Static?
-void philosopher(int argc, char ** argv);
+static void philosopher(int argc, char ** argv);
 static void eat(int id);
 static void leave(int id);
 static void printStatus();
@@ -11,7 +10,7 @@ static void addPhil();
 static void removePhil();
 static void createPhilProcess();
 
-static int philoCount = 0;
+int philoCount = 0;
 static char forks[MAX_PHYL][3];
 static char status[MAX_PHYL];
 static unsigned long long philoPids[MAX_PHYL] = {0};
@@ -76,6 +75,8 @@ void phylo_main() {
     for (int i = 0; i < MAX_PHYL; i++)
         sys_sem_close(forks[i]);
     sys_sem_close(ROOM_SEM_NAME);
+
+    philoCount = 0;
 }
 
 void philosopher(int argc, char ** argv){
