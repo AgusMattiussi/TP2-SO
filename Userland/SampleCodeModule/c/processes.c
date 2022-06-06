@@ -32,9 +32,10 @@ void cat(){
         putChar(c);
     putChar('\n'); */
     char c = read(sys_get_fdin());
-    while(c != '\n'){
-        char toWrite[] = {c, 'x', 0};
+    while(c != 0){
+        char toWrite[] = {c, 0};
         write(sys_get_fdout(), toWrite);
+        c = read(sys_get_fdin());
     }
 }
 

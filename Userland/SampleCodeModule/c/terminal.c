@@ -120,16 +120,19 @@ void executeCommand(char *buffer){
                             print(commandsNames[j]);
                             print(" -> ");
                             print(commandsNames[i]);
-                            int fdsP1[2] = {pipeFds[0], 0};
-                            int fdsP2[2] = {1, pipeFds[1]};
+                            print("\n");
+                            int fdsP1[2] = {pipeFds[1], 1};
+                            int fdsP2[2] = {0, pipeFds[0]};
                             char *argv[] = {commandsNames[j]};
                             int pidP2 = sys_createProcess(commandsFn[j], 1, argv, fdsP2, FOREGROUND);
                             argv[0] = commandsNames[i];
                             int pidP1 = sys_createProcess(commandsFn[i], 1, argv, fdsP1, FOREGROUND);
                             //ps();
                             pipe();
-                            sys_wait(pidP1);
                             sys_wait(pidP2);
+                            print("Termino P2\n");
+                            sys_wait(pidP1);
+                            print("Termino P1\n");
                             sys_pipeClose("pipe");
                             // print("Todo Ok\n");
                         }
@@ -314,8 +317,8 @@ void wcBuitIn(int argSize, char *args[]){
 
 void filterBuitIn(int argSize, char *args[]){
     char c;
-    while((c = getChar()) != '\n')
-        if(isVowel(c))
+    while((c = getChar()) != 'p')
+        if(!isVowel(c))
             putChar(c);
     putChar('\n');
 }
