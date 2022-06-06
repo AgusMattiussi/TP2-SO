@@ -100,7 +100,7 @@ void nice(pid_t pid, uint8_t newPriority);
 void initScheduler();
 uint64_t scheduler(uint64_t prevRsp);
 void createFirstProcess();
-pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint32_t * fd, mode processMode);
+pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, int * fd, mode processMode);
 void yield();
 int exists(pid_t pid);
 void wait(pid_t pid);

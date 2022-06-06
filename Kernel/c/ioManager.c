@@ -31,12 +31,16 @@ void printBase(uint64_t value, uint32_t base){
 }
 
 uint32_t readHandler(int fd){
+    if(fd < 0)
+        return 0;
     if(fd == STDIN)
         return kb_getChar();
     return readPipeWithFd(fd);  
 }
 
 uint32_t writeStrHandler(int fd, char * str, uint8_t colorCode){
+    if(fd < 0)
+        return 0;
     if(fd == STDOUT){
         ncPrintWithColor(str, colorCode);
         return strlen(str);
@@ -46,6 +50,8 @@ uint32_t writeStrHandler(int fd, char * str, uint8_t colorCode){
 }
 
 uint32_t writeCharHandler(int fd, char c, uint8_t colorCode){
+    if(fd < 0)
+        return 0;
     if(fd == STDOUT){
         ncPrintCharWithColor(c, colorCode);
         return 1;
