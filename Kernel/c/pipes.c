@@ -47,7 +47,6 @@ static TPipe * deqPipe() {
         pipesList->last = NULL;
     } else {
         pipesList->first = deq->next;
-        //semaphoresList->last->next = semaphoresList->first;
     }
 
     deq->next = NULL;
@@ -79,7 +78,7 @@ static int createPipe(char *name, int id){
     memcpy(wSem, WRITE_SEM_NAME, lenght+0);
     wSem[lenght] = id + '0';
     wSem[lenght+1] = 0;
-    int sw = semOpen(wSem, BUFFER_SIZE);
+    int sw = semOpen(wSem, 1);
 
     if(sr == FAILED || sw == FAILED){
         ncPrint("Error abriendo semaforos en createPipe\n");

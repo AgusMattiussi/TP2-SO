@@ -112,7 +112,7 @@ static process * delProcess(processList * list, pid_t pid) {
             list->last->next = list->first;
         }
         /* Si justo estoy borrando el ultimo proceso de la lista, actualizo last*/
-        if(toDel == list->last)
+        else if(toDel == list->last)
             list->last = prev;
         /* Salteo a toDel en la lista */
         prev->next = toDel->next;

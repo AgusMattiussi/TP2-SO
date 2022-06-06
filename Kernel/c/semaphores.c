@@ -2,10 +2,11 @@
 
 static int createSemaphore(char *name, int initialValue);
 static void enqSem(TSem * sem);
-static TSem * deqSem();
+static TSem * delSem(char * semName);
 static void enqPr(TSem * sem, pid_t pid);
 static pid_t deqPr(TSem * sem);
 static TSem * getSem(char * name);
+static TSem * getSemAndPrevious(char * semName, TSem ** prev);
 // static int semExists(char * name);
 static void freeSem(TSem * sem);
 
@@ -55,26 +56,89 @@ static void enqSem(TSem * sem) {
     semaphoresList->size++;
 }
 
-static TSem * deqSem() {
+/* static TSem * delSem(char * semName) {
 
     if(semaphoresList == NULL || semaphoresList->size == 0)
         return NULL;
 
-    TSem * deq = semaphoresList->first;
+    TSem * toDel = semaphoresList->first;
+    for (int i = 0; i < semaphoresList->size; i++){
+        if(strcmp(toDel->name, semName) == 0)
+            break;
+        toDel = toDel->next;
+    }
+    
+    if(toDel == NULL)
+        return NULL
+
 
     if(semaphoresList->size == 1){
         semaphoresList->first = NULL;
         semaphoresList->last = NULL;
     } else {
-        semaphoresList->first = deq->next;
-        //semaphoresList->last->next = semaphoresList->first;
+        if(semaphoresList->first == toDel)
+            semaphoresList->first = toDel->next;
+        else if(semaphoresList->last == toDel)
+            semaphoresList->last = 
     }
 
     deq->next = NULL;
 
     semaphoresList->size--;
     return deq;
+} */
+
+static TSem * delSem(char * semName) {
+
+    if(semaphoresList == NULL || semaphoresList->size == 0)
+        return NULL;
+
+    TSem * prev = NULL;
+    TSem * toDel = getSemAndPrevious(semName, &prev);
+    if(toDel == NULL)
+        return NULL;
+    
+    if(semaphoresList->size == 1){
+        semaphoresList->first = NULL;
+        semaphoresList->last = NULL;
+    } else {
+        if(toDel == semaphoresList->first)
+            semaphoresList->first = semaphoresList->first->next;
+        else if(toDel == semaphoresList->last)
+            semaphoresList->last = prev;
+
+        prev->next = toDel->next;
+    }
+
+    toDel->next = NULL;
+    semaphoresList->size--;
+
+    return toDel;
 }
+
+static TSem * getSemAndPrevious(char * semName, TSem ** prev){
+    if(semaphoresList == NULL || semaphoresList->size == 0 || semName == NULL)
+        return NULL;
+
+    TSem * toRet = semaphoresList->first;
+    *prev = toRet;
+
+    int i;
+    for (i = 0; i < semaphoresList->size; i++){
+        if(strcmp(toRet->name, semName) == 0)
+            break;
+        *prev = toRet;
+        toRet = toRet->next;
+    }
+
+    if(i == semaphoresList->size){
+        *prev = NULL;
+        return NULL;
+    }
+
+    return toRet;
+}
+
 
 static void enqPr(TSem * sem, pid_t pid){
     
@@ -117,34 +181,11 @@ static pid_t deqPr(TSem * sem){
     return pid;
 }
 
-static TSem * getSem(char * name){
-    TSem * aux = semaphoresList->first;
 
-    for(int i = 0; i < semaphoresList->size; i++){
-        /* ncPrintWithColor(name, MAGENTA_BLACK);
-        ncPrint("   ");
-        ncPrintWithColor(aux->name, CYAN_BLACK);
-        ncNewline(); */
-        if(strcmp(name, aux->name) == 0){
-            //ncPrintWithColor("TODO OK\n", GREEN_BLACK);
-            return aux;}
-
-        aux = aux->next;
-    }
-
-    return NULL;
+static TSem * getSem(char * semName){
+    TSem * toDiscard = NULL;
+    return getSemAndPrevious(semName, &toDiscard);
 }
-
-// static int semExists(char * name){
-//     TSem * current = semaphoresList->first;
-
-//     for (int i = 0; i < semaphoresList->size; i++){
-//         if(strcmp(name, current->name) == FAILED)
-//             return SUCCESS;
-//         current = current->next;
-//     }
-//     return FAILED;
-// }
 
 uint64_t semOpen(char *name, int initialValue){
     _xchgLock(&semLock);
@@ -168,6 +209,10 @@ uint64_t semOpen(char *name, int initialValue){
 uint64_t semClose(char * semName){
     _xchgLock(&semLock);
 
+    /* ncPrintWithColor("Cerrando el sem: ", ORANGE_BLACK);
+    ncPrint(semName);
+    ncNewline(); */
+
     TSem * toClose = getSem(semName);
     if(toClose == NULL){
         ncPrint("The Semaphore "); 
@@ -182,7 +227,7 @@ uint64_t semClose(char * semName){
 
     toClose->openedBy--;
     if(toClose->openedBy == 0){
-        deqSem(toClose);
+        delSem(semName);
         freeSem(toClose);
     }
 
