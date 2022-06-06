@@ -2,11 +2,12 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <keyboardDriver.h>
 
-#define MAX_SIZE 20
+#define MAX_SIZE 1024
 #define BACKSPACE 0x0E
 
 static unsigned char buffer[MAX_SIZE];
-static int bufferSize = 0;
+static int writeIdx = 0;
+static int readIdx = 0;
 
 int keyboardHandler(){
     unsigned char scancodeKey = 0;
@@ -16,9 +17,9 @@ int keyboardHandler(){
         if(scancodeKey == BACKSPACE)
             ncBackspace();
 
-        if(scancodeToAscii(scancodeKey) != 0 && bufferSize < MAX_SIZE){
-            buffer[bufferSize++] = scancodeToAscii(scancodeKey);
-
+        if(scancodeToAscii(scancodeKey) != 0){
+            buffer[writeIdx] = scancodeToAscii(scancodeKey);
+            writeIdx = (writeIdx+1) % MAX_SIZE;
             return 1;
         }
     }
@@ -68,20 +69,25 @@ unsigned char scancodeToAscii(int scancode){
 }
 
 unsigned char kb_getChar(){
-    if (bufferSize <= 0)
+    /* if (bufferSize <= 0)
         return 0;
     
     unsigned char key = buffer[0];
     removeFirstChar();
+    return key; */
+    if(readIdx == writeIdx)
+        return 0;
+    unsigned char key = buffer[readIdx];
+    readIdx = (readIdx + 1) % MAX_SIZE;
     return key;
 }
 
 void removeFirstChar(){
-    if (bufferSize > 0){
+    /* if (bufferSize > 0){
         // removemos el primero.
         for (int i = 1; i < bufferSize; i++)
             buffer[i - 1] = buffer[i];
     }
-    bufferSize--;
+    bufferSize--; */
 }
 

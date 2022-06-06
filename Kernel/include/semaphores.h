@@ -1,5 +1,5 @@
-#ifndef __SEMAPHORES_H_
-#define _SEMAPHORES_H_
+#ifndef SEMAPHORES_H_
+#define SEMAPHORES_H_
 
 #include <stdint.h>
 #include <stddef.h>

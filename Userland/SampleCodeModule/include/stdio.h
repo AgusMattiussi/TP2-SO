@@ -46,6 +46,20 @@
 
 
 /**
+ * Syscall: Abre un nuevo pipe
+**/
+extern int * sys_pipeOpen(char * pipeName);
+
+/**
+ * Syscall: Cierra un pipe
+**/
+extern unsigned long sys_pipeClose(char * pipeName);
+
+int read(int fd);
+unsigned long write(int fd, char * str);
+int writeChar(int fd, char c);
+
+/**
  * Devuelve un caracter ingresado por el usuario siempre que este no
  * sea nulo (distinto de 0)
 **/

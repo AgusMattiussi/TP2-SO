@@ -11,6 +11,7 @@
 #include <scheduler.h>
 #include <interrupts.h>
 #include <semaphores.h>
+#include <pipes.h>
 
 
 extern uint8_t text;
@@ -66,12 +67,17 @@ int main()
 	_sti();
 
 	_cli();
+	initPipes();
+	_sti();
+
+	_cli();
 	initScheduler();
 	_sti();
 
 	saveInitialState((uint64_t)sampleCodeModuleAddress, getSP());
 	
 	((EntryPoint)sampleCodeModuleAddress)();
+	/* No vuelve a este punto despues de que se borra firstProcess */
 	while(1);
 	ncPrintWithColor("Game over\n", RED_BLACK);
 	

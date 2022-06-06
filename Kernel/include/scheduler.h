@@ -6,6 +6,8 @@
 #include <memoryManager.h>
 #include <strings.h>
 #include <naiveConsole.h>
+#include <interrupts.h>
+#include <ioManager.h>
 
 #define NAME_MAX_SIZE 25
 #define PROCESS_STACK_SIZE 0x1000
@@ -68,8 +70,8 @@ typedef struct processContext{
     int ticketsLeft;
     states state;
     int mode; 
-    int stdIn;
-    int stdOut;
+    int fdIn;
+    int fdOut;
 } processContext;
 
 typedef struct process{
@@ -102,6 +104,8 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint
 void yield();
 int exists(pid_t pid);
 void wait(pid_t pid);
+int getFdIn();
+int getFdOut();
 
 
 #endif

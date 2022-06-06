@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <strings.h>
 #include <phylo.h>
+#include <syscall.h>
 
 void sleep(int argSize, char *args[]);
 

@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <terminal.h>
 
+void pipeTester();
 
 static char * commandsNames[COMMANDS_COUNT];
 static char * commandsDesc[COMMANDS_COUNT];
@@ -31,7 +32,8 @@ void startCommands(){
     commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument", &printmem, TRUE);
     commandBuilder("time", "Displays the current time and date.", &printTime, TRUE);
     //commandBuilder("divzero", "Displays exception of division by zero.", &divZero, TRUE);
-    commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode, TRUE);
+    //commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode, TRUE);
+    commandBuilder("pipetester", "Basta de sufrimiento por favor", &pipeTester, FALSE);
     commandBuilder("phylo", "Philosophers problem", &phylo_main, FALSE);
     commandBuilder("mem", "Displays the current memory state.", &mem, TRUE);
     commandBuilder("ps", "Displays a list with all running processes.", &ps, TRUE);
@@ -61,8 +63,8 @@ void commandBuilder(char *name, char *desc, void (*fn)(), int builtin){
 }
 
 void executeCommand(char *buffer){
-    char *arguments[3];
-    int argumentsCount = strtok(buffer, ' ', arguments, 3);
+    char *arguments[5];
+    int argumentsCount = strtok(buffer, ' ', arguments, 5);
 
     if(argumentsCount <= 0 || argumentsCount > 5){
         print("Invalid amount of arguments.\n");
@@ -84,16 +86,14 @@ void executeCommand(char *buffer){
                         (*catBuitIn)(argumentsCount - 1, arguments + 1);
                         return;
                     }
-                        
                     if(strcmp(arguments[0], "wc") == 0){
                         (*wcBuitIn)(argumentsCount - 1, arguments + 1);
                         return;
                     }
-                        
                     if(strcmp(arguments[0], "filter") == 0){
                         (*filterBuitIn)(argumentsCount - 1, arguments + 1);
                         return;
-                    }           
+                    }
                 }
 
                 if(argumentsCount == 2 && arguments[1][0] == '-')
@@ -105,17 +105,37 @@ void executeCommand(char *buffer){
                     for(int j=0; j< COMMANDS_COUNT; j++){
                         if(strcmp(arguments[2], commandsNames[j]) == 0){
                             //TODO: pipes 
-                            // int fd = sys_pipeOpen("|");
-                            // if(fd == -1){
-                            //     print("Pipe opening error\n");
-                            //     return;
-                            // }
-                            // int fds[2] = {fd, 0};
-                            // int p1 = sys_createProcess(commandsFn[i], 1, commandsNames[i], fds, BACKGROUND);
-                            // fds[2] = {0, fd};
-                            // int p2 = sys_createProcess(commandsFn[j], 1, commandsNames[j], fds, FOREGROUND);
-                            // sys_kill(p1);
-                            // sys_pipeClose(fd);
+                            // print("Todo Ok1\n");
+                            int * pipeFds = sys_pipeOpen("pipe");
+                            print("FDs: ");
+                            printInt(pipeFds[0]);
+                            print(" ");
+                            printInt(pipeFds[1]);
+                            print("\n");
+
+                            // print("Todo Ok2\n");
+                            if(pipeFds == NULL){
+                                print("Pipe opening error\n");
+                                return;
+                            }
+                            print("quiero ");
+                            print(commandsNames[j]);
+                            print(" -> ");
+                            print(commandsNames[i]);
+                            print("\n");
+                            int fdsP1[2] = {pipeFds[1], 1};
+                            int fdsP2[2] = {0, pipeFds[0]};
+                            char *argv[] = {commandsNames[j]};
+                            int pidP2 = sys_createProcess(commandsFn[j], 1, argv, fdsP2, FOREGROUND);
+                            argv[0] = commandsNames[i];
+                            int pidP1 = sys_createProcess(commandsFn[i], 1, argv, fdsP1, FOREGROUND);
+                            //ps();
+                            pipe();
+                            sys_wait(pidP2);
+                            print("Termino P2\n");
+                            sys_wait(pidP1);
+                            print("Termino P1\n");
+                            sys_pipeClose("pipe");
                             // print("Todo Ok\n");
                         }
                     }         
@@ -284,8 +304,19 @@ void wcBuitIn(int argSize, char *args[]){
 
 void filterBuitIn(int argSize, char *args[]){
     char c;
-    while((c = getChar()) != '\n')
-        if(isVowel(c))
+    while((c = getChar()) != 'p')
+        if(!isVowel(c))
             putChar(c);
     putChar('\n');
+}
+
+void pipeTester(){
+    int * fds = sys_pipeOpen("abc");
+    sys_write(fds[0], "Hola Mundo");
+    char c = sys_read(fds[1]);
+    while (c != 0){
+        char toWrite[] = {c, 0};
+        sys_write(1, toWrite);
+        c = sys_read(fds[1]);
+    }
 }

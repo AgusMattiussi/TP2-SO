@@ -1,7 +1,7 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <scheduler.h>
-#include <interrupts.h>
+
 
 static int firstProcess(int argc, char **argv);
 static pid_t initProcess(process *pNode, char *name, uint32_t * fd, mode processMode);
@@ -114,7 +114,7 @@ static process * delProcess(processList * list, pid_t pid) {
             list->last->next = list->first;
         }
         /* Si justo estoy borrando el ultimo proceso de la lista, actualizo last*/
-        if(toDel == list->last)
+        else if(toDel == list->last)
             list->last = prev;
         /* Salteo a toDel en la lista */
         prev->next = toDel->next;
@@ -283,7 +283,8 @@ static processList * initializeProcessList() {
 /* Crea el primer proceso y le asigna su nombre */
 void createFirstProcess(){
     char *argv[] = {"firstProcess"};
-    createProcess((void *)&firstProcess, 1, argv, NULL, FOREGROUND);
+    pid_t fpPid = createProcess((void *)&firstProcess, 1, argv, NULL, FOREGROUND);
+    kill(fpPid);
 }
 
 /* Primer proceso creado. Su unica funcion es esperar a que llegue un
@@ -323,11 +324,11 @@ static pid_t initProcess(process *pNode, char *name, uint32_t * fd, mode process
 
     pc->mode = processMode;
     if(fd == NULL){
-        pc->stdIn = 0;
-        pc->stdOut = 0;
+        pc->fdIn = STDIN;
+        pc->fdOut = STDOUT;
     } else {
-        pc->stdIn = fd[0];
-        pc->stdOut = fd[1];
+        pc->fdIn = fd[0];
+        pc->fdOut = fd[1];
     }
 
     return pc->pid;
@@ -358,7 +359,6 @@ static void setStackFrame(int argc, char **argv, process *pNode, void (*processF
     stack->rdx = (uint64_t)processFn;
     stack->rcx = pid;
     stack->rip = (uint64_t)forceExitAfterExec;
-    // stack->rip = (uint64_t)processFn;
     stack->cs = 0x8;
     stack->rflags = 0x202;
     stack->rsp = (uint64_t)(pNode->pc.rsp);
@@ -391,7 +391,6 @@ pid_t getPid(){
 /* Se mata un proceso segun su PID, eliminando sus recursos. Devuelve 1 si fue
  * exitoso o 0 en caso de error */
 uint64_t kill(pid_t pid){
-   // _cli();
     if(pid < 1)
         return 0;
 
@@ -410,11 +409,9 @@ uint64_t kill(pid_t pid){
     // TODO: Hace falta?
     if(pid == executingP->pc.pid){
         executingP = NULL;
-        //_sti();
         timerInterrupt();
     }
 
-    //_sti();
     return 1;
 }
 
@@ -429,7 +426,6 @@ uint64_t toggleBlocked(pid_t pid) {
 /* Cambia el estado de un proceso a BLOCKED. Devuelve 1 si fue
  * exitoso o 0 en caso de error */
 uint64_t block(pid_t pid){
-    //_cli();
     process * p = delProcess(readyList, pid);
     if(p == NULL)
         return 0;
@@ -440,23 +436,19 @@ uint64_t block(pid_t pid){
     //TODO: Hace falta?
     if(pid == executingP->pc.pid){
         executingP->pc.ticketsLeft = 0;
-        //_sti();
         timerInterrupt();
     }
 
-   // _sti();
     return 1;
 }
 
 /* Cambia el estado de un proceso BLOCKED a READY */
 uint64_t unblock(pid_t pid){
-    //_cli();
     process * p = delProcess(blockedList, pid);
     if(p == NULL)
         return 0;
     p->pc.state = READY;
     enqProcess(readyList, p);
-    //_sti();
     return 1;
 }
 
@@ -468,7 +460,7 @@ void printAllProcessesInfo(){
         return;
     }
     
-    ncPrintWithColor("PID    NAME            RSP      RBP      STATE    PRIORITY\n", ORANGE_BLACK);
+    print("PID    NAME            RSP      RBP      STATE    PRIORITY\n");
     printProcessListInfo(readyList);
     printProcessListInfo(blockedList);
 }
@@ -484,7 +476,7 @@ static void printProcessListInfo(processList * list) {
     }
 }
 
-static void printProcessInfo(process * p){
+/* static void printProcessInfo(process * p){
     ncPrintDec(getPidOf(p));
     ncPrint(TAB);
 
@@ -517,6 +509,30 @@ static void printProcessInfo(process * p){
     printPriority(getPriority(p));
 
     ncPrint("\n");
+} */
+
+static void printProcessInfo(process * p){
+
+    print(p->pc.name);
+    /* int length = strlen(p->pc.name);
+    if(length < PROCESS_NAME_PRINT_SIZE){
+        for(int i=0; i < PROCESS_NAME_PRINT_SIZE - length; i++)
+            ncPrint(" ");
+    } */
+    print(TAB);
+    
+    switch(p->pc.state) {
+        case READY: 
+            print("READY");
+            break;
+        case BLOCKED:
+            print("BLOCKED");
+            break;
+        default:
+            print("?????");
+    }
+
+    print("\n");
 }
 
 static void printPriority(uint8_t priority){
@@ -603,4 +619,12 @@ void wait(pid_t pid){
     while (exists(pid)){
         yield();
     }
+}
+
+int getFdIn(){
+    return executingP->pc.fdIn;
+}
+
+int getFdOut(){
+    return executingP->pc.fdOut;
 }

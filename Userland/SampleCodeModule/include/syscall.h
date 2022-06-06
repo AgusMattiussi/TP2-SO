@@ -65,4 +65,20 @@ extern void sys_wait(unsigned long long pid);
 
 extern int sys_exists(unsigned long long pid);
 
+extern int sys_get_fdin();
+
+extern int sys_get_fdout();
+
+extern int sys_read(int fd);
+
+extern unsigned long sys_write(int fd, char * str);
+
+extern void sys_putChar(char c);
+
+extern void sys_print(char * str);
+
+extern void sys_printWithColor(char * str, char colorCode);
+
+extern int sys_writeChar(int fd, char c);
+
 #endif
