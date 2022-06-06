@@ -77,9 +77,14 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 		case 29:
 			return exists((pid_t)rsi);
 		case 30:
-			return pipeOpen((char *)rsi);
+			return (uint64_t)pipeOpen((char *)rsi);
 		case 31:
 			return pipeClose((char *)rsi);
+		case 32:
+			return getFdIn();
+		case 33:
+			return getFdOut();
+		
 	}
     // Por default devuelve 0
 	return 0;

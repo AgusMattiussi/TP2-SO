@@ -17,6 +17,7 @@
 
 typedef struct TPipe{
     struct TPipe * next;
+    int fds[2];
     char name[PIPE_NAME_SIZE];
     char buffer[BUFFER_SIZE];
     uint64_t readIndex;
@@ -33,7 +34,7 @@ typedef struct pipeList{
 } pipeList;
 
 void initPipes();
-uint64_t pipeOpen(char * name);
+int * pipeOpen(char *name);
 uint64_t pipeClose(char * pipeName);
 uint64_t writePipe(char * pipeName, char *str);
 char readPipe(char * pipeName);

@@ -68,8 +68,8 @@ typedef struct processContext{
     int ticketsLeft;
     states state;
     int mode; 
-    int stdIn;
-    int stdOut;
+    int fdIn;
+    int fdOut;
 } processContext;
 
 typedef struct process{
@@ -102,8 +102,8 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, uint
 void yield();
 int exists(pid_t pid);
 void wait(pid_t pid);
-int getStdIn();
-int getStdOut();
+int getFdIn();
+int getFdOut();
 
 
 #endif

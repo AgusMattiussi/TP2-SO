@@ -19,5 +19,9 @@ extern void sys_free(void *pr);
 extern void sys_mem();
 extern void sys_wait(unsigned long long pid);
 extern int sys_exists(unsigned long long pid);
+extern int sys_get_fdin();
+extern int sys_get_fdout();
+extern unsigned long sys_read(int fd);
+extern unsigned long sys_write(int fd, char * str);
 
 #endif

@@ -31,6 +31,10 @@ GLOBAL sys_wait
 GLOBAL sys_exists
 GLOBAL sys_pipeOpen
 GLOBAL sys_pipeClose
+GLOBAL sys_read
+GLOBAL sys_write
+GLOBAL sys_get_fdin
+GLOBAL sys_get_fdout
 
 SECTION .text
 
@@ -148,6 +152,14 @@ sys_pipeOpen:
 	syscall 30
 sys_pipeClose:
 	syscall 31
+sys_get_fdin:
+	syscall 32
+sys_get_fdout:
+	syscall 33
+sys_read:
+	syscall 34
+sys_write:
+	syscall 35
 
 
 ;Fuente: https://www.felixcloutier.com/x86/ud

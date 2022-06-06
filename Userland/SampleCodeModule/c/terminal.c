@@ -104,9 +104,15 @@ void executeCommand(char *buffer){
                         if(strcmp(arguments[2], commandsNames[j]) == 0){
                             //TODO: pipes 
                             // print("Todo Ok1\n");
-                            int fd = sys_pipeOpen("pipe");
+                            int * fd = sys_pipeOpen("pipe");
+                            print("FDs: ");
+                            printInt(fd[0]);
+                            print(" ");
+                            printInt(fd[1]);
+                            print("\n");
+
                             // print("Todo Ok2\n");
-                            if(fd == 0){
+                            /* if(fd == 0){
                                 print("Pipe opening error\n");
                                 return;
                             }
@@ -118,7 +124,7 @@ void executeCommand(char *buffer){
                             argv[0] = commandsNames[j];
                             sys_createProcess(commandsFn[j], 1, argv, fds, FOREGROUND);
                             sys_killPs(p1);
-                            sys_pipeClose("pipe");
+                            sys_pipeClose("pipe"); */
                             // print("Todo Ok\n");
                         }
                     }         

@@ -3,10 +3,12 @@
 static void enqPipe(TPipe * pipe);
 static TPipe * deqPipe();
 static TPipe * getPipe(char * name);
-static int createPipe(char *name, int id);
+static int * createPipe(char *name, int id);
+static int generateNewFd();
 
 static char * handlerSemName = "pipesHandler";
 static pipeList * pipesList;
+static int lastFdGenerated = 2;
 
 void initPipes(){
     if(semOpen(handlerSemName, 1) == FAILED){
@@ -55,11 +57,14 @@ static TPipe * deqPipe() {
     return deq;
 }
 
-static int createPipe(char *name, int id){
+static int * createPipe(char *name, int id){
     TPipe* new = malloc(sizeof(TPipe));
-    
+
     if(new == NULL)
-        return FAILED;
+        return NULL;
+
+    new->fds[0] = generateNewFd();
+    new->fds[1] = generateNewFd();
 
     memcpy(new->name, name, strlen(name)+1);
 
@@ -82,7 +87,7 @@ static int createPipe(char *name, int id){
 
     if(sr == FAILED || sw == FAILED){
         ncPrint("Error abriendo semaforos en createPipe\n");
-        return FAILED;
+        return NULL;
     }
 
     memcpy(new->readSemName, rSem, strlen(rSem)+1);
@@ -92,7 +97,7 @@ static int createPipe(char *name, int id){
 
 
     enqPipe(new);
-    return SUCCESS;
+    return new->fds;
 }
 
 static TPipe * getPipe(char * name){
@@ -106,24 +111,26 @@ static TPipe * getPipe(char * name){
     return NULL;
 }
 
-uint64_t pipeOpen(char *name){
+int * pipeOpen(char *name){
     if (semWait(handlerSemName) == FAILED){
         ncPrint("Error semWait en pipeOpen\n");
         return FAILED;
     }
 
+    int * fds;
     TPipe * toOpen = getPipe(name);
     if (toOpen == NULL){
-        if(createPipe(name, pipesList->size+1) == FAILED){
-            semPost(handlerSemName);
+        fds = createPipe(name, pipesList->size+1);
+        if(fds == NULL){
             ncPrint("Error creando pipe en pipeOpen\n");
-            return FAILED;
         }
-    } else
+    } else{
         toOpen->numOfProcessesAttached++;
+        fds = toOpen->fds;
+    }
     
     semPost(handlerSemName);
-    return SUCCESS;
+    return fds;
 }
 
 uint64_t pipeClose(char * pipeName){
@@ -231,4 +238,8 @@ void printListOfPipes(){
         toPrint = toPrint->next;
         ncPrint("\n");
     }
+}
+
+static int generateNewFd(){
+    return lastFdGenerated++;
 }

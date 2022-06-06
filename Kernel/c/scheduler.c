@@ -321,11 +321,11 @@ static pid_t initProcess(process *pNode, char *name, uint32_t * fd, mode process
 
     pc->mode = processMode;
     if(fd == NULL){
-        pc->stdIn = 0;
-        pc->stdOut = 0;
+        pc->fdIn = 0;
+        pc->fdOut = 0;
     } else {
-        pc->stdIn = fd[0];
-        pc->stdOut = fd[1];
+        pc->fdIn = fd[0];
+        pc->fdOut = fd[1];
     }
 
     return pc->pid;
@@ -594,10 +594,10 @@ void wait(pid_t pid){
     }
 }
 
-int getStdIn(){
-    return executingP->pc.stdIn;
+int getFdIn(){
+    return executingP->pc.fdIn;
 }
 
-int getStdOut(){
-    return executingP->pc.stdOut;
+int getFdOut(){
+    return executingP->pc.fdOut;
 }

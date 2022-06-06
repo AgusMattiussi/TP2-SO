@@ -1,5 +1,13 @@
 #include <stdio.h>
 
+unsigned long read(int fd){
+    return sys_read(fd);
+}
+
+unsigned long write(int fd, char * str){
+    return sys_write(fd, str);
+}
+
 unsigned char getChar(){
     char c;
     while((c = sys_getChar()) == 0);
@@ -24,7 +32,8 @@ void print(char * string){
     while (*string != 0){
         putChar(*string);
         string++;
-    }    
+    }  
+    //write(sys_get_fdout(), string); 
 }
 
 void printWithColor(char * string, unsigned char colorCode){

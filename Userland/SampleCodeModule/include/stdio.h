@@ -2,6 +2,7 @@
 #define _STDIO_H
 
 #include <stdint.h>
+#include <syscall.h>
 
 #define BACKSPACE '\b'
 #define SHIFT 201
@@ -153,12 +154,15 @@ extern void sys_pipe();
 /**
  * Syscall: Abre un nuevo pipe
 **/
-extern unsigned long sys_pipeOpen(char * pipeName);
+extern int * sys_pipeOpen(char * pipeName);
 
 /**
  * Syscall: Cierra un pipe
 **/
 extern unsigned long sys_pipeClose(char * pipeName);
+
+unsigned long read(int fd);
+unsigned long write(int fd, char * str);
 
 /**
  * Devuelve un caracter ingresado por el usuario siempre que este no
