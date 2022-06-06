@@ -44,5 +44,6 @@ char readPipeWithFd(int fd);
 void printListOfPipes();
 uint64_t writeCharInPipe(TPipe * pipe, char c);
 uint32_t writeInPipeWithFd(int fd, char *str);
+uint64_t writeCharInPipeWithFd(int fd, char c);
 
 #endif

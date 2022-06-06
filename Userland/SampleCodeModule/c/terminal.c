@@ -1,5 +1,6 @@
 #include <terminal.h>
 
+void pipeTester();
 
 static char * commandsNames[COMMANDS_COUNT];
 static char * commandsDesc[COMMANDS_COUNT];
@@ -29,7 +30,8 @@ void startCommands(){
     commandBuilder("printmem", "Displays a 32 bytes memory dump of the address passed as an argument", &printmem, TRUE);
     commandBuilder("time", "Displays the current time and date.", &printTime, TRUE);
     //commandBuilder("divzero", "Displays exception of division by zero.", &divZero, TRUE);
-    commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode, TRUE);
+    //commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode, TRUE);
+    commandBuilder("pipetester", "Basta de sufrimiento por favor", &pipeTester, FALSE);
     commandBuilder("phylo", "Philosophers problem", &phylo_main, FALSE);
     commandBuilder("mem", "Displays the current memory state.", &mem, TRUE);
     commandBuilder("ps", "Displays a list with all running processes.", &ps, TRUE);
@@ -321,4 +323,15 @@ void filterBuitIn(int argSize, char *args[]){
         if(!isVowel(c))
             putChar(c);
     putChar('\n');
+}
+
+void pipeTester(){
+    int * fds = sys_pipeOpen("abc");
+    sys_write(fds[0], "Hola Mundo");
+    char c = sys_read(fds[1]);
+    while (c != 0){
+        char toWrite[] = {c, 0};
+        sys_write(1, toWrite);
+        c = sys_read(fds[1]);
+    }
 }

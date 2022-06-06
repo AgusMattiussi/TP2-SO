@@ -198,9 +198,34 @@ uint64_t writeCharInPipe(TPipe * pipe, char c){
         ncPrint("Error semPost en writeCharInPipe\n");
         return FAILED;
     }
+    semPost(pipe->readSemName);
 
     return SUCCESS;
 }
+
+uint64_t writeCharInPipeWithFd(int fd, char c){
+    TPipe * toWrite = getPipeWithFd(fd, FDIN);
+    if(toWrite == NULL)
+        return FAILED;
+
+    if(semWait(toWrite->writeSemName) == FAILED){
+        ncPrint("Error semWait en writeCharInPipe\n");
+        return FAILED;
+    }
+
+    toWrite->buffer[toWrite->writeIndex % BUFFER_SIZE] = c;
+    toWrite->writeIndex++;
+
+    if(semPost(toWrite->writeSemName) == FAILED){
+        ncPrint("Error semPost en writeCharInPipe\n");
+        return FAILED;
+    }
+    semPost(toWrite->readSemName);
+
+    return SUCCESS;
+}
+
+
 
 uint32_t writeInPipeWithFd(int fd, char *str){
     TPipe * toWrite = getPipeWithFd(fd, FDIN);
@@ -232,9 +257,10 @@ char readPipe(char * pipeName){
         ncPrint("does not exist\n");
         return FAILED;
     }
-
+    //ncPrintWithColor("LLEGUE ACA\n", RED_BLACK);
     if(semWait(toRead->readSemName) == FAILED){
         ncPrint("Error semWait en readPipe\n");
+        //ncPrintWithColor("LLEGUE ACA2\n", RED_BLACK);
         return FAILED;
     }
 

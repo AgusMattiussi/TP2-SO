@@ -458,7 +458,7 @@ void printAllProcessesInfo(){
         return;
     }
     
-    writeHandler(executingP->pc.fdOut,"PID    NAME            RSP      RBP      STATE    PRIORITY\n");
+    print("PID    NAME            RSP      RBP      STATE    PRIORITY\n");
     printProcessListInfo(readyList);
     printProcessListInfo(blockedList);
 }
@@ -511,26 +511,26 @@ static void printProcessListInfo(processList * list) {
 
 static void printProcessInfo(process * p){
 
-    writeHandler(executingP->pc.fdOut, p->pc.name);
+    print(p->pc.name);
     /* int length = strlen(p->pc.name);
     if(length < PROCESS_NAME_PRINT_SIZE){
         for(int i=0; i < PROCESS_NAME_PRINT_SIZE - length; i++)
             ncPrint(" ");
     } */
-    writeHandler(executingP->pc.fdOut, TAB);
+    print(TAB);
     
     switch(p->pc.state) {
         case READY: 
-            writeHandler(executingP->pc.fdOut,"READY");
+            print("READY");
             break;
         case BLOCKED:
-            writeHandler(executingP->pc.fdOut,"BLOCKED");
+            print("BLOCKED");
             break;
         default:
-            writeHandler(executingP->pc.fdOut,"?????");
+            print("?????");
     }
 
-    writeHandler(executingP->pc.fdOut,"\n");
+    print("\n");
 }
 
 static void printPriority(uint8_t priority){

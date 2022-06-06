@@ -3,9 +3,9 @@
 uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9) {
 	switch (rdi) {																	// ======== Origen de las llamadas ========
 		case 0:
-			return kb_getChar(); 													// <-- unsigned char getChar() || stdio.c
+			return readHandler(STDIN); 													// <-- unsigned char getChar() || stdio.c
 		case 1:
-			ncPrintCharWithColor((char) rsi, (unsigned char)rdx); 					//< -- void putCharWithColor(char c, unsigned char colorCode) || stdio.c
+			putCharWithColor((char) rsi, (unsigned char)rdx); 					//< -- void putCharWithColor(char c, unsigned char colorCode) || stdio.c
 			return 1;																
 		case 2:
 			return getTime(rsi);													// <-- int getTime(int descriptor) || stdio.c
@@ -87,8 +87,17 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rc
 		case 34:
 			return readHandler((int)rsi);
 		case 35:
-			return writeHandler((int)rsi, (char *)rdx);
-		
+			return writeStrHandler((int) rsi, (char *) rdx, DEFAULT_COLOR);
+		case 36:
+			putChar((char) rsi);
+			return 36;
+		case 37:
+			print((char *)rsi);
+			return 37;
+		case 38:
+			printWithColor((char *)rsi, (uint8_t)rdx);
+		case 39:
+			return writeCharHandler((int) rsi, (char) rdx, (uint8_t) rcx);
 	}
     // Por default devuelve 0
 	return 0;
