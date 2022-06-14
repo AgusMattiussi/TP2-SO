@@ -61,6 +61,7 @@ typedef struct stackFrame{
 
 typedef struct processContext{
     char name[NAME_MAX_SIZE];
+    void * allocated[10];
     int argc;
     char ** argv;
     pid_t pid;
@@ -107,6 +108,7 @@ void wait(pid_t pid);
 int getFdIn();
 int getFdOut();
 int getProcessMode();
+process * getExecutingP();
 
 
 #endif

@@ -197,6 +197,17 @@ void * malloc(size_t wantedSize){
         // printf("\tSe entregara el puntero %p\n", retPointer);
         // printf("\t--- FBR: %ld (Se deben %ld)\n", freeBytesRemaining, ADJUSTED_HEAP_SIZE - freeBytesRemaining);
     }
+
+    process * currentP = getExecutingP();
+    for (int i = 0; i < 10; i++)
+    {
+        if(currentP->pc.allocated[i] == NULL){
+            currentP->pc.allocated[i] = retPointer;
+            break;
+        }
+
+    }
+    
     
     return retPointer;
 }

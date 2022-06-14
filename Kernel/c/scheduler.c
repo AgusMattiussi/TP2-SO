@@ -196,6 +196,10 @@ pid_t createProcess(void (*pFunction)(int, char **), int argc, char **argv, int 
     new->pc.argc = argc;
     new->pc.argv = prArgs;
 
+    for (int i = 0; i < 10; i++){
+        new->pc.allocated[i] = NULL;
+    }
+    
     /* Se agrega el nuevo proceso a la lista*/
     enqProcess(readyList, new);
     return getPidOf(new);
@@ -389,6 +393,14 @@ uint64_t kill(pid_t pid){
         toKill = delProcess(blockedList, pid);
     if(toKill == NULL)
         return 0;
+
+    for (int i = 0; i < 10; i++)
+    {   
+        if(toKill->pc.allocated[i] == NULL)
+            break;
+        free(toKill->pc.allocated[i]);
+    }
+    
 
     freeProcess(toKill);
 
@@ -590,4 +602,8 @@ int getFdOut(){
 
 int getProcessMode(){
     return executingP->pc.mode;
+}
+
+process * getExecutingP(){
+    return executingP;
 }
