@@ -61,3 +61,7 @@ void filter(){
     }
     putChar('\n');
 }
+
+void testMalloc(){
+    sys_malloc(1000);
+}

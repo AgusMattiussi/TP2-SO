@@ -29,7 +29,7 @@ void startCommands(){
     commandBuilder("time", "Displays the current time and date.", &printTime, TRUE);
     // commandBuilder("inforeg", "Displays the information of all the registers, if saved before.", &getRegisters, TRUE);
     //commandBuilder("divzero", "Displays exception of division by zero.", &divZero, TRUE);
-    commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode, TRUE);
+    // commandBuilder("invalidopcode", "Displays exception of an invalid operation code.", &invalidOpCode, TRUE);
     commandBuilder("phylo", "Philosophers problem", &phylo_main, FALSE);
     commandBuilder("mem", "Displays the current memory state.", &mem, TRUE);
     commandBuilder("ps", "Displays a list with all running processes.", &ps, TRUE);
@@ -48,6 +48,7 @@ void startCommands(){
     commandBuilder("wc", "Displays the quantity of lines of the input.", &wc, FALSE);
     commandBuilder("filter", "Filters the vowels of the input.", &filter, FALSE);
     commandBuilder("pipe", "Displays a list with all the pipes.", &pipe, TRUE);
+    commandBuilder("test", "Test malloc without free.", &testMalloc, TRUE);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)(), int builtin){

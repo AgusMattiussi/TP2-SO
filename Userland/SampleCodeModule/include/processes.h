@@ -18,4 +18,6 @@ void filter();
 
 int isVowel(char c);
 
+void testMalloc();
+
 #endif
