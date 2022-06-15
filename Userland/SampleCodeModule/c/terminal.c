@@ -48,7 +48,7 @@ void startCommands(){
     commandBuilder("wc", "Displays the quantity of lines of the input.", &wc, FALSE);
     commandBuilder("filter", "Filters the vowels of the input.", &filter, FALSE);
     commandBuilder("pipe", "Displays a list with all the pipes.", &pipe, TRUE);
-    commandBuilder("test", "Test malloc without free.", &testMalloc, TRUE);
+    commandBuilder("test", "Test malloc without free.", &testMalloc, FALSE);
 }
 
 void commandBuilder(char *name, char *desc, void (*fn)(), int builtin){

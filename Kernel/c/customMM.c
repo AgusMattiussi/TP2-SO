@@ -203,6 +203,7 @@ void * malloc(size_t wantedSize){
     {
         if(currentP->pc.allocated[i] == NULL){
             currentP->pc.allocated[i] = retPointer;
+            //ncPrintHex((uint64_t)currentP->pc.allocated[i]);
             break;
         }
 

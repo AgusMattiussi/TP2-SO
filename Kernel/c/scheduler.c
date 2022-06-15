@@ -383,6 +383,10 @@ pid_t getPid(){
 /* Se mata un proceso segun su PID, eliminando sus recursos. Devuelve 1 si fue
  * exitoso o 0 en caso de error */
 uint64_t kill(pid_t pid){
+    //ncPrint(" ENTRO EL PROCESO: ");
+    //ncPrintDec(pid);
+    //ncNewline();
+
     if(pid < 1)
         return 0;
 
@@ -396,8 +400,12 @@ uint64_t kill(pid_t pid){
 
     for (int i = 0; i < 10; i++)
     {   
-        if(toKill->pc.allocated[i] == NULL)
+        if(toKill->pc.allocated[i] == NULL){
+            //ncPrint("AAAAAA\n");
             break;
+        }
+        //ncPrint("ESTOY ACA\n");
+        ncPrintHex((uint64_t)toKill->pc.allocated[i]);
         free(toKill->pc.allocated[i]);
     }
     
